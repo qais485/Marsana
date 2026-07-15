@@ -32,4 +32,6 @@ backend/.mypy_cache/
 .DS_Store
 Thumbs.db
 
-.report/
+reports/
+.agents/
+skills-lock.json
