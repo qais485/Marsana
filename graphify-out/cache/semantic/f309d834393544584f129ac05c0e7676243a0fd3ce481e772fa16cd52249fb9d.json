@@ -1,1 +1,0 @@
-{"nodes": [{"id": "error:name-error-admin-import", "type": "concept", "label": "AdminProductImportRequest Error", "description": "NameError in admin_endpoints.py where AdminProductImportRequest is not defined.", "source_file": "FIX_ERROR.md", "confidence": 1.0, "provenance": "EXTRACTED"}], "edges": [], "hyperedges": []}

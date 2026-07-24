@@ -1,1 +1,0 @@
-{"nodes": [{"id": "file:frontend-index-html", "type": "file", "label": "frontend/index.html", "description": "HTML entry point with root div and main.jsx script module.", "source_file": "frontend/index.html", "confidence": 1.0, "provenance": "EXTRACTED"}], "edges": [], "hyperedges": []}
