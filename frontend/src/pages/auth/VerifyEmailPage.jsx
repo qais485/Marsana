@@ -8,10 +8,11 @@ const COOLDOWN_SECONDS = 60;
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  const codeFromUrl = searchParams.get('code') || '';
   const emailFromUrl = searchParams.get('email') || '';
 
   const [email, setEmail] = useState(emailFromUrl);
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(codeFromUrl);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
