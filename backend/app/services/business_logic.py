@@ -68,9 +68,8 @@ class AuthService:
 
         try:
             self._send_email_verification(user, "registration")
-        except ValueError:
-            self.db.rollback()
-            raise
+        except Exception as e:
+            logger.warning("Email send failed during registration for %s: %s", email, e)
 
         return {
             "user_id": str(user.id),
@@ -93,8 +92,15 @@ class AuthService:
         if not verify_password(password, user.password_hash):
             raise ValueError("Invalid credentials")
 
+        if not user.is_email_verified:
+            return {
+                "requires_verification": True,
+                "email": user.email,
+                "message": "Email not verified. Please verify your email to continue.",
+            }
+
         if not user.is_active:
-            raise ValueError("Invalid credentials")
+            raise ValueError("Account is inactive. Please contact support.")
 
         if user.is_2fa_enabled:
             temp_token = create_access_token(str(user.id))
