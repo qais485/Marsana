@@ -49,28 +49,32 @@ import {
   MessageSquare,
   HelpCircle,
   BookOpen,
+  Mail,
+  Megaphone,
+  ClipboardCheck,
+  Settings,
 } from 'lucide-react';
 
 function StatCard({ icon: Icon, label, value, sub, color = 'primary' }) {
   const colors = {
-    primary: 'bg-primary-50 text-primary-600',
-    green: 'bg-green-50 text-green-600',
-    red: 'bg-red-50 text-red-600',
-    yellow: 'bg-yellow-50 text-yellow-600',
-    blue: 'bg-blue-50 text-blue-600',
+    primary: 'bg-marsana-50 dark:bg-marsana-900/30 text-marsana-600 dark:text-marsana-400',
+    green: 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400',
+    red: 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400',
+    yellow: 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400',
+    blue: 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
   };
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-5">
+    <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className={`p-2.5 rounded-lg ${colors[color]}`}>
+        <div className={`p-2.5 rounded-xl ${colors[color]}`}>
           <Icon className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <p className="text-sm text-gray-500">{label}</p>
+          <p className="text-2xl font-bold text-surface-900 dark:text-white">{value}</p>
+          <p className="text-sm text-surface-500 dark:text-surface-400">{label}</p>
         </div>
       </div>
-      {sub && <p className="text-xs text-gray-400 mt-2">{sub}</p>}
+      {sub && <p className="text-xs text-surface-400 dark:text-surface-500 mt-2">{sub}</p>}
     </div>
   );
 }
@@ -84,16 +88,16 @@ function SimpleBarChart({ data, maxVal }) {
         const pct = (val / max) * 100;
         return (
           <div key={i} className="flex-1 flex flex-col items-center gap-1">
-            <span className="text-[10px] text-gray-500">
+            <span className="text-[10px] text-surface-500 dark:text-surface-400">
               {typeof val === 'number' && val >= 1000
                 ? `${(val / 1000).toFixed(1)}k`
                 : val}
             </span>
             <div
-              className="w-full bg-primary-500 rounded-t min-h-[2px]"
+              className="w-full bg-marsana-500 dark:bg-marsana-400 rounded-t min-h-[2px]"
               style={{ height: `${Math.max(pct, 2)}%` }}
             />
-            <span className="text-[9px] text-gray-400 truncate w-full text-center">
+            <span className="text-[9px] text-surface-400 dark:text-surface-500 truncate w-full text-center">
               {item.month?.split(' ')[0] || ''}
             </span>
           </div>
@@ -200,8 +204,10 @@ export default function AdminDashboardPage() {
     { id: 'sales', label: 'Sales', icon: ShoppingCart },
     { id: 'revenue', label: 'Revenue', icon: DollarSign },
     { id: 'promotions', label: 'Promotions', icon: Tag },
+    { id: 'marketing', label: 'Marketing', icon: Megaphone },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'support', label: 'Support', icon: Headphones },
+    { id: 'reports', label: 'Reports', icon: ClipboardCheck },
   ];
 
   const productSubTabs = [
@@ -273,58 +279,65 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-4">
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      <header className="bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
               <Link
                 to="/dashboard"
-                className="text-gray-500 hover:text-gray-700"
+                className="text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 transition-all duration-300 flex-shrink-0"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Link>
-              <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
+              <h1 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white truncate">Admin Dashboard</h1>
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-surface-500 dark:text-surface-400 hidden sm:block">
               {user?.first_name} {user?.last_name}
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           <nav className="lg:w-56 flex-shrink-0">
-            <div className="flex lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0">
+            <div className="flex lg:flex-col gap-1 sm:gap-2 overflow-x-auto pb-2 lg:pb-0 -mx-3 px-3 sm:mx-0 sm:px-0">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all duration-300 ${
                     activeTab === tab.id
-                      ? 'bg-primary-50 text-primary-700 font-medium'
-                      : 'text-gray-600 hover:bg-gray-100'
+                      ? 'bg-marsana-50 dark:bg-marsana-900/30 text-marsana-700 dark:text-marsana-400 font-medium'
+                      : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
                   {tab.label}
                 </button>
               ))}
+              <Link
+                to="/admin/settings"
+                className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all duration-300 text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800"
+              >
+                <Settings className="w-4 h-4" />
+                Settings
+              </Link>
             </div>
           </nav>
 
           <div className="flex-1 min-w-0">
             {loading ? (
               <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
+                <Loader2 className="w-8 h-8 text-marsana-600 dark:text-marsana-400 animate-spin" />
               </div>
             ) : error ? (
               <div className="text-center py-20">
-                <p className="text-gray-600 mb-4">{error}</p>
+                <p className="text-surface-600 dark:text-surface-400 mb-4">{error}</p>
                 <button
                   onClick={() => fetchTabData(activeTab)}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                  className="btn-marsana"
                 >
                   Try Again
                 </button>
@@ -333,7 +346,7 @@ export default function AdminDashboardPage() {
               <>
                 {activeTab === 'overview' && data && (
                   <div className="space-y-6">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <StatCard
                         icon={Users}
                         label="Total Users"
@@ -365,54 +378,54 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <div className="bg-white rounded-xl border border-gray-100 p-5">
-                        <h3 className="font-semibold text-gray-900 mb-3">Quick Stats</h3>
+                      <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                        <h3 className="font-semibold text-surface-900 dark:text-white mb-3">Quick Stats</h3>
                         <div className="space-y-3">
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">New users this month</span>
-                            <span className="font-medium">{data.users?.new_this_month || 0}</span>
+                            <span className="text-surface-500 dark:text-surface-400">New users this month</span>
+                            <span className="font-medium text-surface-900 dark:text-white">{data.users?.new_this_month || 0}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Products low on stock</span>
-                            <span className="font-medium text-yellow-600">{data.products?.low_stock || 0}</span>
+                            <span className="text-surface-500 dark:text-surface-400">Products low on stock</span>
+                            <span className="font-medium text-yellow-600 dark:text-yellow-400">{data.products?.low_stock || 0}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Out of stock</span>
-                            <span className="font-medium text-red-600">{data.products?.out_of_stock || 0}</span>
+                            <span className="text-surface-500 dark:text-surface-400">Out of stock</span>
+                            <span className="font-medium text-red-600 dark:text-red-400">{data.products?.out_of_stock || 0}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Total items sold</span>
-                            <span className="font-medium">{data.products?.total_sold || 0}</span>
+                            <span className="text-surface-500 dark:text-surface-400">Total items sold</span>
+                            <span className="font-medium text-surface-900 dark:text-white">{data.products?.total_sold || 0}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Inventory value</span>
-                            <span className="font-medium">${(data.products?.total_inventory_value || 0).toLocaleString()}</span>
+                            <span className="text-surface-500 dark:text-surface-400">Inventory value</span>
+                            <span className="font-medium text-surface-900 dark:text-white">${(data.products?.total_inventory_value || 0).toLocaleString()}</span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="bg-white rounded-xl border border-gray-100 p-5">
-                        <h3 className="font-semibold text-gray-900 mb-3">Account Health</h3>
+                      <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                        <h3 className="font-semibold text-surface-900 dark:text-white mb-3">Account Health</h3>
                         <div className="space-y-3">
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Active accounts</span>
-                            <span className="font-medium text-green-600">{data.users?.active || 0}</span>
+                            <span className="text-surface-500 dark:text-surface-400">Active accounts</span>
+                            <span className="font-medium text-green-600 dark:text-green-400">{data.users?.active || 0}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Inactive accounts</span>
-                            <span className="font-medium">{data.users?.inactive || 0}</span>
+                            <span className="text-surface-500 dark:text-surface-400">Inactive accounts</span>
+                            <span className="font-medium text-surface-900 dark:text-white">{data.users?.inactive || 0}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Verified emails</span>
-                            <span className="font-medium">{data.users?.verified || 0}</span>
+                            <span className="text-surface-500 dark:text-surface-400">Verified emails</span>
+                            <span className="font-medium text-surface-900 dark:text-white">{data.users?.verified || 0}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Unverified emails</span>
-                            <span className="font-medium text-yellow-600">{data.users?.unverified || 0}</span>
+                            <span className="text-surface-500 dark:text-surface-400">Unverified emails</span>
+                            <span className="font-medium text-yellow-600 dark:text-yellow-400">{data.users?.unverified || 0}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Admin accounts</span>
-                            <span className="font-medium">{data.users?.admins || 0}</span>
+                            <span className="text-surface-500 dark:text-surface-400">Admin accounts</span>
+                            <span className="font-medium text-surface-900 dark:text-white">{data.users?.admins || 0}</span>
                           </div>
                         </div>
                       </div>
@@ -422,53 +435,63 @@ export default function AdminDashboardPage() {
 
                 {activeTab === 'users' && data && (
                   <div className="space-y-6">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="flex justify-end">
+                      <Link
+                        to="/admin/users"
+                        className="btn-marsana flex items-center gap-2 text-sm"
+                      >
+                        <Users className="h-4 w-4" />
+                        Manage Users
+                      </Link>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <StatCard icon={Users} label="Total" value={data.stats?.total || 0} color="blue" />
                       <StatCard icon={Users} label="Active" value={data.stats?.active || 0} color="green" />
                       <StatCard icon={UserPlus} label="New This Month" value={data.stats?.new_this_month || 0} color="primary" />
                       <StatCard icon={TrendingUp} label="New This Week" value={data.stats?.new_this_week || 0} color="yellow" />
                     </div>
 
-                    <div className="bg-white rounded-xl border border-gray-100 p-5">
-                      <h3 className="font-semibold text-gray-900 mb-4">Monthly Registrations</h3>
+                    <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                      <h3 className="font-semibold text-surface-900 dark:text-white mb-4">Monthly Registrations</h3>
                       <SimpleBarChart data={data.monthly_registrations || []} />
                     </div>
 
-                    <div className="bg-white rounded-xl border border-gray-100 p-5">
-                      <h3 className="font-semibold text-gray-900 mb-4">Recent Users</h3>
+                    <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                      <h3 className="font-semibold text-surface-900 dark:text-white mb-4">Recent Users</h3>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="border-b border-gray-100">
-                              <th className="text-left py-2 text-gray-500 font-medium">Name</th>
-                              <th className="text-left py-2 text-gray-500 font-medium">Email</th>
-                              <th className="text-left py-2 text-gray-500 font-medium">Role</th>
-                              <th className="text-left py-2 text-gray-500 font-medium">Status</th>
-                              <th className="text-left py-2 text-gray-500 font-medium">Joined</th>
+                            <tr className="border-b border-surface-200 dark:border-surface-800">
+                              <th className="text-left py-2 text-surface-500 dark:text-surface-400 font-medium">Name</th>
+                              <th className="text-left py-2 text-surface-500 dark:text-surface-400 font-medium">Email</th>
+                              <th className="text-left py-2 text-surface-500 dark:text-surface-400 font-medium">Role</th>
+                              <th className="text-left py-2 text-surface-500 dark:text-surface-400 font-medium">Status</th>
+                              <th className="text-left py-2 text-surface-500 dark:text-surface-400 font-medium">Joined</th>
                             </tr>
                           </thead>
                           <tbody>
                             {(data.recent_users || []).map((u) => (
-                              <tr key={u.id} className="border-b border-gray-50">
-                                <td className="py-2.5 font-medium text-gray-900">
+                              <tr key={u.id} className="border-b border-surface-100 dark:border-surface-800">
+                                <td className="py-2.5 font-medium text-surface-900 dark:text-white">
                                   {u.first_name} {u.last_name}
                                 </td>
-                                <td className="py-2.5 text-gray-600">{u.email}</td>
+                                <td className="py-2.5 text-surface-600 dark:text-surface-400">{u.email}</td>
                                 <td className="py-2.5">
                                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                                    u.role === 'admin' ? 'bg-purple-50 text-purple-700' : 'bg-gray-100 text-gray-600'
+                                    u.role === 'admin' ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400' : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400'
                                   }`}>
                                     {u.role}
                                   </span>
                                 </td>
                                 <td className="py-2.5">
                                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                                    u.is_active ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+                                    u.is_active ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400'
                                   }`}>
                                     {u.is_active ? 'Active' : 'Inactive'}
                                   </span>
                                 </td>
-                                <td className="py-2.5 text-gray-500">
+                                <td className="py-2.5 text-surface-500 dark:text-surface-400">
                                   {u.created_at ? new Date(u.created_at).toLocaleDateString() : '-'}
                                 </td>
                               </tr>
@@ -482,7 +505,7 @@ export default function AdminDashboardPage() {
 
                 {activeTab === 'products' && data && (
                   <div className="space-y-4">
-                    <div className="flex gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
+                    <div className="flex gap-2 border-b border-surface-200 dark:border-surface-800 pb-2 overflow-x-auto">
                       {productSubTabs.map((tab) => (
                         <button
                           key={tab.id}
@@ -490,10 +513,10 @@ export default function AdminDashboardPage() {
                             setProductSubTab(tab.id);
                             if (tab.id !== 'create') setEditingProduct(undefined);
                           }}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
+                          className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all duration-300 ${
                             productSubTab === tab.id
-                              ? 'bg-primary-50 text-primary-700 font-medium'
-                              : 'text-gray-600 hover:bg-gray-100'
+                              ? 'bg-marsana-50 dark:bg-marsana-900/30 text-marsana-700 dark:text-marsana-400 font-medium'
+                              : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
                           }`}
                         >
                           <tab.icon className="w-4 h-4" />
@@ -504,7 +527,7 @@ export default function AdminDashboardPage() {
 
                     {productSubTab === 'stats' && (
                       <div className="space-y-6">
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                           <StatCard icon={Package} label="Total" value={data.stats?.total || 0} color="primary" />
                           <StatCard icon={Package} label="Active" value={data.stats?.active || 0} color="green" />
                           <StatCard icon={AlertTriangle} label="Low Stock" value={data.stats?.low_stock || 0} color="yellow" />
@@ -512,86 +535,86 @@ export default function AdminDashboardPage() {
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                          <div className="bg-white rounded-xl border border-gray-100 p-5">
-                            <h3 className="font-semibold text-gray-900 mb-3">Inventory</h3>
+                          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                            <h3 className="font-semibold text-surface-900 dark:text-white mb-3">Inventory</h3>
                             <div className="space-y-3">
                               <div className="flex justify-between text-sm">
-                                <span className="text-gray-500">Total inventory value</span>
-                                <span className="font-medium">${(data.stats?.total_inventory_value || 0).toLocaleString()}</span>
+                                <span className="text-surface-500 dark:text-surface-400">Total inventory value</span>
+                                <span className="font-medium text-surface-900 dark:text-white">${(data.stats?.total_inventory_value || 0).toLocaleString()}</span>
                               </div>
                               <div className="flex justify-between text-sm">
-                                <span className="text-gray-500">Total items sold</span>
-                                <span className="font-medium">{data.stats?.total_sold || 0}</span>
+                                <span className="text-surface-500 dark:text-surface-400">Total items sold</span>
+                                <span className="font-medium text-surface-900 dark:text-white">{data.stats?.total_sold || 0}</span>
                               </div>
                               <div className="flex justify-between text-sm">
-                                <span className="text-gray-500">Average price</span>
-                                <span className="font-medium">${(data.stats?.average_price || 0).toFixed(2)}</span>
+                                <span className="text-surface-500 dark:text-surface-400">Average price</span>
+                                <span className="font-medium text-surface-900 dark:text-white">${(data.stats?.average_price || 0).toFixed(2)}</span>
                               </div>
                               <div className="flex justify-between text-sm">
-                                <span className="text-gray-500">Featured products</span>
-                                <span className="font-medium">{data.stats?.featured || 0}</span>
+                                <span className="text-surface-500 dark:text-surface-400">Featured products</span>
+                                <span className="font-medium text-surface-900 dark:text-white">{data.stats?.featured || 0}</span>
                               </div>
                             </div>
                           </div>
 
-                          <div className="bg-white rounded-xl border border-gray-100 p-5">
-                            <h3 className="font-semibold text-gray-900 mb-3">Stock Alerts</h3>
+                          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                            <h3 className="font-semibold text-surface-900 dark:text-white mb-3">Stock Alerts</h3>
                             <div className="space-y-2">
                               {data.stats?.low_stock > 0 && (
-                                <div className="flex items-center gap-2 p-2 bg-yellow-50 rounded-lg">
-                                  <AlertTriangle className="w-4 h-4 text-yellow-500" />
-                                  <span className="text-sm text-yellow-700">
+                                <div className="flex items-center gap-2 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
+                                  <AlertTriangle className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
+                                  <span className="text-sm text-yellow-700 dark:text-yellow-400">
                                     {data.stats.low_stock} products low on stock
                                   </span>
                                 </div>
                               )}
                               {data.stats?.out_of_stock > 0 && (
-                                <div className="flex items-center gap-2 p-2 bg-red-50 rounded-lg">
-                                  <AlertTriangle className="w-4 h-4 text-red-500" />
-                                  <span className="text-sm text-red-700">
+                                <div className="flex items-center gap-2 p-2 bg-red-50 dark:bg-red-900/20 rounded-xl">
+                                  <AlertTriangle className="w-4 h-4 text-red-500 dark:text-red-400" />
+                                  <span className="text-sm text-red-700 dark:text-red-400">
                                     {data.stats.out_of_stock} products out of stock
                                   </span>
                                 </div>
                               )}
                               {data.stats?.low_stock === 0 && data.stats?.out_of_stock === 0 && (
-                                <p className="text-sm text-gray-500 py-2">All products well stocked</p>
+                                <p className="text-sm text-surface-500 dark:text-surface-400 py-2">All products well stocked</p>
                               )}
                             </div>
                           </div>
                         </div>
 
-                        <div className="bg-white rounded-xl border border-gray-100 p-5">
-                          <h3 className="font-semibold text-gray-900 mb-4">Top Products by Sales</h3>
+                        <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                          <h3 className="font-semibold text-surface-900 dark:text-white mb-4">Top Products by Sales</h3>
                           <div className="overflow-x-auto">
                             <table className="w-full text-sm">
                               <thead>
-                                <tr className="border-b border-gray-100">
-                                  <th className="text-left py-2 text-gray-500 font-medium">Product</th>
-                                  <th className="text-right py-2 text-gray-500 font-medium">Price</th>
-                                  <th className="text-right py-2 text-gray-500 font-medium">Sold</th>
-                                  <th className="text-right py-2 text-gray-500 font-medium">Stock</th>
-                                  <th className="text-right py-2 text-gray-500 font-medium">Rating</th>
+                                <tr className="border-b border-surface-200 dark:border-surface-800">
+                                  <th className="text-left py-2 text-surface-500 dark:text-surface-400 font-medium">Product</th>
+                                  <th className="text-right py-2 text-surface-500 dark:text-surface-400 font-medium">Price</th>
+                                  <th className="text-right py-2 text-surface-500 dark:text-surface-400 font-medium">Sold</th>
+                                  <th className="text-right py-2 text-surface-500 dark:text-surface-400 font-medium">Stock</th>
+                                  <th className="text-right py-2 text-surface-500 dark:text-surface-400 font-medium">Rating</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {(data.top_products || []).map((p) => (
-                                  <tr key={p.id} className="border-b border-gray-50">
-                                    <td className="py-2.5 font-medium text-gray-900 truncate max-w-[200px]">
+                                  <tr key={p.id} className="border-b border-surface-100 dark:border-surface-800">
+                                    <td className="py-2.5 font-medium text-surface-900 dark:text-white truncate max-w-[200px]">
                                       {p.name}
                                     </td>
                                     <td className="py-2.5 text-right">
-                                      <span className={p.discount_price ? 'text-red-600' : 'text-gray-900'}>
+                                      <span className={p.discount_price ? 'text-red-600 dark:text-red-400' : 'text-surface-900 dark:text-white'}>
                                         ${p.discount_price || p.price}
                                       </span>
                                     </td>
-                                    <td className="py-2.5 text-right font-medium">{p.sold_count}</td>
+                                    <td className="py-2.5 text-right font-medium text-surface-900 dark:text-white">{p.sold_count}</td>
                                     <td className="py-2.5 text-right">
-                                      <span className={p.stock_quantity === 0 ? 'text-red-600' : ''}>
+                                      <span className={p.stock_quantity === 0 ? 'text-red-600 dark:text-red-400' : 'text-surface-900 dark:text-white'}>
                                         {p.stock_quantity}
                                       </span>
                                     </td>
                                     <td className="py-2.5 text-right">
-                                      <span className="flex items-center justify-end gap-1">
+                                      <span className="flex items-center justify-end gap-1 text-surface-900 dark:text-white">
                                         <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                                         {p.rating}
                                       </span>
@@ -629,7 +652,7 @@ export default function AdminDashboardPage() {
 
                 {activeTab === 'categories' && (
                   <div className="space-y-4">
-                    <div className="flex gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
+                    <div className="flex gap-2 border-b border-surface-200 dark:border-surface-800 pb-2 overflow-x-auto">
                       {categorySubTabs.map((tab) => (
                         <button
                           key={tab.id}
@@ -637,10 +660,10 @@ export default function AdminDashboardPage() {
                             setCategorySubTab(tab.id);
                             if (tab.id !== 'create') setEditingCategory(undefined);
                           }}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
+                          className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all duration-300 ${
                             categorySubTab === tab.id
-                              ? 'bg-primary-50 text-primary-700 font-medium'
-                              : 'text-gray-600 hover:bg-gray-100'
+                              ? 'bg-marsana-50 dark:bg-marsana-900/30 text-marsana-700 dark:text-marsana-400 font-medium'
+                              : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
                           }`}
                         >
                           <tab.icon className="w-4 h-4" />
@@ -686,10 +709,10 @@ export default function AdminDashboardPage() {
                 {activeTab === 'sales' && data && (
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <div className="bg-white rounded-xl border border-gray-100 p-5">
-                        <h3 className="font-semibold text-gray-900 mb-4">Sales by Category</h3>
+                      <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                        <h3 className="font-semibold text-surface-900 dark:text-white mb-4">Sales by Category</h3>
                         {(data.by_category || []).length === 0 ? (
-                          <p className="text-sm text-gray-500">No sales data</p>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">No sales data</p>
                         ) : (
                           <div className="space-y-3">
                             {(data.by_category || []).slice(0, 8).map((item, i) => {
@@ -697,12 +720,12 @@ export default function AdminDashboardPage() {
                               return (
                                 <div key={i}>
                                   <div className="flex justify-between text-sm mb-1">
-                                    <span className="text-gray-700">{item.category}</span>
-                                    <span className="font-medium">{item.sold} sold</span>
+                                    <span className="text-surface-700 dark:text-surface-300">{item.category}</span>
+                                    <span className="font-medium text-surface-900 dark:text-white">{item.sold} sold</span>
                                   </div>
-                                  <div className="w-full bg-gray-100 rounded-full h-2">
+                                  <div className="w-full bg-surface-100 dark:bg-surface-800 rounded-full h-2">
                                     <div
-                                      className="bg-primary-500 rounded-full h-2"
+                                      className="bg-marsana-500 dark:bg-marsana-400 rounded-full h-2"
                                       style={{ width: `${(item.sold / maxSold) * 100}%` }}
                                     />
                                   </div>
@@ -713,10 +736,10 @@ export default function AdminDashboardPage() {
                         )}
                       </div>
 
-                      <div className="bg-white rounded-xl border border-gray-100 p-5">
-                        <h3 className="font-semibold text-gray-900 mb-4">Sales by Brand</h3>
+                      <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                        <h3 className="font-semibold text-surface-900 dark:text-white mb-4">Sales by Brand</h3>
                         {(data.by_brand || []).length === 0 ? (
-                          <p className="text-sm text-gray-500">No sales data</p>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">No sales data</p>
                         ) : (
                           <div className="space-y-3">
                             {(data.by_brand || []).slice(0, 8).map((item, i) => {
@@ -724,12 +747,12 @@ export default function AdminDashboardPage() {
                               return (
                                 <div key={i}>
                                   <div className="flex justify-between text-sm mb-1">
-                                    <span className="text-gray-700">{item.brand}</span>
-                                    <span className="font-medium">{item.sold} sold</span>
+                                    <span className="text-surface-700 dark:text-surface-300">{item.brand}</span>
+                                    <span className="font-medium text-surface-900 dark:text-white">{item.sold} sold</span>
                                   </div>
-                                  <div className="w-full bg-gray-100 rounded-full h-2">
+                                  <div className="w-full bg-surface-100 dark:bg-surface-800 rounded-full h-2">
                                     <div
-                                      className="bg-blue-500 rounded-full h-2"
+                                      className="bg-blue-500 dark:bg-blue-400 rounded-full h-2"
                                       style={{ width: `${(item.sold / maxSold) * 100}%` }}
                                     />
                                   </div>
@@ -741,29 +764,29 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-xl border border-gray-100 p-5">
-                      <h3 className="font-semibold text-gray-900 mb-4">Top Products</h3>
+                    <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                      <h3 className="font-semibold text-surface-900 dark:text-white mb-4">Top Products</h3>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="border-b border-gray-100">
-                              <th className="text-left py-2 text-gray-500 font-medium">#</th>
-                              <th className="text-left py-2 text-gray-500 font-medium">Product</th>
-                              <th className="text-right py-2 text-gray-500 font-medium">Price</th>
-                              <th className="text-right py-2 text-gray-500 font-medium">Sold</th>
-                              <th className="text-right py-2 text-gray-500 font-medium">Revenue</th>
+                            <tr className="border-b border-surface-200 dark:border-surface-800">
+                              <th className="text-left py-2 text-surface-500 dark:text-surface-400 font-medium">#</th>
+                              <th className="text-left py-2 text-surface-500 dark:text-surface-400 font-medium">Product</th>
+                              <th className="text-right py-2 text-surface-500 dark:text-surface-400 font-medium">Price</th>
+                              <th className="text-right py-2 text-surface-500 dark:text-surface-400 font-medium">Sold</th>
+                              <th className="text-right py-2 text-surface-500 dark:text-surface-400 font-medium">Revenue</th>
                             </tr>
                           </thead>
                           <tbody>
                             {(data.top_products || []).map((p, i) => (
-                              <tr key={p.id} className="border-b border-gray-50">
-                                <td className="py-2.5 text-gray-500">{i + 1}</td>
-                                <td className="py-2.5 font-medium text-gray-900 truncate max-w-[200px]">
+                              <tr key={p.id} className="border-b border-surface-100 dark:border-surface-800">
+                                <td className="py-2.5 text-surface-500 dark:text-surface-400">{i + 1}</td>
+                                <td className="py-2.5 font-medium text-surface-900 dark:text-white truncate max-w-[200px]">
                                   {p.name}
                                 </td>
-                                <td className="py-2.5 text-right">${p.discount_price || p.price}</td>
-                                <td className="py-2.5 text-right font-medium">{p.sold_count}</td>
-                                <td className="py-2.5 text-right font-medium text-green-600">
+                                <td className="py-2.5 text-right text-surface-900 dark:text-white">${p.discount_price || p.price}</td>
+                                <td className="py-2.5 text-right font-medium text-surface-900 dark:text-white">{p.sold_count}</td>
+                                <td className="py-2.5 text-right font-medium text-green-600 dark:text-green-400">
                                   ${((p.discount_price || p.price) * p.sold_count)?.toLocaleString() ?? '0'}
                                 </td>
                               </tr>
@@ -777,7 +800,7 @@ export default function AdminDashboardPage() {
 
                 {activeTab === 'revenue' && data && (
                   <div className="space-y-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       <StatCard
                         icon={DollarSign}
                         label="Est. Total Revenue"
@@ -798,10 +821,10 @@ export default function AdminDashboardPage() {
                       />
                     </div>
 
-                    <div className="bg-white rounded-xl border border-gray-100 p-5">
-                      <h3 className="font-semibold text-gray-900 mb-4">Monthly Revenue (Estimated)</h3>
+                    <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                      <h3 className="font-semibold text-surface-900 dark:text-white mb-4">Monthly Revenue (Estimated)</h3>
                       {(data.monthly || []).length === 0 ? (
-                        <p className="text-sm text-gray-500">No revenue data</p>
+                        <p className="text-sm text-surface-500 dark:text-surface-400">No revenue data</p>
                       ) : (
                         <SimpleBarChart
                           data={(data.monthly || []).map((m) => ({ month: m.month, count: m.revenue }))}
@@ -809,21 +832,21 @@ export default function AdminDashboardPage() {
                       )}
                     </div>
 
-                    <div className="bg-white rounded-xl border border-gray-100 p-5">
-                      <h3 className="font-semibold text-gray-900 mb-4">Monthly Breakdown</h3>
+                    <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+                      <h3 className="font-semibold text-surface-900 dark:text-white mb-4">Monthly Breakdown</h3>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="border-b border-gray-100">
-                              <th className="text-left py-2 text-gray-500 font-medium">Month</th>
-                              <th className="text-right py-2 text-gray-500 font-medium">Revenue</th>
+                            <tr className="border-b border-surface-200 dark:border-surface-800">
+                              <th className="text-left py-2 text-surface-500 dark:text-surface-400 font-medium">Month</th>
+                              <th className="text-right py-2 text-surface-500 dark:text-surface-400 font-medium">Revenue</th>
                             </tr>
                           </thead>
                           <tbody>
                             {(data.monthly || []).map((m, i) => (
-                              <tr key={i} className="border-b border-gray-50">
-                                <td className="py-2.5 text-gray-900">{m.month}</td>
-                                <td className="py-2.5 text-right font-medium">
+                              <tr key={i} className="border-b border-surface-100 dark:border-surface-800">
+                                <td className="py-2.5 text-surface-900 dark:text-white">{m.month}</td>
+                                <td className="py-2.5 text-right font-medium text-surface-900 dark:text-white">
                                   ${m.revenue?.toLocaleString() ?? '0'}
                                 </td>
                               </tr>
@@ -837,29 +860,96 @@ export default function AdminDashboardPage() {
 
                 {activeTab === 'promotions' && (
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <Link
                         to="/admin/coupons"
-                        className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-md transition-shadow flex items-center gap-4"
+                        className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 hover:shadow-md transition-all duration-300 flex items-center gap-3 sm:gap-4"
                       >
-                        <div className="p-3 bg-primary-50 rounded-lg">
-                          <Tag className="w-6 h-6 text-primary-600" />
+                        <div className="p-3 bg-marsana-50 dark:bg-marsana-900/30 rounded-xl">
+                          <Tag className="w-6 h-6 text-marsana-600 dark:text-marsana-400" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900">Coupon Management</h3>
-                          <p className="text-sm text-gray-500">Create and manage discount coupons</p>
+                          <h3 className="font-semibold text-surface-900 dark:text-white">Coupon Management</h3>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">Create and manage discount coupons</p>
                         </div>
                       </Link>
                       <Link
                         to="/admin/flash-sales"
-                        className="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-md transition-shadow flex items-center gap-4"
+                        className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 hover:shadow-md transition-all duration-300 flex items-center gap-3 sm:gap-4"
                       >
-                        <div className="p-3 bg-orange-50 rounded-lg">
-                          <Zap className="w-6 h-6 text-orange-600" />
+                        <div className="p-3 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
+                          <Zap className="w-6 h-6 text-orange-600 dark:text-orange-400" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900">Flash Sales</h3>
-                          <p className="text-sm text-gray-500">Create and manage time-limited flash sales</p>
+                          <h3 className="font-semibold text-surface-900 dark:text-white">Flash Sales</h3>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">Create and manage time-limited flash sales</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'marketing' && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Link
+                        to="/admin/marketing"
+                        className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 hover:shadow-md transition-all duration-300 flex items-center gap-3 sm:gap-4"
+                      >
+                        <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl">
+                          <Megaphone className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-surface-900 dark:text-white">Marketing Dashboard</h3>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">Overview of all marketing campaigns</p>
+                        </div>
+                      </Link>
+                      <Link
+                        to="/admin/marketing/email"
+                        className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 hover:shadow-md transition-all duration-300 flex items-center gap-3 sm:gap-4"
+                      >
+                        <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-xl">
+                          <Mail className="w-6 h-6 text-green-600 dark:text-green-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-surface-900 dark:text-white">Email Campaigns</h3>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">Create and manage email campaigns</p>
+                        </div>
+                      </Link>
+                      <Link
+                        to="/admin/marketing/sms"
+                        className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 hover:shadow-md transition-all duration-300 flex items-center gap-3 sm:gap-4"
+                      >
+                        <div className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
+                          <MessageSquare className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-surface-900 dark:text-white">SMS Campaigns</h3>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">Create and manage SMS campaigns</p>
+                        </div>
+                      </Link>
+                      <Link
+                        to="/admin/marketing/push"
+                        className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 hover:shadow-md transition-all duration-300 flex items-center gap-3 sm:gap-4"
+                      >
+                        <div className="p-3 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
+                          <Bell className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-surface-900 dark:text-white">Push Campaigns</h3>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">Create and manage push notifications</p>
+                        </div>
+                      </Link>
+                      <Link
+                        to="/admin/marketing/affiliates"
+                        className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 hover:shadow-md transition-all duration-300 flex items-center gap-3 sm:gap-4"
+                      >
+                        <div className="p-3 bg-red-50 dark:bg-red-900/30 rounded-xl">
+                          <Users className="w-6 h-6 text-red-600 dark:text-red-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-surface-900 dark:text-white">Affiliate System</h3>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">Manage affiliate programs and partners</p>
                         </div>
                       </Link>
                     </div>
@@ -873,10 +963,10 @@ export default function AdminDashboardPage() {
                         <button
                           key={tab.id}
                           onClick={() => setNotificationSubTab(tab.id)}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
+                          className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all duration-300 ${
                             notificationSubTab === tab.id
-                              ? 'bg-primary-50 text-primary-700 font-medium'
-                              : 'text-gray-600 hover:bg-gray-100'
+                              ? 'bg-marsana-50 dark:bg-marsana-900/30 text-marsana-700 dark:text-marsana-400 font-medium'
+                              : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
                           }`}
                         >
                           <tab.icon className="w-4 h-4" />
@@ -922,10 +1012,10 @@ export default function AdminDashboardPage() {
                             if (tab.id === 'faq') setEditingFAQ(undefined);
                             if (tab.id === 'help') setEditingHelpArticle(undefined);
                           }}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
+                          className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all duration-300 ${
                             supportSubTab === tab.id
-                              ? 'bg-primary-50 text-primary-700 font-medium'
-                              : 'text-gray-600 hover:bg-gray-100'
+                              ? 'bg-marsana-50 dark:bg-marsana-900/30 text-marsana-700 dark:text-marsana-400 font-medium'
+                              : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
                           }`}
                         >
                           <tab.icon className="w-4 h-4" />
@@ -961,6 +1051,25 @@ export default function AdminDashboardPage() {
                         onCancel={() => setEditingHelpArticle(undefined)}
                       />
                     )}
+                  </div>
+                )}
+
+                {activeTab === 'reports' && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <Link
+                        to="/admin/reports"
+                        className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 hover:shadow-md transition-all duration-300 flex items-center gap-3 sm:gap-4"
+                      >
+                        <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl">
+                          <ClipboardCheck className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-surface-900 dark:text-white">Reports Dashboard</h3>
+                          <p className="text-sm text-surface-500 dark:text-surface-400">View all business reports and analytics</p>
+                        </div>
+                      </Link>
+                    </div>
                   </div>
                 )}
               </>

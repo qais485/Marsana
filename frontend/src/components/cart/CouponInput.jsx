@@ -45,17 +45,17 @@ export default function CouponInput() {
 
   if (hasCoupon) {
     return (
-      <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
-        <div className="flex items-center gap-2">
-          <Tag className="w-4 h-4 text-green-600" />
-          <span className="text-sm font-medium text-green-700">
+      <div className="flex items-center justify-between p-2.5 sm:p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
+        <div className="flex items-center gap-2 min-w-0">
+          <Tag className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium text-green-700 dark:text-green-400 truncate">
             {cart.summary.coupon_code}
           </span>
         </div>
         <button
           onClick={handleRemove}
           disabled={loading}
-          className="p-1 text-green-600 hover:text-green-800 transition-colors"
+          className="p-1.5 sm:p-2 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center flex-shrink-0"
         >
           <X className="w-4 h-4" />
         </button>
@@ -71,18 +71,18 @@ export default function CouponInput() {
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="Coupon code"
-          className="input-field flex-1 text-sm"
+          className="input-premium flex-1 text-xs sm:text-sm min-h-[44px]"
         />
         <button
           type="submit"
           disabled={loading || !code.trim()}
-          className="btn-primary text-sm px-4"
+          className="btn-marsana text-xs sm:text-sm px-3 sm:px-4 min-h-[44px]"
         >
           {loading ? 'Applying...' : 'Apply'}
         </button>
       </form>
       {message && (
-        <p className={`text-xs mt-1.5 ${isError ? 'text-red-500' : 'text-green-600'}`}>
+        <p className={`text-[10px] sm:text-xs mt-1.5 ${isError ? 'text-red-500 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
           {message}
         </p>
       )}

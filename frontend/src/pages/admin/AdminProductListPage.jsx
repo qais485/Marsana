@@ -78,34 +78,34 @@ export default function AdminProductListPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-4">
-              <Link to="/admin" className="text-gray-500 hover:text-gray-700">
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      <header className="bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center h-14 sm:h-16">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+              <Link to="/admin" className="text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 transition-all duration-300 flex-shrink-0">
                 <ArrowLeft className="h-5 w-5" />
               </Link>
-              <h1 className="text-xl font-bold text-gray-900">Product Management</h1>
+              <h1 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white truncate">Product Management</h1>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <Link
                 to="/admin/products/import"
-                className="btn-secondary flex items-center gap-2 text-sm"
+                className="btn-outline flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
               >
-                <Upload className="h-4 w-4" />
-                Import
+                <Upload className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Import</span>
               </Link>
               <Link
                 to="/admin/products/export"
-                className="btn-secondary flex items-center gap-2 text-sm"
+                className="btn-outline flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
               >
-                <Download className="h-4 w-4" />
-                Export
+                <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Export</span>
               </Link>
               <Link
                 to="/admin/products/new"
-                className="btn-primary flex items-center gap-2 text-sm"
+                className="btn-marsana flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
               >
                 <Plus className="h-4 w-4" />
                 Add Product
@@ -115,30 +115,30 @@ export default function AdminProductListPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="card mb-6">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
+        <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm mb-6">
           <div className="flex flex-col sm:flex-row gap-4">
-            <form onSubmit={handleSearch} className="flex-1 flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <form onSubmit={handleSearch} className="flex-1 flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1 min-w-0">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400 dark:text-surface-500" />
                 <input
                   type="text"
                   placeholder="Search products by name or SKU..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full pl-10 pr-4 py-2 text-sm"
                 />
               </div>
-              <button type="submit" className="btn-primary text-sm">
+              <button type="submit" className="btn-marsana text-sm min-h-[44px]">
                 Search
               </button>
             </form>
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-500" />
+              <Filter className="h-4 w-4 text-surface-500 dark:text-surface-400 flex-shrink-0" />
               <select
                 value={filterActive}
                 onChange={(e) => { setFilterActive(e.target.value); setCurrentPage(1); }}
-                className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="input-premium px-3 py-2 text-sm min-h-[44px]"
               >
                 <option value="">All Status</option>
                 <option value="true">Active</option>
@@ -149,66 +149,66 @@ export default function AdminProductListPage() {
         </div>
 
         {error && (
-          <div className="card mb-6 bg-red-50 border border-red-200 text-red-700 text-sm">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-red-200 dark:border-red-800 p-4 mb-6 text-red-700 dark:text-red-400 text-sm">
             {error}
           </div>
         )}
 
-        <div className="card overflow-hidden">
+        <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-marsana-600 dark:text-marsana-400 animate-spin" />
             </div>
           ) : products.length === 0 ? (
             <div className="text-center py-12">
-              <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No products found</p>
-              <Link to="/admin/products/new" className="btn-primary mt-4 inline-flex items-center gap-2 text-sm">
+              <Package className="w-12 h-12 text-surface-300 dark:text-surface-600 mx-auto mb-3" />
+              <p className="text-surface-500 dark:text-surface-400">No products found</p>
+              <Link to="/admin/products/new" className="btn-marsana mt-4 inline-flex items-center gap-2 text-sm">
                 <Plus className="h-4 w-4" />
                 Create your first product
               </Link>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-surface-200 dark:divide-surface-800">
+                <thead className="bg-surface-50 dark:bg-surface-800">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wider">Product</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wider">SKU</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wider">Price</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wider">Stock</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-surface-900 divide-y divide-surface-200 dark:divide-surface-800">
                   {products.map((product) => (
-                    <tr key={product.id} className="hover:bg-gray-50">
+                    <tr key={product.id} className="hover:bg-surface-50 dark:hover:bg-surface-800 transition-all duration-300">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Package className="w-5 h-5 text-gray-400" />
+                          <div className="w-10 h-10 bg-surface-100 dark:bg-surface-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <Package className="w-5 h-5 text-surface-400 dark:text-surface-500" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900 text-sm">{product.name}</p>
-                            <p className="text-xs text-gray-500">{product.category_name || 'Uncategorized'}</p>
+                            <p className="font-medium text-surface-900 dark:text-white text-sm">{product.name}</p>
+                            <p className="text-xs text-surface-500 dark:text-surface-400">{product.category_name || 'Uncategorized'}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{product.sku || '-'}</td>
+                      <td className="px-6 py-4 text-sm text-surface-600 dark:text-surface-400">{product.sku || '-'}</td>
                       <td className="px-6 py-4 text-sm">
-                        <span className="font-medium">${product.price}</span>
+                        <span className="font-medium text-surface-900 dark:text-white">${product.price}</span>
                         {product.discount_price && (
-                          <span className="text-green-600 ml-1">${product.discount_price}</span>
+                          <span className="text-green-600 dark:text-green-400 ml-1">${product.discount_price}</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        <span className={`font-medium ${product.stock_quantity <= 0 ? 'text-red-600' : product.stock_quantity < 10 ? 'text-yellow-600' : 'text-gray-900'}`}>
+                        <span className={`font-medium ${product.stock_quantity <= 0 ? 'text-red-600 dark:text-red-400' : product.stock_quantity < 10 ? 'text-yellow-600 dark:text-yellow-400' : 'text-surface-900 dark:text-white'}`}>
                           {product.stock_quantity}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${product.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${product.is_active ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' : 'bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-300'}`}>
                           {product.is_active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
@@ -216,13 +216,13 @@ export default function AdminProductListPage() {
                         <div className="flex items-center justify-end gap-2">
                           <Link
                             to={`/admin/products/${product.id}/edit`}
-                            className="text-gray-500 hover:text-primary-600 p-1"
+                            className="text-surface-500 dark:text-surface-400 hover:text-marsana-600 dark:hover:text-marsana-400 p-1 transition-all duration-300"
                           >
                             <Edit2 className="h-4 w-4" />
                           </Link>
                           <button
                             onClick={() => setDeleteConfirm(product.id)}
-                            className="text-gray-500 hover:text-red-600 p-1"
+                            className="text-surface-500 dark:text-surface-400 hover:text-red-600 dark:hover:text-red-400 p-1 transition-all duration-300"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -236,25 +236,25 @@ export default function AdminProductListPage() {
           )}
 
           {pagination.pages > 1 && (
-            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-              <p className="text-sm text-gray-500">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-surface-200 dark:border-surface-800">
+              <p className="text-sm text-surface-500 dark:text-surface-400">
                 Showing {((currentPage - 1) * 20) + 1} to {Math.min(currentPage * 20, pagination.total)} of {pagination.total} products
               </p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50"
+                  className="p-2 rounded-xl border border-surface-200 dark:border-surface-800 disabled:opacity-50 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all duration-300"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-surface-700 dark:text-surface-300">
                   Page {currentPage} of {pagination.pages}
                 </span>
                 <button
                   onClick={() => setCurrentPage(p => Math.min(pagination.pages, p + 1))}
                   disabled={currentPage === pagination.pages}
-                  className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50"
+                  className="p-2 rounded-xl border border-surface-200 dark:border-surface-800 disabled:opacity-50 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all duration-300"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
@@ -266,12 +266,12 @@ export default function AdminProductListPage() {
 
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Product</h3>
-            <p className="text-sm text-gray-600 mb-6">Are you sure you want to delete this product? This action cannot be undone.</p>
+          <div className="bg-white dark:bg-surface-900 rounded-2xl p-6 max-w-sm w-full mx-4 border border-surface-200 dark:border-surface-800">
+            <h3 className="text-lg font-semibold text-surface-900 dark:text-white mb-2">Delete Product</h3>
+            <p className="text-sm text-surface-600 dark:text-surface-400 mb-6">Are you sure you want to delete this product? This action cannot be undone.</p>
             <div className="flex gap-3 justify-end">
-              <button onClick={() => setDeleteConfirm(null)} className="btn-secondary text-sm">Cancel</button>
-              <button onClick={() => handleDelete(deleteConfirm)} className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700">Delete</button>
+              <button onClick={() => setDeleteConfirm(null)} className="btn-outline text-sm">Cancel</button>
+              <button onClick={() => handleDelete(deleteConfirm)} className="bg-red-600 text-white px-4 py-2 rounded-xl text-sm hover:bg-red-700 transition-all duration-300">Delete</button>
             </div>
           </div>
         </div>

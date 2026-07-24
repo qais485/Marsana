@@ -86,9 +86,16 @@ export default function AdminProductFormPage() {
     setError(null);
 
     try {
+      const price = parseFloat(formData.price);
+      if (!price || price <= 0) {
+        setError('Price must be greater than 0');
+        setSaving(false);
+        return;
+      }
+
       const payload = {
         ...formData,
-        price: parseFloat(formData.price) || 0,
+        price,
         discount_price: formData.discount_price ? parseFloat(formData.discount_price) : null,
         stock_quantity: parseInt(formData.stock_quantity) || 0,
         category_id: formData.category_id || null,
@@ -110,99 +117,99 @@ export default function AdminProductFormPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
+      <div className="min-h-screen bg-surface-50 dark:bg-surface-950 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-marsana-600 dark:text-marsana-400 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4 h-16">
-            <Link to="/admin/products" className="text-gray-500 hover:text-gray-700">
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      <header className="bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex items-center gap-4 h-14 sm:h-16">
+            <Link to="/admin/products" className="text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 transition-all duration-300">
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <h1 className="text-xl font-bold text-gray-900">
+            <h1 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white">
               {isEdit ? 'Edit Product' : 'Create Product'}
             </h1>
           </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
         {error && (
-          <div className="card mb-6 bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-red-200 dark:border-red-800 p-3 sm:p-4 mb-6 text-red-700 dark:text-red-400 text-sm flex items-center gap-2">
             <X className="h-4 w-4 flex-shrink-0" />
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="card">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-5 shadow-sm">
+            <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-4">Basic Information</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Product Name *</label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">SKU</label>
                 <input
                   type="text"
                   name="sku"
                   value={formData.sku}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Barcode</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Barcode</label>
                 <input
                   type="text"
                   name="barcode"
                   value={formData.barcode}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Short Description</label>
                 <input
                   type="text"
                   name="short_description"
                   value={formData.short_description}
                   onChange={handleChange}
                   maxLength={500}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Description</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 />
               </div>
             </div>
           </div>
 
-          <div className="card">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Pricing & Inventory</h2>
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+            <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-4">Pricing & Inventory</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price *</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Price *</label>
                 <input
                   type="number"
                   name="price"
@@ -211,11 +218,11 @@ export default function AdminProductFormPage() {
                   required
                   step="0.01"
                   min="0.01"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Discount Price</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Discount Price</label>
                 <input
                   type="number"
                   name="discount_price"
@@ -223,43 +230,43 @@ export default function AdminProductFormPage() {
                   onChange={handleChange}
                   step="0.01"
                   min="0"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity *</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Stock Quantity *</label>
                 <input
                   type="number"
                   name="stock_quantity"
                   value={formData.stock_quantity}
                   onChange={handleChange}
                   min="0"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Image URL</label>
                 <input
                   type="text"
                   name="images"
                   value={formData.images}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 />
               </div>
             </div>
           </div>
 
-          <div className="card">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Organization</h2>
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+            <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-4">Organization</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Category</label>
                 <select
                   name="category_id"
                   value={formData.category_id}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 >
                   <option value="">No Category</option>
                   {categories.map((cat) => (
@@ -268,12 +275,12 @@ export default function AdminProductFormPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Brand</label>
                 <select
                   name="brand_id"
                   value={formData.brand_id}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                  className="input-premium w-full px-3 py-2 text-sm"
                 >
                   <option value="">No Brand</option>
                   {brands.map((brand) => (
@@ -284,8 +291,8 @@ export default function AdminProductFormPage() {
             </div>
           </div>
 
-          <div className="card">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Status</h2>
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm">
+            <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-4">Status</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
                 { name: 'is_active', label: 'Active' },
@@ -299,22 +306,22 @@ export default function AdminProductFormPage() {
                     name={name}
                     checked={formData[name]}
                     onChange={handleChange}
-                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                    className="w-4 h-4 text-marsana-600 border-surface-300 dark:border-surface-600 rounded focus:ring-marsana-500"
                   />
-                  <span className="text-sm text-gray-700">{label}</span>
+                  <span className="text-sm text-surface-700 dark:text-surface-300">{label}</span>
                 </label>
               ))}
             </div>
           </div>
 
           <div className="flex justify-end gap-3">
-            <Link to="/admin/products" className="btn-secondary text-sm">
+            <Link to="/admin/products" className="btn-outline text-sm">
               Cancel
             </Link>
             <button
               type="submit"
               disabled={saving}
-              className="btn-primary flex items-center gap-2 text-sm"
+              className="btn-marsana flex items-center gap-2 text-sm"
             >
               {saving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

@@ -37,9 +37,6 @@ export default function AdminProductImportExport() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const lines = e.target.result.split('\n').filter((l) => l.trim());
-        // NOTE: This is a naive CSV parser. For production use, consider a proper
-        // CSV parsing library (e.g., PapaParse) to handle quoted fields, escaped
-        // commas, and edge cases correctly.
         if (lines.length < 2) {
           setErrors(['File is empty or has no data rows']);
           return;
@@ -155,13 +152,13 @@ export default function AdminProductImportExport() {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2 border-b border-gray-200 pb-2">
+      <div className="flex gap-2 border-b border-surface-200 dark:border-surface-800 pb-2 overflow-x-auto">
         <button
           onClick={() => setActiveSection('import')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap ${
             activeSection === 'import'
-              ? 'bg-primary-50 text-primary-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-marsana-50 dark:bg-marsana-900/30 text-marsana-700 dark:text-marsana-400'
+              : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
           }`}
         >
           <Upload className="h-4 w-4" />
@@ -169,10 +166,10 @@ export default function AdminProductImportExport() {
         </button>
         <button
           onClick={() => setActiveSection('export')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap ${
             activeSection === 'export'
-              ? 'bg-primary-50 text-primary-700'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'bg-marsana-50 dark:bg-marsana-900/30 text-marsana-700 dark:text-marsana-400'
+              : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
           }`}
         >
           <Download className="h-4 w-4" />
@@ -181,13 +178,13 @@ export default function AdminProductImportExport() {
       </div>
 
       {errors.length > 0 && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
           <div className="flex items-center gap-2 mb-1">
-            <AlertTriangle className="h-4 w-4 text-red-600" />
-            <span className="font-medium text-red-700 text-sm">Errors</span>
+            <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
+            <span className="font-medium text-red-700 dark:text-red-400 text-sm">Errors</span>
           </div>
           {errors.map((err, i) => (
-            <p key={i} className="text-sm text-red-600">{err}</p>
+            <p key={i} className="text-sm text-red-600 dark:text-red-400">{err}</p>
           ))}
         </div>
       )}
@@ -195,24 +192,24 @@ export default function AdminProductImportExport() {
       {activeSection === 'import' ? (
         <div className="space-y-4">
           {importResult ? (
-            <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-              <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">Import Complete</h4>
+            <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 text-center shadow-sm">
+              <CheckCircle className="w-12 h-12 text-green-500 dark:text-green-400 mx-auto mb-3" />
+              <h4 className="text-lg font-semibold text-surface-900 dark:text-white mb-2">Import Complete</h4>
               <div className="flex justify-center gap-6 mb-4">
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{importResult.total_products}</p>
-                  <p className="text-sm text-gray-500">Total</p>
+                  <p className="text-2xl font-bold text-surface-900 dark:text-white">{importResult.total_products}</p>
+                  <p className="text-sm text-surface-500 dark:text-surface-400">Total</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-green-600">{importResult.successful_imports}</p>
-                  <p className="text-sm text-gray-500">Imported</p>
+                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">{importResult.successful_imports}</p>
+                  <p className="text-sm text-surface-500 dark:text-surface-400">Imported</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-red-600">{importResult.failed_imports}</p>
-                  <p className="text-sm text-gray-500">Failed</p>
+                  <p className="text-2xl font-bold text-red-600 dark:text-red-400">{importResult.failed_imports}</p>
+                  <p className="text-sm text-surface-500 dark:text-surface-400">Failed</p>
                 </div>
               </div>
-              <button onClick={resetImport} className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700">
+              <button onClick={resetImport} className="btn-marsana min-h-[44px] w-full sm:w-auto">
                 Import More
               </button>
             </div>
@@ -223,8 +220,8 @@ export default function AdminProductImportExport() {
                 onDragLeave={() => setDragActive(false)}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
-                  dragActive ? 'border-primary-500 bg-primary-50' : 'border-gray-300 hover:border-gray-400'
+                className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 ${
+                  dragActive ? 'border-marsana-500 dark:border-marsana-400 bg-marsana-50 dark:bg-marsana-900/20' : 'border-surface-300 dark:border-surface-700 hover:border-surface-400 dark:hover:border-surface-600'
                 }`}
               >
                 <input
@@ -236,51 +233,51 @@ export default function AdminProductImportExport() {
                 />
                 {file ? (
                   <div className="flex items-center justify-center gap-3">
-                    <FileText className="h-8 w-8 text-primary-600" />
+                    <FileText className="h-8 w-8 text-marsana-600 dark:text-marsana-400" />
                     <div>
-                      <p className="font-medium text-gray-900">{file.name}</p>
-                      <p className="text-sm text-gray-500">{preview.length} rows</p>
+                      <p className="font-medium text-surface-900 dark:text-white">{file.name}</p>
+                      <p className="text-sm text-surface-500 dark:text-surface-400">{preview.length} rows</p>
                     </div>
-                    <button onClick={(e) => { e.stopPropagation(); resetImport(); }} className="text-gray-400 hover:text-gray-600">
+                    <button onClick={(e) => { e.stopPropagation(); resetImport(); }} className="text-surface-400 dark:text-surface-500 hover:text-surface-600 dark:hover:text-surface-300">
                       <X className="h-5 w-5" />
                     </button>
                   </div>
                 ) : (
                   <>
-                    <Upload className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-                    <p className="text-gray-600 text-sm">Drop CSV/XLSX file or click to browse</p>
+                    <Upload className="w-10 h-10 text-surface-300 dark:text-surface-600 mx-auto mb-2" />
+                    <p className="text-surface-600 dark:text-surface-400 text-sm">Drop CSV/XLSX file or click to browse</p>
                   </>
                 )}
               </div>
 
               {preview.length > 0 && (
-                <div className="bg-white rounded-xl border border-gray-100 p-4">
-                  <h4 className="font-medium text-gray-900 mb-3">Preview ({preview.length} rows)</h4>
+                <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-sm">
+                  <h4 className="font-medium text-surface-900 dark:text-white mb-3">Preview ({preview.length} rows)</h4>
                   <div className="overflow-x-auto max-h-48">
                     <table className="w-full text-xs">
-                      <thead className="bg-gray-50 sticky top-0">
+                      <thead className="bg-surface-50 dark:bg-surface-800/50 sticky top-0">
                         <tr>
                           {Object.keys(preview[0]).filter((k) => !k.startsWith('_')).slice(0, 5).map((h) => (
-                            <th key={h} className="px-2 py-1 text-left text-gray-500 font-medium">{h}</th>
+                            <th key={h} className="px-2 py-1 text-left text-surface-500 dark:text-surface-400 font-medium">{h}</th>
                           ))}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-100">
+                      <tbody className="divide-y divide-surface-100 dark:divide-surface-800">
                         {preview.slice(0, 5).map((row, i) => (
                           <tr key={i}>
                             {Object.keys(row).filter((k) => !k.startsWith('_')).slice(0, 5).map((h) => (
-                              <td key={h} className="px-2 py-1 text-gray-700">{row[h]}</td>
+                              <td key={h} className="px-2 py-1 text-surface-700 dark:text-surface-300">{row[h]}</td>
                             ))}
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
-                  <div className="flex justify-end mt-3">
+                  <div className="flex flex-col sm:flex-row justify-end gap-2 mt-3">
                     <button
                       onClick={handleImport}
                       disabled={importing}
-                      className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700 disabled:opacity-50"
+                      className="btn-marsana flex items-center justify-center gap-2 min-h-[44px]"
                     >
                       {importing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                       Import {preview.length} Products
@@ -292,15 +289,15 @@ export default function AdminProductImportExport() {
           )}
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 p-6">
-          <h4 className="font-medium text-gray-900 mb-3">Export Products as CSV</h4>
-          <p className="text-sm text-gray-500 mb-4">Download your product catalog. Apply filters to export a subset.</p>
-          <div className="flex items-center gap-3 mb-4">
-            <label className="text-sm text-gray-700">Status:</label>
+        <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 shadow-sm">
+          <h4 className="font-medium text-surface-900 dark:text-white mb-3">Export Products as CSV</h4>
+          <p className="text-sm text-surface-500 dark:text-surface-400 mb-4">Download your product catalog. Apply filters to export a subset.</p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
+            <label className="text-sm text-surface-700 dark:text-surface-300">Status:</label>
             <select
               value={filterActive}
               onChange={(e) => setFilterActive(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="input-premium w-full sm:w-auto min-w-0"
             >
               <option value="">All Products</option>
               <option value="true">Active Only</option>
@@ -310,7 +307,7 @@ export default function AdminProductImportExport() {
           <button
             onClick={handleExport}
             disabled={exporting}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700 disabled:opacity-50"
+            className="btn-marsana flex items-center justify-center gap-2 min-h-[44px] w-full sm:w-auto"
           >
             {exporting ? (
               <Loader2 className="h-4 w-4 animate-spin" />

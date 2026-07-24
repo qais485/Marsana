@@ -46,10 +46,10 @@ export default function LoyaltyRedeem() {
   };
 
   return (
-    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+    <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
       <div className="flex items-center gap-2 mb-2">
-        <Coins className="w-4 h-4 text-yellow-600" />
-        <span className="text-sm font-medium text-yellow-800">
+        <Coins className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+        <span className="text-sm font-medium text-yellow-800 dark:text-yellow-400">
           {balance.points_balance} points available (${(balance.points_balance / LOYALTY_POINTS_PER_DOLLAR).toFixed(2)})
         </span>
       </div>
@@ -59,20 +59,20 @@ export default function LoyaltyRedeem() {
           value={points}
           onChange={(e) => setPoints(e.target.value)}
           placeholder="Points to redeem"
-          className="input-field flex-1 text-sm"
+          className="input-premium flex-1 text-sm"
           min={1}
           max={balance.points_balance}
         />
         <button
           onClick={handleRedeem}
           disabled={loading || !points}
-          className="btn-primary text-sm px-3"
+          className="btn-marsana text-sm px-3"
         >
           {loading ? '...' : 'Redeem'}
         </button>
       </div>
       {message && (
-        <p className={`text-xs mt-1.5 ${isError ? 'text-red-500' : 'text-green-600'}`}>
+        <p className={`text-xs mt-1.5 ${isError ? 'text-red-500 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
           {message}
         </p>
       )}

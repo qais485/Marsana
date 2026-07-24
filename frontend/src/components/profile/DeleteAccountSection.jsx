@@ -26,7 +26,7 @@ export default function DeleteAccountSection() {
     setMessage({ type: '', text: '' });
 
     try {
-      await profileService.deleteAccount({ password, confirmation: confirmationText });
+      await profileService.deleteAccount({ password, confirmation });
       await logout();
       navigate('/login');
     } catch (err) {
@@ -37,20 +37,20 @@ export default function DeleteAccountSection() {
   };
 
   return (
-    <div className="card border-red-200">
+    <div className="bg-white dark:bg-surface-900 rounded-2xl shadow-sm border border-red-200 dark:border-red-800/50 p-6 transition-all duration-300">
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-red-100 rounded-lg">
-          <AlertTriangle className="h-5 w-5 text-red-600" />
+        <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-xl">
+          <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-red-900">Delete Account</h2>
-          <p className="text-sm text-red-600">This action cannot be undone</p>
+          <h2 className="text-lg font-semibold text-red-900 dark:text-red-400">Delete Account</h2>
+          <p className="text-sm text-red-600 dark:text-red-400/80">This action cannot be undone</p>
         </div>
       </div>
 
-      <div className="bg-red-50 rounded-lg p-4 mb-6">
-        <h3 className="text-sm font-medium text-red-800 mb-2">Before you delete your account:</h3>
-        <ul className="text-sm text-red-700 space-y-1 list-disc list-inside">
+      <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 mb-6 border border-red-100 dark:border-red-800/30">
+        <h3 className="text-sm font-medium text-red-800 dark:text-red-300 mb-2">Before you delete your account:</h3>
+        <ul className="text-sm text-red-700 dark:text-red-400/90 space-y-1 list-disc list-inside">
           <li>All your data will be permanently removed</li>
           <li>Your order history will be lost</li>
           <li>Your saved addresses and wishlist will be deleted</li>
@@ -60,35 +60,37 @@ export default function DeleteAccountSection() {
       </div>
 
       {message.text && (
-        <div className={`mb-4 p-3 rounded-lg text-sm ${
-          message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-        }`}>
+        <div className={`mb-4 p-3 rounded-xl text-sm ${
+          message.type === 'success'
+            ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800'
+            : 'bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800'
+        } transition-all duration-300`}>
           {message.text}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="label">Enter your password</label>
+          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">Enter your password</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="input-field"
+            className="input-premium"
             placeholder="Your current password"
             required
           />
         </div>
 
         <div>
-          <label className="label">
-            Type <span className="font-mono font-bold text-red-600">DELETE_MY_ACCOUNT</span> to confirm
+          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+            Type <span className="font-mono font-bold text-red-600 dark:text-red-400">DELETE_MY_ACCOUNT</span> to confirm
           </label>
           <input
             type="text"
             value={confirmation}
             onChange={(e) => setConfirmation(e.target.value)}
-            className="input-field"
+            className="input-premium"
             placeholder="DELETE_MY_ACCOUNT"
             required
           />
@@ -96,7 +98,7 @@ export default function DeleteAccountSection() {
 
         <button
           type="submit"
-          className="btn-danger flex items-center gap-2 w-full justify-center"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white rounded-2xl font-semibold text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
           disabled={loading || !password || !isConfirmed}
         >
           {loading ? (

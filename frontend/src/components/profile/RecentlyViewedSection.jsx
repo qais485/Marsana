@@ -36,56 +36,58 @@ export default function RecentlyViewedSection() {
 
   if (loading) {
     return (
-      <div className="card">
+      <div className="bg-white dark:bg-surface-900 rounded-2xl shadow-sm border border-surface-200 dark:border-surface-800 p-6">
         <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-primary-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-marsana-600" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="card">
+    <div className="bg-white dark:bg-surface-900 rounded-2xl shadow-sm border border-surface-200 dark:border-surface-800 p-6 transition-all duration-300">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Recently Viewed Products</h2>
+        <h2 className="text-lg font-semibold text-surface-900 dark:text-white">Recently Viewed Products</h2>
         {items.length > 0 && (
-          <button onClick={handleClearAll} className="text-sm text-red-500 hover:text-red-700">
+          <button onClick={handleClearAll} className="text-sm text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors duration-200">
             Clear All
           </button>
         )}
       </div>
 
       {message.text && (
-        <div className={`mb-4 p-3 rounded-lg text-sm ${
-          message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-        }`}>
+        <div className={`mb-4 p-3 rounded-xl text-sm ${
+          message.type === 'success'
+            ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800'
+            : 'bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800'
+        } transition-all duration-300`}>
           {message.text}
         </div>
       )}
 
       {items.length === 0 ? (
         <div className="text-center py-8">
-          <Eye className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No recently viewed products</p>
-          <p className="text-sm text-gray-400">Products you view will appear here</p>
+          <Eye className="h-12 w-12 text-surface-300 dark:text-surface-600 mx-auto mb-3" />
+          <p className="text-surface-500 dark:text-surface-400">No recently viewed products</p>
+          <p className="text-sm text-surface-400 dark:text-surface-500">Products you view will appear here</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {items.map((item) => (
-            <div key={item.id} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
+            <div key={item.id} className="flex gap-4 p-4 bg-surface-50 dark:bg-surface-800/50 rounded-xl transition-all duration-300">
+              <div className="w-20 h-20 bg-surface-200 dark:bg-surface-700 rounded-xl flex-shrink-0 overflow-hidden">
                 {item.product_image ? (
                   <img src={item.product_image} alt={item.product_name} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Clock className="h-6 w-6 text-gray-400" />
+                    <Clock className="h-6 w-6 text-surface-400 dark:text-surface-500" />
                   </div>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-gray-900 truncate">{item.product_name}</p>
-                <p className="text-lg font-bold text-primary-600">{formatPrice(item.product_price)}</p>
-                <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                <p className="font-medium text-surface-900 dark:text-white truncate">{item.product_name}</p>
+                <p className="text-lg font-bold text-marsana-600 dark:text-marsana-400">{formatPrice(item.product_price)}</p>
+                <p className="text-xs text-surface-500 dark:text-surface-400 mt-1 flex items-center gap-1">
                   <Clock className="h-3 w-3" />
                   Viewed {new Date(item.viewed_at).toLocaleDateString()}
                 </p>

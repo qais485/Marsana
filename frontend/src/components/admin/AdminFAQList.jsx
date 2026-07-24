@@ -57,12 +57,12 @@ export default function AdminFAQList({ onEdit, onCreate }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => { setCategoryFilter(''); setPage(1); }}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              !categoryFilter ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-100'
+            className={`px-3 py-2 min-h-[44px] rounded-lg text-sm font-medium transition-colors ${
+              !categoryFilter ? 'bg-marsana-50 text-marsana-700' : 'text-surface-600 hover:bg-surface-100'
             }`}
           >
             All
@@ -71,8 +71,8 @@ export default function AdminFAQList({ onEdit, onCreate }) {
             <button
               key={cat}
               onClick={() => { setCategoryFilter(cat); setPage(1); }}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors capitalize ${
-                categoryFilter === cat ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-100'
+              className={`px-3 py-2 min-h-[44px] rounded-lg text-sm font-medium transition-colors capitalize ${
+                categoryFilter === cat ? 'bg-marsana-50 text-marsana-700' : 'text-surface-600 hover:bg-surface-100'
               }`}
             >
               {cat}
@@ -81,7 +81,7 @@ export default function AdminFAQList({ onEdit, onCreate }) {
         </div>
         <button
           onClick={onCreate}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700"
+          className="flex items-center justify-center gap-2 px-4 py-2 min-h-[44px] bg-marsana-600 text-white rounded-lg text-sm font-medium hover:bg-marsana-700"
         >
           <Plus className="w-4 h-4" />
           Add FAQ
@@ -90,34 +90,34 @@ export default function AdminFAQList({ onEdit, onCreate }) {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-primary-500 animate-spin" />
+          <Loader2 className="w-8 h-8 text-marsana-500 animate-spin" />
         </div>
       ) : error ? (
         <div className="text-center py-12 text-red-600">{error}</div>
       ) : faqs.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500">No FAQ items found. Create your first FAQ.</p>
+          <p className="text-surface-500">No FAQ items found. Create your first FAQ.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {faqs.map((faq) => (
-            <div key={faq.id} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div key={faq.id} className="bg-white rounded-xl border border-surface-100 p-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${faq.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                    <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${faq.is_active ? 'bg-green-100 text-green-700' : 'bg-surface-100 text-surface-500'}`}>
                       {faq.is_active ? 'Active' : 'Inactive'}
                     </span>
-                    <span className="text-xs text-gray-400 capitalize">{faq.category}</span>
+                    <span className="text-xs text-surface-400 capitalize">{faq.category}</span>
                   </div>
-                  <h4 className="text-sm font-medium text-gray-900 mb-1">{faq.question}</h4>
-                  <p className="text-sm text-gray-600 line-clamp-2">{faq.answer}</p>
+                  <h4 className="text-sm font-medium text-surface-900 mb-1">{faq.question}</h4>
+                  <p className="text-sm text-surface-600 line-clamp-2">{faq.answer}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => onEdit(faq)} className="p-1.5 text-gray-400 hover:text-primary-600 rounded-lg hover:bg-primary-50">
+                  <button onClick={() => onEdit(faq)} className="p-1.5 text-surface-400 hover:text-marsana-600 rounded-lg hover:bg-marsana-50">
                     <Pencil className="w-4 h-4" />
                   </button>
-                  <button onClick={() => handleDelete(faq.id)} className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50">
+                  <button onClick={() => handleDelete(faq.id)} className="p-1.5 text-surface-400 hover:text-red-600 rounded-lg hover:bg-red-50">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -129,10 +129,10 @@ export default function AdminFAQList({ onEdit, onCreate }) {
 
       {pagination && pagination.pages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">Page {pagination.page} of {pagination.pages}</p>
+          <p className="text-sm text-surface-500">Page {pagination.page} of {pagination.pages}</p>
           <div className="flex gap-2">
-            <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50">Prev</button>
-            <button onClick={() => setPage(Math.min(pagination.pages, page + 1))} disabled={page === pagination.pages} className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50">Next</button>
+            <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} className="px-3 py-1.5 text-sm border border-surface-200 rounded-lg disabled:opacity-50 hover:bg-surface-50">Prev</button>
+            <button onClick={() => setPage(Math.min(pagination.pages, page + 1))} disabled={page === pagination.pages} className="px-3 py-1.5 text-sm border border-surface-200 rounded-lg disabled:opacity-50 hover:bg-surface-50">Next</button>
           </div>
         </div>
       )}

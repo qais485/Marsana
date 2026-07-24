@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Zap } from 'lucide-react';
+import { Clock, Zap, ArrowRight } from 'lucide-react';
 import ProductCard from '../common/ProductCard';
 
 function CountdownTimer({ endDate }) {
@@ -33,18 +33,18 @@ function CountdownTimer({ endDate }) {
 
   return (
     <div className="flex items-center gap-2">
-      <Clock className="w-4 h-4 text-red-500" />
-      <div className="flex gap-1">
+      <Clock className="w-4 h-4 text-accent-rose" />
+      <div className="flex gap-1.5">
         {[
           { value: timeLeft.hours, label: 'H' },
           { value: timeLeft.minutes, label: 'M' },
           { value: timeLeft.seconds, label: 'S' },
         ].map(({ value, label }) => (
           <div key={label} className="flex items-center">
-            <span className="bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+            <span className="bg-gradient-to-r from-accent-rose to-red-500 text-white text-xs font-bold px-2.5 py-1.5 rounded-xl">
               {String(value).padStart(2, '0')}
             </span>
-            <span className="text-xs text-gray-500 ml-0.5">{label}</span>
+            <span className="text-xs text-surface-400 ml-0.5">{label}</span>
           </div>
         ))}
       </div>
@@ -56,28 +56,32 @@ export default function FlashSale({ flashSale }) {
   if (!flashSale || !flashSale.items || flashSale.items.length === 0) return null;
 
   return (
-    <section className="py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <Zap className="w-5 h-5 text-red-600" />
+    <section className="py-20 sm:py-28">
+      <div className="section-premium">
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4 sm:gap-0">
+          <div>
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent-rose/10 text-accent-rose rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+              <Zap className="w-3.5 h-3.5 fill-current" />
+              Limited Time
+            </span>
+            <div className="flex flex-wrap items-center gap-4 mt-3">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-white leading-tight">
+                {flashSale.name}
+              </h2>
+              <CountdownTimer endDate={flashSale.end_date} />
             </div>
-            <div>
-              <div className="flex items-center gap-3">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">{flashSale.name}</h2>
-                <CountdownTimer endDate={flashSale.end_date} />
-              </div>
-              {flashSale.description && (
-                <p className="text-gray-600 mt-1">{flashSale.description}</p>
-              )}
-            </div>
+            {flashSale.description && (
+              <p className="text-surface-500 dark:text-surface-400 mt-4 max-w-lg text-lg">
+                {flashSale.description}
+              </p>
+            )}
           </div>
           <Link
             to="/products"
-            className="hidden sm:flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors"
+            className="hidden sm:inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 bg-marsana-50 dark:bg-marsana-950 hover:bg-marsana-100 dark:hover:bg-marsana-900 rounded-2xl transition-all duration-200 group"
           >
             View All
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 

@@ -5,21 +5,21 @@ export default function FeaturedCategories({ categories = [] }) {
   if (categories.length === 0) return null;
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12 bg-surface-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary-100 rounded-lg">
-              <LayoutGrid className="w-5 h-5 text-primary-600" />
+            <div className="p-2 bg-marsana-100 rounded-lg">
+              <LayoutGrid className="w-5 h-5 text-marsana-600" />
             </div>
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Featured Categories</h2>
-              <p className="text-gray-600 mt-1">Browse our top categories</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-surface-900">Featured Categories</h2>
+              <p className="text-surface-600 mt-1">Browse our top categories</p>
             </div>
           </div>
           <Link
             to="/categories"
-            className="hidden sm:flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors"
+            className="hidden sm:flex items-center text-marsana-600 hover:text-marsana-700 font-medium transition-colors"
           >
             All Categories
             <ArrowRight className="w-4 h-4 ml-1" />
@@ -31,9 +31,9 @@ export default function FeaturedCategories({ categories = [] }) {
             <Link
               key={category.id}
               to={`/categories/${category.slug}`}
-              className="group relative overflow-hidden rounded-xl bg-white border border-gray-100 hover:shadow-md transition-all duration-300"
+              className="group relative overflow-hidden rounded-xl bg-white border border-surface-100 hover:shadow-md transition-all duration-300"
             >
-              <div className="aspect-square bg-gray-100 overflow-hidden">
+              <div className="aspect-square bg-surface-100 overflow-hidden">
                 {category.image_url ? (
                   <img
                     src={category.image_url}
@@ -42,16 +42,16 @@ export default function FeaturedCategories({ categories = [] }) {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <LayoutGrid className="w-10 h-10 text-gray-300" />
+                    <LayoutGrid className="w-10 h-10 text-surface-300" />
                   </div>
                 )}
               </div>
               <div className="p-3 text-center">
-                <h3 className="text-sm font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+                <h3 className="text-sm font-semibold text-surface-900 group-hover:text-marsana-600 transition-colors">
                   {category.name}
                 </h3>
                 {category.product_count > 0 && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-surface-500 mt-1">
                     {category.product_count} products
                   </p>
                 )}
@@ -63,7 +63,7 @@ export default function FeaturedCategories({ categories = [] }) {
         <div className="mt-6 text-center sm:hidden">
           <Link
             to="/categories"
-            className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
+            className="inline-flex items-center text-marsana-600 hover:text-marsana-700 font-medium"
           >
             All Categories
             <ArrowRight className="w-4 h-4 ml-1" />

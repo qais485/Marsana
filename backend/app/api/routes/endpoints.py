@@ -280,7 +280,7 @@ def disable_2fa(
 
 
 @router.post("/social/login")
-def social_login(
+async def social_login(
     request: SocialLoginRequest,
     request_obj: Request,
     auth_service: AuthService = Depends(get_auth_service),
@@ -289,7 +289,7 @@ def social_login(
         ip_address = request_obj.client.host if request_obj.client else None
         user_agent = request_obj.headers.get("user-agent")
 
-        social_data = _get_social_user_data(request.provider, request.access_token)
+        social_data = await _get_social_user_data(request.provider, request.access_token)
 
         result = auth_service.social_login(
             provider=request.provider,
@@ -383,9 +383,9 @@ def revoke_all_sessions(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-def _get_social_user_data(provider: str, access_token: str) -> dict:
+async def _get_social_user_data(provider: str, access_token: str) -> dict:
     if provider == "google":
-        return _get_google_user_data(access_token)
+        return await _get_google_user_data(access_token)
     raise ValueError(f"Unsupported provider: {provider}")
 
 

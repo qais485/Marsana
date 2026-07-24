@@ -57,12 +57,12 @@ export default function AdminHelpArticleList({ onEdit, onCreate }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => { setCategoryFilter(''); setPage(1); }}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              !categoryFilter ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-100'
+            className={`px-3 py-2 min-h-[44px] rounded-lg text-sm font-medium transition-colors ${
+              !categoryFilter ? 'bg-marsana-50 text-marsana-700' : 'text-surface-600 hover:bg-surface-100'
             }`}
           >
             All
@@ -71,8 +71,8 @@ export default function AdminHelpArticleList({ onEdit, onCreate }) {
             <button
               key={cat}
               onClick={() => { setCategoryFilter(cat); setPage(1); }}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors capitalize ${
-                categoryFilter === cat ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-100'
+              className={`px-3 py-2 min-h-[44px] rounded-lg text-sm font-medium transition-colors capitalize ${
+                categoryFilter === cat ? 'bg-marsana-50 text-marsana-700' : 'text-surface-600 hover:bg-surface-100'
               }`}
             >
               {cat}
@@ -81,7 +81,7 @@ export default function AdminHelpArticleList({ onEdit, onCreate }) {
         </div>
         <button
           onClick={onCreate}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700"
+          className="flex items-center justify-center gap-2 px-4 py-2 min-h-[44px] bg-marsana-600 text-white rounded-lg text-sm font-medium hover:bg-marsana-700"
         >
           <Plus className="w-4 h-4" />
           Add Article
@@ -90,48 +90,48 @@ export default function AdminHelpArticleList({ onEdit, onCreate }) {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-primary-500 animate-spin" />
+          <Loader2 className="w-8 h-8 text-marsana-500 animate-spin" />
         </div>
       ) : error ? (
         <div className="text-center py-12 text-red-600">{error}</div>
       ) : articles.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500">No help articles found. Create your first article.</p>
+          <p className="text-surface-500">No help articles found. Create your first article.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl border border-surface-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Title</th>
-                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Category</th>
-                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Status</th>
-                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Views</th>
-                  <th className="text-right px-4 py-3 text-sm font-medium text-gray-500">Actions</th>
+                <tr className="border-b border-surface-100">
+                  <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Title</th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Category</th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Status</th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Views</th>
+                  <th className="text-right px-4 py-3 text-sm font-medium text-surface-500">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {articles.map((article) => (
-                  <tr key={article.id} className="border-b border-gray-50 hover:bg-gray-50">
+                  <tr key={article.id} className="border-b border-surface-50 hover:bg-surface-50">
                     <td className="px-4 py-3">
-                      <div className="text-sm font-medium text-gray-900">{article.title}</div>
-                      {article.excerpt && <div className="text-xs text-gray-500 line-clamp-1">{article.excerpt}</div>}
+                      <div className="text-sm font-medium text-surface-900">{article.title}</div>
+                      {article.excerpt && <div className="text-xs text-surface-500 line-clamp-1">{article.excerpt}</div>}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-500 capitalize">{article.category}</td>
+                    <td className="px-4 py-3 text-sm text-surface-500 capitalize">{article.category}</td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${article.is_published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${article.is_published ? 'bg-green-100 text-green-700' : 'bg-surface-100 text-surface-500'}`}>
                         {article.is_published ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
                         {article.is_published ? 'Published' : 'Draft'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{article.view_count}</td>
+                    <td className="px-4 py-3 text-sm text-surface-500">{article.view_count}</td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => onEdit(article)} className="p-1.5 text-gray-400 hover:text-primary-600 rounded-lg hover:bg-primary-50">
+                        <button onClick={() => onEdit(article)} className="p-1.5 text-surface-400 hover:text-marsana-600 rounded-lg hover:bg-marsana-50">
                           <Pencil className="w-4 h-4" />
                         </button>
-                        <button onClick={() => handleDelete(article.id)} className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50">
+                        <button onClick={() => handleDelete(article.id)} className="p-1.5 text-surface-400 hover:text-red-600 rounded-lg hover:bg-red-50">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -146,10 +146,10 @@ export default function AdminHelpArticleList({ onEdit, onCreate }) {
 
       {pagination && pagination.pages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">Page {pagination.page} of {pagination.pages}</p>
+          <p className="text-sm text-surface-500">Page {pagination.page} of {pagination.pages}</p>
           <div className="flex gap-2">
-            <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50">Prev</button>
-            <button onClick={() => setPage(Math.min(pagination.pages, page + 1))} disabled={page === pagination.pages} className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50">Next</button>
+            <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} className="px-3 py-1.5 text-sm border border-surface-200 rounded-lg disabled:opacity-50 hover:bg-surface-50">Prev</button>
+            <button onClick={() => setPage(Math.min(pagination.pages, page + 1))} disabled={page === pagination.pages} className="px-3 py-1.5 text-sm border border-surface-200 rounded-lg disabled:opacity-50 hover:bg-surface-50">Next</button>
           </div>
         </div>
       )}

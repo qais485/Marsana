@@ -12,6 +12,7 @@ from sqlalchemy import (
     String,
     Text,
     UniqueConstraint,
+    JSON,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -469,6 +470,7 @@ class Product(Base):
         UUID(as_uuid=True), ForeignKey("brands.id", ondelete="SET NULL"), nullable=True
     )
     stock_quantity = Column(Integer, default=0)
+    low_stock_threshold = Column(Integer, default=10)
     sku = Column(String(100), unique=True, nullable=True, index=True)
     barcode = Column(String(100), nullable=True, index=True)
     is_active = Column(Boolean, default=True)
@@ -503,6 +505,12 @@ class Product(Base):
     )
     reviews = relationship(
         "ProductReview", back_populates="product", cascade="all, delete-orphan"
+    )
+    warehouse_inventories = relationship(
+        "WarehouseInventory", back_populates="product", cascade="all, delete-orphan"
+    )
+    stock_alerts = relationship(
+        "StockAlert", back_populates="product", cascade="all, delete-orphan"
     )
 
 
@@ -1427,5 +1435,404 @@ class HelpArticle(Base):
     category = Column(String(100), nullable=False, default="general")
     is_published = Column(Boolean, default=True)
     view_count = Column(Integer, default=0)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+
+# ─── Inventory Management Models ──────────────────────────────────
+
+
+class Warehouse(Base):
+    __tablename__ = "warehouses"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = Column(String(255), nullable=False)
+    code = Column(String(50), unique=True, nullable=False, index=True)
+    address_line_1 = Column(String(255), nullable=False)
+    address_line_2 = Column(String(255), nullable=True)
+    city = Column(String(100), nullable=False)
+    state = Column(String(100), nullable=False)
+    postal_code = Column(String(20), nullable=False)
+    country = Column(String(100), nullable=False)
+    phone_number = Column(String(20), nullable=True)
+    email = Column(String(255), nullable=True)
+    is_active = Column(Boolean, default=True)
+    is_default = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+    inventories = relationship(
+        "WarehouseInventory", back_populates="warehouse", cascade="all, delete-orphan"
+    )
+
+
+class WarehouseInventory(Base):
+    __tablename__ = "warehouse_inventories"
+    __table_args__ = (
+        UniqueConstraint(
+            "warehouse_id", "product_id", name="uq_warehouse_product"
+        ),
+    )
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    warehouse_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("warehouses.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    product_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("products.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    variant_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("product_variants.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    quantity = Column(Integer, nullable=False, default=0)
+    reserved_quantity = Column(Integer, nullable=False, default=0)
+    low_stock_threshold = Column(Integer, default=10)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+    warehouse = relationship("Warehouse", back_populates="inventories")
+    product = relationship("Product")
+    variant = relationship("ProductVariant")
+
+
+class InventoryHistory(Base):
+    __tablename__ = "inventory_history"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    product_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("products.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    variant_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("product_variants.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    warehouse_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("warehouses.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    change_type = Column(String(50), nullable=False)
+    quantity_change = Column(Integer, nullable=False)
+    previous_quantity = Column(Integer, nullable=False)
+    new_quantity = Column(Integer, nullable=False)
+    reason = Column(String(255), nullable=True)
+    reference_type = Column(String(50), nullable=True)
+    reference_id = Column(String(255), nullable=True)
+    performed_by = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    notes = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+
+    product = relationship("Product")
+    variant = relationship("ProductVariant")
+    warehouse = relationship("Warehouse")
+    performer = relationship("User")
+
+
+class StockAlert(Base):
+    __tablename__ = "stock_alerts"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    product_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("products.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    variant_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("product_variants.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    warehouse_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("warehouses.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    alert_type = Column(String(50), nullable=False)
+    threshold = Column(Integer, nullable=False)
+    current_quantity = Column(Integer, nullable=False)
+    is_resolved = Column(Boolean, default=False)
+    resolved_at = Column(DateTime(timezone=True), nullable=True)
+    resolved_by = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+
+    product = relationship("Product")
+    variant = relationship("ProductVariant")
+    warehouse = relationship("Warehouse")
+    resolver = relationship("User")
+
+
+# ─── Marketing Models ──────────────────────────────────────────────
+
+
+class EmailCampaign(Base):
+    __tablename__ = "email_campaigns"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = Column(String(255), nullable=False)
+    subject = Column(String(500), nullable=False)
+    body = Column(Text, nullable=False)
+    from_email = Column(String(255), nullable=False)
+    from_name = Column(String(255), nullable=True)
+    segment = Column(String(100), nullable=True)
+    target_user_ids = Column(JSON, nullable=True)
+    status = Column(String(20), nullable=False, default="draft")
+    scheduled_at = Column(DateTime(timezone=True), nullable=True)
+    sent_at = Column(DateTime(timezone=True), nullable=True)
+    total_recipients = Column(Integer, default=0)
+    total_sent = Column(Integer, default=0)
+    total_opened = Column(Integer, default=0)
+    total_clicked = Column(Integer, default=0)
+    total_bounced = Column(Integer, default=0)
+    total_unsubscribed = Column(Integer, default=0)
+    created_by = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+    creator = relationship("User")
+    logs = relationship("CampaignLog", back_populates="campaign", cascade="all, delete-orphan")
+
+
+class SMSCampaign(Base):
+    __tablename__ = "sms_campaigns"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = Column(String(255), nullable=False)
+    message = Column(Text, nullable=False)
+    segment = Column(String(100), nullable=True)
+    target_user_ids = Column(JSON, nullable=True)
+    status = Column(String(20), nullable=False, default="draft")
+    scheduled_at = Column(DateTime(timezone=True), nullable=True)
+    sent_at = Column(DateTime(timezone=True), nullable=True)
+    total_recipients = Column(Integer, default=0)
+    total_sent = Column(Integer, default=0)
+    total_delivered = Column(Integer, default=0)
+    total_failed = Column(Integer, default=0)
+    created_by = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+    creator = relationship("User")
+    logs = relationship("CampaignLog", back_populates="sms_campaign", cascade="all, delete-orphan")
+
+
+class PushCampaign(Base):
+    __tablename__ = "push_campaigns"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = Column(String(255), nullable=False)
+    title = Column(String(255), nullable=False)
+    body = Column(Text, nullable=False)
+    url = Column(String(500), nullable=True)
+    image_url = Column(String(500), nullable=True)
+    segment = Column(String(100), nullable=True)
+    target_user_ids = Column(JSON, nullable=True)
+    status = Column(String(20), nullable=False, default="draft")
+    scheduled_at = Column(DateTime(timezone=True), nullable=True)
+    sent_at = Column(DateTime(timezone=True), nullable=True)
+    total_recipients = Column(Integer, default=0)
+    total_sent = Column(Integer, default=0)
+    total_delivered = Column(Integer, default=0)
+    total_opened = Column(Integer, default=0)
+    total_clicked = Column(Integer, default=0)
+    created_by = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+    creator = relationship("User")
+    logs = relationship("CampaignLog", back_populates="push_campaign", cascade="all, delete-orphan")
+
+
+class CampaignLog(Base):
+    __tablename__ = "campaign_logs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    campaign_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("email_campaigns.id", ondelete="CASCADE"),
+        nullable=True,
+    )
+    sms_campaign_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("sms_campaigns.id", ondelete="CASCADE"),
+        nullable=True,
+    )
+    push_campaign_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("push_campaigns.id", ondelete="CASCADE"),
+        nullable=True,
+    )
+    user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    event_type = Column(String(50), nullable=False)
+    extra_data = Column(JSON, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+
+    campaign = relationship("EmailCampaign", back_populates="logs")
+    sms_campaign = relationship("SMSCampaign", back_populates="logs")
+    push_campaign = relationship("PushCampaign", back_populates="logs")
+    user = relationship("User")
+
+
+class AffiliateProgram(Base):
+    __tablename__ = "affiliate_programs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    commission_type = Column(String(20), nullable=False, default="percentage")
+    commission_value = Column(Numeric(10, 2), nullable=False)
+    cookie_duration_days = Column(Integer, default=30)
+    minimum_payout = Column(Numeric(10, 2), default=50.00)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+    affiliates = relationship("Affiliate", back_populates="program", cascade="all, delete-orphan")
+
+
+class Affiliate(Base):
+    __tablename__ = "affiliates"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    program_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("affiliate_programs.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    affiliate_code = Column(String(50), unique=True, nullable=False, index=True)
+    status = Column(String(20), nullable=False, default="pending")
+    total_earnings = Column(Numeric(10, 2), default=0)
+    pending_balance = Column(Numeric(10, 2), default=0)
+    paid_balance = Column(Numeric(10, 2), default=0)
+    total_referrals = Column(Integer, default=0)
+    total_conversions = Column(Integer, default=0)
+    approved_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+    user = relationship("User", backref="affiliate_account")
+    program = relationship("AffiliateProgram", back_populates="affiliates")
+    links = relationship("AffiliateLink", back_populates="affiliate", cascade="all, delete-orphan")
+    earnings = relationship("AffiliateEarning", back_populates="affiliate", cascade="all, delete-orphan")
+
+
+class AffiliateLink(Base):
+    __tablename__ = "affiliate_links"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    affiliate_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("affiliates.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    product_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("products.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    url = Column(String(500), nullable=False)
+    code = Column(String(50), unique=True, nullable=False, index=True)
+    custom_slug = Column(String(100), nullable=True)
+    total_clicks = Column(Integer, default=0)
+    total_conversions = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+    affiliate = relationship("Affiliate", back_populates="links")
+    product = relationship("Product")
+    clicks = relationship("AffiliateClick", back_populates="link", cascade="all, delete-orphan")
+
+
+class AffiliateClick(Base):
+    __tablename__ = "affiliate_clicks"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    link_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("affiliate_links.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    ip_address = Column(String(50), nullable=True)
+    user_agent = Column(String(500), nullable=True)
+    referrer = Column(String(500), nullable=True)
+    converted = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+
+    link = relationship("AffiliateLink", back_populates="clicks")
+
+
+class AffiliateEarning(Base):
+    __tablename__ = "affiliate_earnings"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    affiliate_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("affiliates.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    order_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("orders.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    amount = Column(Numeric(10, 2), nullable=False)
+    commission = Column(Numeric(10, 2), nullable=False)
+    status = Column(String(20), nullable=False, default="pending")
+    paid_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=utcnow)
+
+    affiliate = relationship("Affiliate", back_populates="earnings")
+    order = relationship("Order")
+
+
+class StoreSetting(Base):
+    __tablename__ = "store_settings"
+    __table_args__ = (
+        Index("ix_store_settings_key", "key", unique=True),
+    )
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    key = Column(String(100), nullable=False, unique=True)
+    value = Column(JSON, nullable=True)
+    category = Column(String(50), nullable=False)
+    description = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), default=utcnow)
     updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)

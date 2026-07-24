@@ -69,59 +69,59 @@ export default function AdminProductInventory() {
   };
 
   const getStockStatus = (qty) => {
-    if (qty <= 0) return { label: 'Out of Stock', color: 'text-red-600 bg-red-50' };
-    if (qty < 10) return { label: 'Low Stock', color: 'text-yellow-600 bg-yellow-50' };
-    return { label: 'In Stock', color: 'text-green-600 bg-green-50' };
+    if (qty <= 0) return { label: 'Out of Stock', color: 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30' };
+    if (qty < 10) return { label: 'Low Stock', color: 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30' };
+    return { label: 'In Stock', color: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30' };
   };
 
   return (
     <div className="space-y-4">
-      <form onSubmit={handleSearch} className="flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
+        <div className="relative flex-1 min-w-0">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400 dark:text-surface-500" />
           <input
             type="text"
             placeholder="Search products to update stock..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            className="input-premium pl-10 w-full"
           />
         </div>
-        <button type="submit" className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700">
+        <button type="submit" className="btn-marsana min-h-[44px]">
           Search
         </button>
       </form>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm flex items-center justify-between">
+        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between">
           {error}
-          <button onClick={() => setError(null)} className="text-red-500 hover:text-red-700">
+          <button onClick={() => setError(null)} className="text-red-500 hover:text-red-700 dark:hover:text-red-300">
             <X className="h-4 w-4" />
           </button>
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 overflow-hidden shadow-sm">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-6 h-6 text-primary-600 animate-spin" />
+            <Loader2 className="w-6 h-6 text-marsana-600 dark:text-marsana-400 animate-spin" />
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-12">
-            <Package className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-            <p className="text-gray-500 text-sm">No products found</p>
+            <Package className="w-10 h-10 text-surface-300 dark:text-surface-600 mx-auto mb-2" />
+            <p className="text-surface-500 dark:text-surface-400 text-sm">No products found</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="text-left px-4 py-3 text-gray-500 font-medium">Product</th>
-                  <th className="text-left px-4 py-3 text-gray-500 font-medium">SKU</th>
-                  <th className="text-left px-4 py-3 text-gray-500 font-medium">Barcode</th>
-                  <th className="text-center px-4 py-3 text-gray-500 font-medium">Stock</th>
-                  <th className="text-left px-4 py-3 text-gray-500 font-medium">Status</th>
-                  <th className="text-right px-4 py-3 text-gray-500 font-medium">Action</th>
+                <tr className="border-b border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-800/50">
+                  <th className="text-left px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Product</th>
+                  <th className="text-left px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">SKU</th>
+                  <th className="text-left px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Barcode</th>
+                  <th className="text-center px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Stock</th>
+                  <th className="text-left px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Status</th>
+                  <th className="text-right px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -130,12 +130,12 @@ export default function AdminProductInventory() {
                   const isEditing = editingId === product.id;
 
                   return (
-                    <tr key={product.id} className="border-b border-gray-50 hover:bg-gray-50">
+                    <tr key={product.id} className="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-all duration-300">
                       <td className="px-4 py-3">
-                        <p className="font-medium text-gray-900 truncate max-w-[150px]">{product.name}</p>
+                        <p className="font-medium text-surface-900 dark:text-white truncate max-w-[150px]">{product.name}</p>
                       </td>
-                      <td className="px-4 py-3 text-gray-600">{product.sku || '-'}</td>
-                      <td className="px-4 py-3 text-gray-600">{product.barcode || '-'}</td>
+                      <td className="px-4 py-3 text-surface-600 dark:text-surface-400">{product.sku || '-'}</td>
+                      <td className="px-4 py-3 text-surface-600 dark:text-surface-400">{product.barcode || '-'}</td>
                       <td className="px-4 py-3 text-center">
                         {isEditing ? (
                           <input
@@ -143,11 +143,11 @@ export default function AdminProductInventory() {
                             value={editValue}
                             onChange={(e) => setEditValue(e.target.value)}
                             min="0"
-                            className="w-20 px-2 py-1 border border-primary-300 rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="input-premium w-20 text-center"
                             autoFocus
                           />
                         ) : (
-                          <span className="font-medium">{product.stock_quantity}</span>
+                          <span className="font-medium text-surface-900 dark:text-white">{product.stock_quantity}</span>
                         )}
                       </td>
                       <td className="px-4 py-3">
@@ -161,18 +161,18 @@ export default function AdminProductInventory() {
                             <button
                               onClick={() => saveStock(product.id)}
                               disabled={saving}
-                              className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg disabled:opacity-50"
+                              className="p-1.5 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-xl disabled:opacity-50 transition-all duration-300"
                             >
                               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                             </button>
-                            <button onClick={cancelEdit} className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-lg">
+                            <button onClick={cancelEdit} className="p-1.5 text-surface-500 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-xl transition-all duration-300">
                               <X className="h-4 w-4" />
                             </button>
                           </div>
                         ) : (
                           <button
                             onClick={() => startEdit(product)}
-                            className="p-1.5 text-gray-500 hover:text-primary-600 rounded-lg hover:bg-primary-50"
+                            className="p-1.5 text-surface-500 dark:text-surface-400 hover:text-marsana-600 dark:hover:text-marsana-400 rounded-xl hover:bg-marsana-50 dark:hover:bg-marsana-900/30 transition-all duration-300"
                           >
                             <Edit2 className="h-4 w-4" />
                           </button>

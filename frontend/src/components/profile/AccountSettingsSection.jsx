@@ -54,29 +54,31 @@ export default function AccountSettingsSection() {
 
   if (loading) {
     return (
-      <div className="card">
+      <div className="bg-white dark:bg-surface-900 rounded-2xl shadow-sm border border-surface-200 dark:border-surface-800 p-6">
         <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-primary-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-marsana-600" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="card">
-      <h2 className="text-lg font-semibold text-gray-900 mb-6">Account Settings</h2>
+    <div className="bg-white dark:bg-surface-900 rounded-2xl shadow-sm border border-surface-200 dark:border-surface-800 p-6 transition-all duration-300">
+      <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-6">Account Settings</h2>
 
       {message.text && (
-        <div className={`mb-4 p-3 rounded-lg text-sm ${
-          message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-        }`}>
+        <div className={`mb-4 p-3 rounded-xl text-sm ${
+          message.type === 'success'
+            ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800'
+            : 'bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800'
+        } transition-all duration-300`}>
           {message.text}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <h3 className="text-sm font-medium text-gray-900 mb-3">Notifications</h3>
+          <h3 className="text-sm font-medium text-surface-900 dark:text-white mb-3">Notifications</h3>
           <div className="space-y-3">
             <ToggleSetting
               label="Email notifications"
@@ -105,12 +107,12 @@ export default function AccountSettingsSection() {
           </div>
         </div>
 
-        <div className="border-t border-gray-200 pt-6">
-          <h3 className="text-sm font-medium text-gray-900 mb-3">Preferences</h3>
+        <div className="border-t border-surface-200 dark:border-surface-800 pt-6">
+          <h3 className="text-sm font-medium text-surface-900 dark:text-white mb-3">Preferences</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="label">Language</label>
-              <select name="language" value={settings.language} onChange={handleChange} className="input-field">
+              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">Language</label>
+              <select name="language" value={settings.language} onChange={handleChange} className="input-premium">
                 <option value="en">English</option>
                 <option value="es">Spanish</option>
                 <option value="fr">French</option>
@@ -119,8 +121,8 @@ export default function AccountSettingsSection() {
               </select>
             </div>
             <div>
-              <label className="label">Currency</label>
-              <select name="currency" value={settings.currency} onChange={handleChange} className="input-field">
+              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">Currency</label>
+              <select name="currency" value={settings.currency} onChange={handleChange} className="input-premium">
                 <option value="USD">USD ($)</option>
                 <option value="EUR">EUR (€)</option>
                 <option value="GBP">GBP (£)</option>
@@ -131,7 +133,7 @@ export default function AccountSettingsSection() {
         </div>
 
         <div className="flex justify-end">
-          <button type="submit" className="btn-primary flex items-center gap-2" disabled={saving}>
+          <button type="submit" className="btn-marsana flex items-center gap-2 w-full sm:w-auto justify-center min-h-[44px]" disabled={saving}>
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Save Settings
           </button>
@@ -143,20 +145,20 @@ export default function AccountSettingsSection() {
 
 function ToggleSetting({ label, description, enabled, onToggle }) {
   return (
-    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-      <div>
-        <p className="font-medium text-gray-900">{label}</p>
-        <p className="text-sm text-gray-600">{description}</p>
+    <div className="flex items-center justify-between p-3 bg-surface-50 dark:bg-surface-800/50 rounded-xl transition-all duration-300 gap-3">
+      <div className="min-w-0">
+        <p className="font-medium text-surface-900 dark:text-white">{label}</p>
+        <p className="text-sm text-surface-600 dark:text-surface-400">{description}</p>
       </div>
       <button
         type="button"
         onClick={onToggle}
-        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
-          enabled ? 'bg-primary-600' : 'bg-gray-200'
+        className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-marsana-500/30 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-surface-900 ${
+          enabled ? 'bg-marsana-600' : 'bg-surface-200 dark:bg-surface-700'
         }`}
       >
         <span
-          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+          className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition-all duration-300 ease-in-out ${
             enabled ? 'translate-x-5' : 'translate-x-0'
           }`}
         />

@@ -48,48 +48,49 @@ export default function AdminTemplateList({ onEdit, onCreate }) {
   if (loading && templates.length === 0) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-6 w-6 animate-spin text-primary-600" />
+        <Loader2 className="h-6 w-6 animate-spin text-marsana-600" />
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Notification Templates</h3>
-        <button onClick={onCreate} className="btn-primary flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <h3 className="text-lg font-semibold text-surface-900">Notification Templates</h3>
+        <button onClick={onCreate} className="btn-primary flex items-center justify-center gap-2 min-h-[44px] w-full sm:w-auto">
           <Plus className="h-4 w-4" />
           Add Template
         </button>
       </div>
 
       {templates.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
-          <p className="text-gray-500">No templates found</p>
-          <p className="text-sm text-gray-400 mt-1">Create your first notification template</p>
+        <div className="text-center py-12 bg-white rounded-xl border border-surface-100">
+          <p className="text-surface-500">No templates found</p>
+          <p className="text-sm text-surface-400 mt-1">Create your first notification template</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-100">
+        <div className="bg-white rounded-xl border border-surface-100 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+            <thead className="bg-surface-50 border-b border-surface-100">
               <tr>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Name</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Slug</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Type</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Channel</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Status</th>
-                <th className="text-right px-4 py-3 text-sm font-medium text-gray-500">Actions</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Name</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Slug</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Type</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Channel</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Status</th>
+                <th className="text-right px-4 py-3 text-sm font-medium text-surface-500">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-surface-100">
               {templates.map((template) => (
-                <tr key={template.id} className="hover:bg-gray-50">
+                <tr key={template.id} className="hover:bg-surface-50">
                   <td className="px-4 py-3">
-                    <p className="text-sm font-medium text-gray-900">{template.name}</p>
-                    <p className="text-xs text-gray-500">{template.subject}</p>
+                    <p className="text-sm font-medium text-surface-900">{template.name}</p>
+                    <p className="text-xs text-surface-500">{template.subject}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <code className="text-xs bg-gray-100 px-2 py-1 rounded">{template.slug}</code>
+                    <code className="text-xs bg-surface-100 px-2 py-1 rounded">{template.slug}</code>
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded capitalize">
@@ -97,16 +98,16 @@ export default function AdminTemplateList({ onEdit, onCreate }) {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs text-gray-600 capitalize">{template.channel.replace('_', ' ')}</span>
+                    <span className="text-xs text-surface-600 capitalize">{template.channel.replace('_', ' ')}</span>
                   </td>
                   <td className="px-4 py-3">
                     <button onClick={() => handleToggle(template.id)} className="flex items-center gap-1">
                       {template.is_active ? (
                         <ToggleRight className="h-5 w-5 text-green-500" />
                       ) : (
-                        <ToggleLeft className="h-5 w-5 text-gray-400" />
+                        <ToggleLeft className="h-5 w-5 text-surface-400" />
                       )}
-                      <span className={`text-xs ${template.is_active ? 'text-green-600' : 'text-gray-500'}`}>
+                      <span className={`text-xs ${template.is_active ? 'text-green-600' : 'text-surface-500'}`}>
                         {template.is_active ? 'Active' : 'Inactive'}
                       </span>
                     </button>
@@ -115,7 +116,7 @@ export default function AdminTemplateList({ onEdit, onCreate }) {
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => onEdit(template)}
-                        className="text-sm text-primary-600 hover:text-primary-700"
+                        className="text-sm text-marsana-600 hover:text-marsana-700"
                       >
                         Edit
                       </button>
@@ -130,13 +131,14 @@ export default function AdminTemplateList({ onEdit, onCreate }) {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
       )}
 
       {pagination.pages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-surface-500">
             Showing {((pagination.page - 1) * pagination.limit) + 1} to{' '}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
           </p>

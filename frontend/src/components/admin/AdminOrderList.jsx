@@ -11,19 +11,19 @@ import {
 } from 'lucide-react';
 
 const STATUS_COLORS = {
-  pending: 'bg-yellow-50 text-yellow-700',
-  processing: 'bg-blue-50 text-blue-700',
-  shipped: 'bg-purple-50 text-purple-700',
-  delivered: 'bg-green-50 text-green-700',
-  cancelled: 'bg-red-50 text-red-700',
-  refunded: 'bg-gray-50 text-gray-700',
+  pending: 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+  processing: 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
+  shipped: 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
+  delivered: 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+  cancelled: 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+  refunded: 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-400',
 };
 
 const PAYMENT_STATUS_COLORS = {
-  pending: 'bg-yellow-50 text-yellow-700',
-  paid: 'bg-green-50 text-green-700',
-  refunded: 'bg-gray-50 text-gray-700',
-  failed: 'bg-red-50 text-red-700',
+  pending: 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+  paid: 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+  refunded: 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-400',
+  failed: 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400',
 };
 
 export default function AdminOrderList({ onView, onRefresh }) {
@@ -69,28 +69,28 @@ export default function AdminOrderList({ onView, onRefresh }) {
   return (
     <div className="space-y-4">
       <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <div className="relative flex-1 min-w-0">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400 dark:text-surface-500" />
           <input
             type="text"
             placeholder="Search by order number or name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            className="input-premium pl-10 w-full"
           />
         </div>
-        <button type="submit" className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700">
+        <button type="submit" className="btn-marsana min-h-[44px]">
           Search
         </button>
       </form>
 
-      <div className="flex flex-wrap gap-2">
-        <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-gray-500" />
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <Filter className="h-4 w-4 text-surface-500 dark:text-surface-400 flex-shrink-0" />
           <select
             value={filterStatus}
             onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="input-premium flex-1 min-w-0"
           >
             <option value="">All Status</option>
             <option value="pending">Pending</option>
@@ -104,7 +104,7 @@ export default function AdminOrderList({ onView, onRefresh }) {
         <select
           value={filterPayment}
           onChange={(e) => { setFilterPayment(e.target.value); setCurrentPage(1); }}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="input-premium flex-1 sm:flex-none min-w-0"
         >
           <option value="">All Payment</option>
           <option value="pending">Pending</option>
@@ -115,64 +115,64 @@ export default function AdminOrderList({ onView, onRefresh }) {
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm">
           {error}
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 overflow-hidden shadow-sm">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-6 h-6 text-primary-600 animate-spin" />
+            <Loader2 className="w-6 h-6 text-marsana-600 dark:text-marsana-400 animate-spin" />
           </div>
         ) : orders.length === 0 ? (
           <div className="text-center py-12">
-            <Package className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-            <p className="text-gray-500 text-sm">No orders found</p>
+            <Package className="w-10 h-10 text-surface-300 dark:text-surface-600 mx-auto mb-2" />
+            <p className="text-surface-500 dark:text-surface-400 text-sm">No orders found</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="text-left px-4 py-3 text-gray-500 font-medium">Order</th>
-                  <th className="text-left px-4 py-3 text-gray-500 font-medium">Customer</th>
-                  <th className="text-center px-4 py-3 text-gray-500 font-medium">Items</th>
-                  <th className="text-right px-4 py-3 text-gray-500 font-medium">Total</th>
-                  <th className="text-center px-4 py-3 text-gray-500 font-medium">Status</th>
-                  <th className="text-center px-4 py-3 text-gray-500 font-medium">Payment</th>
-                  <th className="text-left px-4 py-3 text-gray-500 font-medium">Date</th>
-                  <th className="text-right px-4 py-3 text-gray-500 font-medium">Actions</th>
+                <tr className="border-b border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-800/50">
+                  <th className="text-left px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Order</th>
+                  <th className="text-left px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Customer</th>
+                  <th className="text-center px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Items</th>
+                  <th className="text-right px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Total</th>
+                  <th className="text-center px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Status</th>
+                  <th className="text-center px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Payment</th>
+                  <th className="text-left px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Date</th>
+                  <th className="text-right px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr key={order.id} className="border-b border-gray-50 hover:bg-gray-50">
+                  <tr key={order.id} className="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-all duration-300">
                     <td className="px-4 py-3">
-                      <p className="font-medium text-primary-600">{order.order_number}</p>
+                      <p className="font-medium text-marsana-600 dark:text-marsana-400">{order.order_number}</p>
                     </td>
-                    <td className="px-4 py-3 text-gray-700">{order.shipping_name || '-'}</td>
-                    <td className="px-4 py-3 text-center text-gray-700">{order.item_count}</td>
-                    <td className="px-4 py-3 text-right font-medium text-gray-900">
+                    <td className="px-4 py-3 text-surface-700 dark:text-surface-300">{order.shipping_name || '-'}</td>
+                    <td className="px-4 py-3 text-center text-surface-700 dark:text-surface-300">{order.item_count}</td>
+                    <td className="px-4 py-3 text-right font-medium text-surface-900 dark:text-white">
                       ${order.total_amount.toFixed(2)}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[order.status] || 'bg-gray-100 text-gray-600'}`}>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[order.status] || 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400'}`}>
                         {order.status}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${PAYMENT_STATUS_COLORS[order.payment_status] || 'bg-gray-100 text-gray-600'}`}>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${PAYMENT_STATUS_COLORS[order.payment_status] || 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400'}`}>
                         {order.payment_status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-500 text-xs">
+                    <td className="px-4 py-3 text-surface-500 dark:text-surface-400 text-xs">
                       {order.created_at ? new Date(order.created_at).toLocaleDateString() : '-'}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => onView(order)}
-                        className="p-1.5 text-gray-500 hover:text-primary-600 rounded-lg hover:bg-primary-50"
+                        className="p-1.5 text-surface-500 dark:text-surface-400 hover:text-marsana-600 dark:hover:text-marsana-400 rounded-xl hover:bg-marsana-50 dark:hover:bg-marsana-900/30 transition-all duration-300"
                       >
                         <Eye className="h-4 w-4" />
                       </button>
@@ -185,22 +185,22 @@ export default function AdminOrderList({ onView, onRefresh }) {
         )}
 
         {pagination.pages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
-            <p className="text-sm text-gray-500">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-surface-200 dark:border-surface-800">
+            <p className="text-sm text-surface-500 dark:text-surface-400">
               Page {currentPage} of {pagination.pages} ({pagination.total} orders)
             </p>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50"
+                className="p-1.5 rounded-xl border border-surface-200 dark:border-surface-700 disabled:opacity-50 hover:bg-surface-50 dark:hover:bg-surface-800 transition-all duration-300"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setCurrentPage((p) => Math.min(pagination.pages, p + 1))}
                 disabled={currentPage === pagination.pages}
-                className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50"
+                className="p-1.5 rounded-xl border border-surface-200 dark:border-surface-700 disabled:opacity-50 hover:bg-surface-50 dark:hover:bg-surface-800 transition-all duration-300"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>

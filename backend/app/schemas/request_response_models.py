@@ -2,7 +2,7 @@ from datetime import date, datetime
 from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
 # ─── Base Response ───────────────────────────────────────────────
@@ -92,7 +92,7 @@ class Enable2FARequest(BaseModel):
 
 
 class Verify2FARequest(BaseModel):
-    temp_token: str = Field(description="Temporary token from login with 2FA")
+    temp_token: Optional[str] = Field(None, description="Temporary token from login with 2FA (optional for enable flow)")
     code: str = Field(max_length=6, pattern=r"^\d{6}$", description="6-digit TOTP verification code")
 
 
@@ -175,6 +175,23 @@ class ProfileUpdateRequest(BaseModel):
         None, pattern=r"^(male|female|other|prefer_not_to_say)$"
     )
     avatar_url: Optional[str] = None
+
+    @field_validator(
+        "first_name", "last_name", "phone_number", "bio", "gender", "avatar_url",
+        mode="before",
+    )
+    @classmethod
+    def empty_str_to_none(cls, v):
+        if isinstance(v, str) and v.strip() == "":
+            return None
+        return v
+
+    @field_validator("date_of_birth", mode="before")
+    @classmethod
+    def empty_date_to_none(cls, v):
+        if isinstance(v, str) and v.strip() == "":
+            return None
+        return v
 
 
 class ProfileResponse(BaseModel):
@@ -1119,6 +1136,36 @@ class AdminOrderNotesRequest(BaseModel):
     admin_notes: Optional[str] = None
 
 
+# ─── Admin User Management Schemas ────────────────────────────
+
+
+class AdminUserResponse(BaseModel):
+    id: UUID
+    email: str
+    first_name: str
+    last_name: str
+    role: str
+    is_active: bool
+    is_email_verified: bool
+    is_2fa_enabled: bool
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class AdminUserListResponse(BaseResponse):
+    data: Optional[list[AdminUserResponse]] = None
+
+
+class AdminUserUpdateRequest(BaseModel):
+    first_name: Optional[str] = Field(None, min_length=1, max_length=100)
+    last_name: Optional[str] = Field(None, min_length=1, max_length=100)
+    email: Optional[str] = Field(None, min_length=1, max_length=255)
+    role: Optional[str] = Field(None, pattern=r"^(user|admin)$")
+
+
 # ─── Cart Schemas ────────────────────────────────────────────────
 
 
@@ -1729,3 +1776,577 @@ class HelpArticleResponse(BaseModel):
     view_count: int
     created_at: datetime
     updated_at: datetime
+
+
+# ─── Warehouse Schemas ──────────────────────────────────────────────
+
+
+class WarehouseCreateRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=255)
+    code: str = Field(min_length=1, max_length=50)
+    address_line_1: str = Field(min_length=1, max_length=255)
+    address_line_2: Optional[str] = Field(None, max_length=255)
+    city: str = Field(min_length=1, max_length=100)
+    state: str = Field(min_length=1, max_length=100)
+    postal_code: str = Field(min_length=1, max_length=20)
+    country: str = Field(min_length=1, max_length=100)
+    phone_number: Optional[str] = Field(None, max_length=20)
+    email: Optional[str] = None
+    is_active: bool = True
+    is_default: bool = False
+
+
+class WarehouseUpdateRequest(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=255)
+    code: Optional[str] = Field(None, min_length=1, max_length=50)
+    address_line_1: Optional[str] = Field(None, min_length=1, max_length=255)
+    address_line_2: Optional[str] = Field(None, max_length=255)
+    city: Optional[str] = Field(None, min_length=1, max_length=100)
+    state: Optional[str] = Field(None, min_length=1, max_length=100)
+    postal_code: Optional[str] = Field(None, min_length=1, max_length=20)
+    country: Optional[str] = Field(None, min_length=1, max_length=100)
+    phone_number: Optional[str] = Field(None, max_length=20)
+    email: Optional[str] = None
+    is_active: Optional[bool] = None
+    is_default: Optional[bool] = None
+
+
+class WarehouseResponse(BaseModel):
+    id: UUID
+    name: str
+    code: str
+    address_line_1: str
+    address_line_2: Optional[str] = None
+    city: str
+    state: str
+    postal_code: str
+    country: str
+    phone_number: Optional[str] = None
+    email: Optional[str] = None
+    is_active: bool
+    is_default: bool
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class WarehouseListResponse(BaseResponse):
+    data: Optional[list[WarehouseResponse]] = None
+
+
+# ─── Inventory Schemas ──────────────────────────────────────────────
+
+
+class InventoryAdjustRequest(BaseModel):
+    product_id: UUID
+    variant_id: Optional[UUID] = None
+    warehouse_id: Optional[UUID] = None
+    quantity: int = Field(description="Positive to add, negative to subtract")
+    reason: str = Field(min_length=1, max_length=255)
+    notes: Optional[str] = None
+
+
+class InventoryBulkAdjustRequest(BaseModel):
+    adjustments: list[InventoryAdjustRequest]
+
+
+class InventoryTransferRequest(BaseModel):
+    product_id: UUID
+    variant_id: Optional[UUID] = None
+    from_warehouse_id: UUID
+    to_warehouse_id: UUID
+    quantity: int = Field(gt=0)
+    notes: Optional[str] = None
+
+
+class WarehouseInventoryResponse(BaseModel):
+    id: UUID
+    warehouse_id: UUID
+    warehouse_name: Optional[str] = None
+    product_id: UUID
+    product_name: Optional[str] = None
+    variant_id: Optional[UUID] = None
+    variant_name: Optional[str] = None
+    quantity: int
+    reserved_quantity: int
+    available_quantity: int = 0
+    low_stock_threshold: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class WarehouseInventoryListResponse(BaseResponse):
+    data: Optional[list[WarehouseInventoryResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class InventoryHistoryResponse(BaseModel):
+    id: UUID
+    product_id: Optional[UUID] = None
+    product_name: Optional[str] = None
+    variant_id: Optional[UUID] = None
+    variant_name: Optional[str] = None
+    warehouse_id: Optional[UUID] = None
+    warehouse_name: Optional[str] = None
+    change_type: str
+    quantity_change: int
+    previous_quantity: int
+    new_quantity: int
+    reason: Optional[str] = None
+    reference_type: Optional[str] = None
+    reference_id: Optional[str] = None
+    performed_by: Optional[UUID] = None
+    performer_name: Optional[str] = None
+    notes: Optional[str] = None
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class InventoryHistoryListResponse(BaseResponse):
+    data: Optional[list[InventoryHistoryResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class StockAlertResponse(BaseModel):
+    id: UUID
+    product_id: UUID
+    product_name: Optional[str] = None
+    variant_id: Optional[UUID] = None
+    variant_name: Optional[str] = None
+    warehouse_id: Optional[UUID] = None
+    warehouse_name: Optional[str] = None
+    alert_type: str
+    threshold: int
+    current_quantity: int
+    is_resolved: bool
+    resolved_at: Optional[datetime] = None
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class StockAlertListResponse(BaseResponse):
+    data: Optional[list[StockAlertResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class StockAlertResolveRequest(BaseModel):
+    notes: Optional[str] = None
+
+
+class InventorySummaryResponse(BaseModel):
+    total_products: int
+    total_stock_value: float
+    low_stock_count: int
+    out_of_stock_count: int
+    total_warehouses: int
+
+
+class ProductInventoryResponse(BaseModel):
+    product_id: UUID
+    product_name: str
+    sku: Optional[str] = None
+    total_quantity: int
+    low_stock_threshold: int
+    is_low_stock: bool
+    is_out_of_stock: bool
+    warehouse_stock: list[WarehouseInventoryResponse] = []
+
+
+class ProductInventoryListResponse(BaseResponse):
+    data: Optional[list[ProductInventoryResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class AdminProductInventoryUpdateRequest(BaseModel):
+    stock_quantity: int = Field(ge=0)
+    low_stock_threshold: Optional[int] = Field(None, ge=0)
+
+
+# ─── Marketing Schemas ──────────────────────────────────────────────
+
+
+class EmailCampaignCreateRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=255)
+    subject: str = Field(min_length=1, max_length=500)
+    body: str = Field(min_length=1)
+    from_email: EmailStr = Field(max_length=255)
+    from_name: Optional[str] = Field(None, max_length=255)
+    segment: Optional[str] = Field(None, max_length=100)
+    target_user_ids: Optional[list[UUID]] = None
+    scheduled_at: Optional[datetime] = None
+
+
+class EmailCampaignUpdateRequest(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=255)
+    subject: Optional[str] = Field(None, min_length=1, max_length=500)
+    body: Optional[str] = Field(None, min_length=1)
+    from_email: Optional[EmailStr] = Field(None, max_length=255)
+    from_name: Optional[str] = Field(None, max_length=255)
+    segment: Optional[str] = Field(None, max_length=100)
+    target_user_ids: Optional[list[UUID]] = None
+    scheduled_at: Optional[datetime] = None
+
+
+class EmailCampaignResponse(BaseModel):
+    id: UUID
+    name: str
+    subject: str
+    body: str
+    from_email: str
+    from_name: Optional[str] = None
+    segment: Optional[str] = None
+    target_user_ids: Optional[list[UUID]] = None
+    status: str
+    scheduled_at: Optional[datetime] = None
+    sent_at: Optional[datetime] = None
+    total_recipients: int
+    total_sent: int
+    total_opened: int
+    total_clicked: int
+    total_bounced: int
+    total_unsubscribed: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class EmailCampaignListResponse(BaseResponse):
+    data: Optional[list[EmailCampaignResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class SMSCampaignCreateRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=255)
+    message: str = Field(min_length=1, max_length=1600)
+    segment: Optional[str] = Field(None, max_length=100)
+    target_user_ids: Optional[list[UUID]] = None
+    scheduled_at: Optional[datetime] = None
+
+
+class SMSCampaignUpdateRequest(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=255)
+    message: Optional[str] = Field(None, min_length=1, max_length=1600)
+    segment: Optional[str] = Field(None, max_length=100)
+    target_user_ids: Optional[list[UUID]] = None
+    scheduled_at: Optional[datetime] = None
+
+
+class SMSCampaignResponse(BaseModel):
+    id: UUID
+    name: str
+    message: str
+    segment: Optional[str] = None
+    target_user_ids: Optional[list[UUID]] = None
+    status: str
+    scheduled_at: Optional[datetime] = None
+    sent_at: Optional[datetime] = None
+    total_recipients: int
+    total_sent: int
+    total_delivered: int
+    total_failed: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class SMSCampaignListResponse(BaseResponse):
+    data: Optional[list[SMSCampaignResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class PushCampaignCreateRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=255)
+    title: str = Field(min_length=1, max_length=255)
+    body: str = Field(min_length=1, max_length=500)
+    url: Optional[str] = Field(None, max_length=500)
+    image_url: Optional[str] = Field(None, max_length=500)
+    segment: Optional[str] = Field(None, max_length=100)
+    target_user_ids: Optional[list[UUID]] = None
+    scheduled_at: Optional[datetime] = None
+
+
+class PushCampaignUpdateRequest(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=255)
+    title: Optional[str] = Field(None, min_length=1, max_length=255)
+    body: Optional[str] = Field(None, min_length=1, max_length=500)
+    url: Optional[str] = Field(None, max_length=500)
+    image_url: Optional[str] = Field(None, max_length=500)
+    segment: Optional[str] = Field(None, max_length=100)
+    target_user_ids: Optional[list[UUID]] = None
+    scheduled_at: Optional[datetime] = None
+
+
+class PushCampaignResponse(BaseModel):
+    id: UUID
+    name: str
+    title: str
+    body: str
+    url: Optional[str] = None
+    image_url: Optional[str] = None
+    segment: Optional[str] = None
+    target_user_ids: Optional[list[UUID]] = None
+    status: str
+    scheduled_at: Optional[datetime] = None
+    sent_at: Optional[datetime] = None
+    total_recipients: int
+    total_sent: int
+    total_delivered: int
+    total_opened: int
+    total_clicked: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class PushCampaignListResponse(BaseResponse):
+    data: Optional[list[PushCampaignResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class CampaignLogResponse(BaseModel):
+    id: UUID
+    campaign_id: Optional[UUID] = None
+    sms_campaign_id: Optional[UUID] = None
+    push_campaign_id: Optional[UUID] = None
+    user_id: UUID
+    event_type: str
+    extra_data: Optional[dict] = None
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class CampaignLogListResponse(BaseResponse):
+    data: Optional[list[CampaignLogResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class AffiliateProgramCreateRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=255)
+    description: Optional[str] = None
+    commission_type: str = Field(default="percentage", pattern="^(percentage|fixed)$")
+    commission_value: float = Field(gt=0)
+    cookie_duration_days: int = Field(default=30, ge=1)
+    minimum_payout: float = Field(default=50.00, ge=0)
+    is_active: bool = True
+
+
+class AffiliateProgramUpdateRequest(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=255)
+    description: Optional[str] = None
+    commission_type: Optional[str] = Field(None, pattern="^(percentage|fixed)$")
+    commission_value: Optional[float] = Field(None, gt=0)
+    cookie_duration_days: Optional[int] = Field(None, ge=1)
+    minimum_payout: Optional[float] = Field(None, ge=0)
+    is_active: Optional[bool] = None
+
+
+class AffiliateProgramResponse(BaseModel):
+    id: UUID
+    name: str
+    description: Optional[str] = None
+    commission_type: str
+    commission_value: float
+    cookie_duration_days: int
+    minimum_payout: float
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class AffiliateProgramListResponse(BaseResponse):
+    data: Optional[list[AffiliateProgramResponse]] = None
+
+
+class AffiliateCreateRequest(BaseModel):
+    program_id: UUID
+    user_id: UUID
+
+
+class AffiliateUpdateRequest(BaseModel):
+    status: Optional[str] = Field(None, pattern="^(pending|approved|rejected|suspended)$")
+
+
+class AffiliateResponse(BaseModel):
+    id: UUID
+    user_id: UUID
+    user_name: Optional[str] = None
+    user_email: Optional[str] = None
+    program_id: UUID
+    program_name: Optional[str] = None
+    affiliate_code: str
+    status: str
+    total_earnings: float
+    pending_balance: float
+    paid_balance: float
+    total_referrals: int
+    total_conversions: int
+    approved_at: Optional[datetime] = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class AffiliateListResponse(BaseResponse):
+    data: Optional[list[AffiliateResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class AffiliateLinkCreateRequest(BaseModel):
+    product_id: Optional[UUID] = None
+    url: str = Field(min_length=1, max_length=500)
+    custom_slug: Optional[str] = Field(None, max_length=100)
+
+
+class AffiliateLinkResponse(BaseModel):
+    id: UUID
+    affiliate_id: UUID
+    product_id: Optional[UUID] = None
+    product_name: Optional[str] = None
+    url: str
+    code: str
+    custom_slug: Optional[str] = None
+    total_clicks: int
+    total_conversions: int
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class AffiliateLinkListResponse(BaseResponse):
+    data: Optional[list[AffiliateLinkResponse]] = None
+
+
+class AffiliateEarningResponse(BaseModel):
+    id: UUID
+    affiliate_id: UUID
+    order_id: Optional[UUID] = None
+    amount: float
+    commission: float
+    status: str
+    paid_at: Optional[datetime] = None
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class AffiliateEarningListResponse(BaseResponse):
+    data: Optional[list[AffiliateEarningResponse]] = None
+    pagination: Optional[dict] = None
+
+
+class AffiliateSummaryData(BaseModel):
+    total_affiliates: int
+    active_affiliates: int
+    total_earnings: float
+    pending_payouts: float
+    total_clicks: int
+    total_conversions: int
+    conversion_rate: float
+
+
+class AffiliateSummaryResponse(BaseResponse):
+    data: Optional[AffiliateSummaryData] = None
+
+
+class MarketingDashboardData(BaseModel):
+    email_campaigns: int
+    sms_campaigns: int
+    push_campaigns: int
+    total_sent: int
+    total_opened: int
+    total_clicked: int
+    active_affiliates: int
+    affiliate_earnings: float
+
+
+class MarketingDashboardResponse(BaseResponse):
+    data: Optional[MarketingDashboardData] = None
+
+
+# ─── Report Schemas ───────────────────────────────────────────
+
+
+class ReportDateRangeRequest(BaseModel):
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+
+
+class SalesSummaryData(BaseModel):
+    total_orders: int
+    total_revenue: float
+    average_order_value: float
+    total_items_sold: int
+    orders_by_status: dict
+    revenue_by_period: list[dict]
+
+
+class SalesReportResponse(BaseResponse):
+    data: Optional[SalesSummaryData] = None
+
+
+class ProductSummaryData(BaseModel):
+    total_products: int
+    active_products: int
+    out_of_stock: int
+    low_stock: int
+    top_selling: list[dict]
+    category_distribution: list[dict]
+    revenue_by_product: list[dict]
+
+
+class ProductReportResponse(BaseResponse):
+    data: Optional[ProductSummaryData] = None
+
+
+class CustomerSummaryData(BaseModel):
+    total_customers: int
+    active_customers: int
+    new_customers: int
+    customers_by_role: dict
+    top_customers: list[dict]
+    registration_trend: list[dict]
+
+
+class CustomerReportResponse(BaseResponse):
+    data: Optional[CustomerSummaryData] = None
+
+
+class InventorySummaryData(BaseModel):
+    total_items: int
+    total_value: float
+    low_stock_items: list[dict]
+    out_of_stock_items: list[dict]
+    stock_by_category: list[dict]
+    inventory_movement: list[dict]
+
+
+class InventoryReportResponse(BaseResponse):
+    data: Optional[InventorySummaryData] = None
+
+
+class FinancialSummaryData(BaseModel):
+    total_revenue: float
+    total_costs: float
+    gross_profit: float
+    profit_margin: float
+    revenue_by_period: list[dict]
+    payment_method_distribution: list[dict]
+    refund_summary: dict
+
+
+class FinancialReportResponse(BaseResponse):
+    data: Optional[FinancialSummaryData] = None

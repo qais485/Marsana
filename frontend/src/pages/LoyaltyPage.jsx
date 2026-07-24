@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Coins, ArrowLeft, Loader2, TrendingUp, TrendingDown, Gift } from 'lucide-react';
+import { Coins, ArrowLeft, Loader2, TrendingUp, TrendingDown, Gift, AlertCircle } from 'lucide-react';
 import { promotionService } from '../services/api/promotionService';
 import { useAuth } from '../context/AuthContext';
+import Header from '../components/common/Header';
+import Footer from '../components/common/Footer';
 
 export default function LoyaltyPage() {
   const { isAuthenticated } = useAuth();
@@ -52,12 +54,20 @@ export default function LoyaltyPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="text-center">
-          <Coins className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Sign in to view loyalty points</h2>
-          <p className="text-gray-500 mb-4">Earn points on every purchase</p>
-          <Link to="/login" className="btn-primary">Sign In</Link>
+      <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
+          <div className="w-20 h-20 rounded-full bg-marsana-100 dark:bg-marsana-900/30 flex items-center justify-center mx-auto mb-6">
+            <Coins className="w-10 h-10 text-marsana-500" />
+          </div>
+          <h2 className="text-xl font-semibold text-surface-900 dark:text-white mb-2">
+            Sign in to view loyalty points
+          </h2>
+          <p className="text-surface-500 dark:text-surface-400 mb-4">
+            Earn points on every purchase
+          </p>
+          <Link to="/login" className="btn-marsana">
+            Sign In
+          </Link>
         </div>
       </div>
     );
@@ -65,91 +75,130 @@ export default function LoyaltyPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+      <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-marsana-500" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center gap-4 mb-8">
-          <Link to="/dashboard" className="p-2 hover:bg-gray-100 rounded-lg">
-            <ArrowLeft className="w-5 h-5" />
+    <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <Header />
+
+      <main className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
+        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <Link
+            to="/dashboard"
+            className="p-2 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-xl transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+          >
+            <ArrowLeft className="w-5 h-5 text-surface-600 dark:text-surface-400" />
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Loyalty Points</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-surface-900 dark:text-white">
+            Loyalty Points
+          </h1>
         </div>
 
-        {error && <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg">{error}</div>}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-xl flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+            <span className="text-sm">{error}</span>
+          </div>
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-            <Coins className="w-10 h-10 text-yellow-500 mx-auto mb-2" />
-            <div className="text-3xl font-bold text-gray-900">{balance?.points_balance || 0}</div>
-            <div className="text-sm text-gray-500">Available Points</div>
-            <div className="text-xs text-gray-400 mt-1">Worth ${((balance?.points_balance || 0) / 100).toFixed(2)}</div>
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
+          <div className="bg-white dark:bg-surface-900 rounded-3xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 text-center shadow-sm">
+            <Coins className="w-8 h-8 sm:w-10 sm:h-10 text-amber-500 mx-auto mb-2" />
+            <div className="text-2xl sm:text-3xl font-bold text-surface-900 dark:text-white">
+              {balance?.points_balance || 0}
+            </div>
+            <div className="text-xs sm:text-sm text-surface-500 dark:text-surface-400">Available Points</div>
+            <div className="text-xs text-surface-400 dark:text-surface-500 mt-1">
+              Worth ${((balance?.points_balance || 0) / 100).toFixed(2)}
+            </div>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-            <TrendingUp className="w-10 h-10 text-green-500 mx-auto mb-2" />
-            <div className="text-3xl font-bold text-green-600">{balance?.lifetime_earned || 0}</div>
-            <div className="text-sm text-gray-500">Lifetime Earned</div>
+          <div className="bg-white dark:bg-surface-900 rounded-3xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 text-center shadow-sm">
+            <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-500 mx-auto mb-2" />
+            <div className="text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+              {balance?.lifetime_earned || 0}
+            </div>
+            <div className="text-xs sm:text-sm text-surface-500 dark:text-surface-400">Lifetime Earned</div>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
-            <TrendingDown className="w-10 h-10 text-red-500 mx-auto mb-2" />
-            <div className="text-3xl font-bold text-red-600">{balance?.lifetime_redeemed || 0}</div>
-            <div className="text-sm text-gray-500">Lifetime Redeemed</div>
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 text-center shadow-sm col-span-2 lg:col-span-1">
+            <TrendingDown className="w-8 h-8 sm:w-10 sm:h-10 text-red-500 mx-auto mb-2" />
+            <div className="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-400">
+              {balance?.lifetime_redeemed || 0}
+            </div>
+            <div className="text-xs sm:text-sm text-surface-500 dark:text-surface-400">Lifetime Redeemed</div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 p-6 mb-8">
-          <h3 className="font-semibold text-gray-900 mb-4">Redeem Points</h3>
-          <p className="text-sm text-gray-600 mb-4">100 points = $1.00 discount. Redeem your points at checkout.</p>
-          <div className="flex gap-3">
+        <div className="bg-white dark:bg-surface-900 rounded-3xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 mb-6 sm:mb-8 shadow-sm">
+          <h3 className="font-semibold text-surface-900 dark:text-white mb-3 sm:mb-4">Redeem Points</h3>
+          <p className="text-sm text-surface-600 dark:text-surface-400 mb-4">
+            100 points = $1.00 discount. Redeem your points at checkout.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               type="number"
               value={redeemAmount}
               onChange={(e) => setRedeemAmount(e.target.value)}
               placeholder="Points to redeem"
-              className="input-field max-w-xs"
+              className="input-premium w-full sm:max-w-xs"
               min={1}
               max={balance?.points_balance || 0}
             />
             <button
               onClick={handleRedeem}
               disabled={redeeming || !redeemAmount}
-              className="btn-primary"
+              className="btn-marsana min-h-[44px]"
             >
               {redeeming ? 'Redeeming...' : 'Redeem'}
             </button>
           </div>
           {redeemAmount && parseInt(redeemAmount) > 0 && (
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-surface-500 dark:text-surface-400 mt-2">
               This will give you a ${(parseInt(redeemAmount) / 100).toFixed(2)} discount
             </p>
           )}
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 p-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Transaction History</h3>
+        <div className="bg-white dark:bg-surface-900 rounded-3xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 shadow-sm">
+          <h3 className="font-semibold text-surface-900 dark:text-white mb-3 sm:mb-4">
+            Transaction History
+          </h3>
           {transactions.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No transactions yet</p>
+            <p className="text-surface-500 dark:text-surface-400 text-center py-4">
+              No transactions yet
+            </p>
           ) : (
             <div className="space-y-3">
               {transactions.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between py-3 border-b border-gray-50 last:border-0">
-                  <div className="flex items-center gap-3">
+                <div
+                  key={tx.id}
+                  className="flex items-center justify-between py-3 border-b border-surface-50 dark:border-surface-800 last:border-0 gap-3"
+                >
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                     {tx.transaction_type === 'earned' ? (
-                      <TrendingUp className="w-5 h-5 text-green-500" />
+                      <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500 shrink-0" />
                     ) : (
-                      <Gift className="w-5 h-5 text-red-500" />
+                      <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 shrink-0" />
                     )}
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{tx.description}</p>
-                      <p className="text-xs text-gray-500">{new Date(tx.created_at).toLocaleString()}</p>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-surface-900 dark:text-white truncate">
+                        {tx.description}
+                      </p>
+                      <p className="text-xs text-surface-500 dark:text-surface-400">
+                        {new Date(tx.created_at).toLocaleString()}
+                      </p>
                     </div>
                   </div>
-                  <span className={`font-semibold ${tx.transaction_type === 'earned' ? 'text-green-600' : 'text-red-600'}`}>
+                  <span
+                    className={`font-semibold ${
+                      tx.transaction_type === 'earned'
+                        ? 'text-emerald-600 dark:text-emerald-400'
+                        : 'text-red-600 dark:text-red-400'
+                    }`}
+                  >
                     {tx.transaction_type === 'earned' ? '+' : '-'}{tx.points}
                   </span>
                 </div>
@@ -157,7 +206,9 @@ export default function LoyaltyPage() {
             </div>
           )}
         </div>
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

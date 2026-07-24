@@ -45,17 +45,17 @@ export default function GiftCardInput() {
 
   if (hasGiftCard) {
     return (
-      <div className="flex items-center justify-between p-3 bg-purple-50 border border-purple-200 rounded-lg">
+      <div className="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-xl">
         <div className="flex items-center gap-2">
-          <Gift className="w-4 h-4 text-purple-600" />
-          <span className="text-sm font-medium text-purple-700">
+          <Gift className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+          <span className="text-sm font-medium text-purple-700 dark:text-purple-400">
             {cart.summary.gift_card_code}
           </span>
         </div>
         <button
           onClick={handleRemove}
           disabled={loading}
-          className="p-1 text-purple-600 hover:text-purple-800 transition-colors"
+          className="p-1 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-all duration-300"
         >
           <X className="w-4 h-4" />
         </button>
@@ -71,18 +71,18 @@ export default function GiftCardInput() {
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="Gift card code"
-          className="input-field flex-1 text-sm"
+          className="input-premium flex-1 text-sm"
         />
         <button
           type="submit"
           disabled={loading || !code.trim()}
-          className="btn-primary text-sm px-4"
+          className="btn-marsana text-sm px-4"
         >
           {loading ? 'Applying...' : 'Apply'}
         </button>
       </form>
       {message && (
-        <p className={`text-xs mt-1.5 ${isError ? 'text-red-500' : 'text-green-600'}`}>
+        <p className={`text-xs mt-1.5 ${isError ? 'text-red-500 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
           {message}
         </p>
       )}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/api/authService';
-import { Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
 
 const COOLDOWN_SECONDS = 60;
 
@@ -83,38 +83,40 @@ export default function LoginPage() {
 
   if (unverifiedEmail) {
     return (
-      <div className="page-container">
-        <div className="form-container">
-          <div className="card">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertCircle className="h-8 w-8 text-yellow-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900">Email not verified</h1>
-              <p className="text-gray-600 mt-2">
-                Your account <strong>{unverifiedEmail}</strong> has not been verified yet.
-                Please check your inbox or resend the verification email.
-              </p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 px-4 py-8 sm:py-12 overflow-hidden">
+      <div className="w-full max-w-md">
+        <div className="bg-white dark:bg-surface-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-surface-200 dark:border-surface-800">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="h-7 w-7 sm:h-8 sm:w-8 text-amber-500" />
             </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white">
+              Email not verified
+            </h1>
+            <p className="text-surface-500 dark:text-surface-400 mt-2 text-sm sm:text-base">
+              Your account <strong className="text-surface-900 dark:text-white">{unverifiedEmail}</strong> has not been verified yet.
+              Please check your inbox or resend the verification email.
+            </p>
+          </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 flex items-start gap-2">
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl mb-4 flex items-start gap-3">
                 <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
-                <span>{error}</span>
+                <span className="text-sm">{error}</span>
               </div>
             )}
 
             {resendSuccess && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4 flex items-start gap-2">
+              <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-xl mb-4 flex items-start gap-3">
                 <CheckCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
-                <span>Verification email sent! Check your inbox.</span>
+                <span className="text-sm">Verification email sent! Check your inbox.</span>
               </div>
             )}
 
             <button
               onClick={handleResendVerification}
               disabled={resending || cooldown > 0}
-              className="btn-primary w-full mb-4"
+              className="btn-marsana w-full mb-4"
             >
               {resending
                 ? 'Sending...'
@@ -130,7 +132,7 @@ export default function LoginPage() {
                   setResendSuccess(false);
                   setError('');
                 }}
-                className="text-sm text-gray-600 hover:text-gray-900"
+                className="text-sm text-surface-500 dark:text-surface-400 hover:text-marsana-600 dark:hover:text-marsana-400 transition-colors"
               >
                 Back to login
               </button>
@@ -142,31 +144,42 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="page-container">
-      <div className="form-container">
-        <div className="card">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-            <p className="text-gray-600 mt-2">Sign in to your account</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 px-4 py-8 sm:py-12 overflow-hidden">
+      <div className="w-full max-w-md">
+        <div className="bg-white dark:bg-surface-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-surface-200 dark:border-surface-800">
+          <div className="text-center mb-6 sm:mb-8">
+            <Link to="/" className="inline-flex items-center gap-2 text-xl font-bold mb-4 sm:mb-6">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-marsana-500 to-marsana-800 flex items-center justify-center">
+                <span className="text-white font-bold">M</span>
+              </div>
+              <span className="bg-gradient-to-r from-marsana-600 to-violet-600 bg-clip-text text-transparent">
+                Marsana
+              </span>
+            </Link>
+            <h1 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white">Welcome back</h1>
+            <p className="text-surface-500 dark:text-surface-400 mt-2 text-sm sm:text-base">Sign in to your account</p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-              {error}
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl mb-4 flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+              <span className="text-sm">{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="email" className="label">Email address</label>
+              <label htmlFor="email" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                Email address
+              </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="input-field pl-10"
+                  className="input-premium !pl-12"
                   placeholder="you@example.com"
                   required
                 />
@@ -174,22 +187,24 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="label">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                Password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="input-field pl-10 pr-10"
+                  className="input-premium !pl-12 !pr-12"
                   placeholder="Enter your password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -197,16 +212,16 @@ export default function LoginPage() {
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="flex items-center">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-gray-300 text-primary-600 mr-2"
+                  className="w-4 h-4 rounded border-surface-300 text-marsana-600 focus:ring-marsana-500/20"
                 />
-                <span className="text-sm text-gray-600">Remember me</span>
+                <span className="text-sm text-surface-600 dark:text-surface-400">Remember me</span>
               </label>
-              <Link to="/forgot-password" className="text-sm text-primary-600 hover:text-primary-700">
+              <Link to="/forgot-password" className="text-sm text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 font-medium transition-colors">
                 Forgot password?
               </Link>
             </div>
@@ -214,24 +229,36 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full"
+              className="btn-marsana w-full flex items-center justify-center gap-2"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  Sign in
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-surface-200 dark:border-surface-700" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-3 bg-white dark:bg-surface-900 text-surface-400">
+                  Or continue with
+                </span>
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-3 gap-3">
-              <button type="button" className="btn-secondary flex justify-center items-center">
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <button type="button" className="btn-outline !py-3 flex justify-center items-center hover:bg-surface-50 dark:hover:bg-surface-800 min-h-[44px]">
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                   <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -239,12 +266,12 @@ export default function LoginPage() {
                   <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                 </svg>
               </button>
-              <button type="button" className="btn-secondary flex justify-center items-center">
+              <button type="button" className="btn-outline !py-3 flex justify-center items-center hover:bg-surface-50 dark:hover:bg-surface-800 min-h-[44px]">
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                 </svg>
               </button>
-              <button type="button" className="btn-secondary flex justify-center items-center">
+              <button type="button" className="btn-outline !py-3 flex justify-center items-center hover:bg-surface-50 dark:hover:bg-surface-800 min-h-[44px] col-span-2 sm:col-span-1">
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" />
                 </svg>
@@ -252,9 +279,9 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <p className="mt-6 text-center text-sm text-gray-600">
-            Don&apos;t have an account?{' '}
-            <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
+          <p className="mt-8 text-center text-sm text-surface-500 dark:text-surface-400">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 font-semibold transition-colors">
               Sign up
             </Link>
           </p>

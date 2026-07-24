@@ -57,6 +57,7 @@ class ProfileService:
                 "email": user.email,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
+                "role": user.role,
                 "is_email_verified": user.is_email_verified,
                 "is_2fa_enabled": user.is_2fa_enabled,
             },

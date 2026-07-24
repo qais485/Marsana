@@ -31,8 +31,8 @@ export default function ProductGallery({ images = [], productName = '' }) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden group">
+    <div className="flex flex-col gap-3 sm:gap-4">
+      <div className="relative aspect-square bg-surface-100 rounded-xl overflow-hidden group">
         <img
           src={allImages[selectedIndex]?.url}
           alt={allImages[selectedIndex]?.alt_text || productName}
@@ -43,27 +43,27 @@ export default function ProductGallery({ images = [], productName = '' }) {
           <>
             <button
               onClick={handlePrev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/80 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
+              className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 p-2 sm:p-2.5 bg-white/80 rounded-full shadow-sm sm:opacity-0 sm:group-hover:opacity-100 transition-opacity hover:bg-white min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Previous image"
             >
-              <ChevronLeft className="w-5 h-5 text-gray-700" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-surface-700" />
             </button>
             <button
               onClick={handleNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/80 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
+              className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-2 sm:p-2.5 bg-white/80 rounded-full shadow-sm sm:opacity-0 sm:group-hover:opacity-100 transition-opacity hover:bg-white min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Next image"
             >
-              <ChevronRight className="w-5 h-5 text-gray-700" />
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-surface-700" />
             </button>
           </>
         )}
 
         <button
           onClick={() => setIsZoomed(true)}
-          className="absolute top-2 right-2 p-2 bg-white/80 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
+          className="absolute top-2 sm:top-3 right-2 sm:right-3 p-2 sm:p-2.5 bg-white/80 rounded-full shadow-sm sm:opacity-0 sm:group-hover:opacity-100 transition-opacity hover:bg-white min-h-[44px] min-w-[44px] flex items-center justify-center"
           aria-label="Zoom image"
         >
-          <ZoomIn className="w-5 h-5 text-gray-700" />
+          <ZoomIn className="w-4 h-4 sm:w-5 sm:h-5 text-surface-700" />
         </button>
 
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-2 py-1 rounded">
@@ -72,15 +72,15 @@ export default function ProductGallery({ images = [], productName = '' }) {
       </div>
 
       {allImages.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory scrollbar-hide">
           {allImages.map((image, index) => (
             <button
               key={image.id || index}
               onClick={() => setSelectedIndex(index)}
-              className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+              className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-colors snap-start min-h-[44px] min-w-[44px] ${
                 index === selectedIndex
-                  ? 'border-primary-600'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? 'border-marsana-600'
+                  : 'border-surface-200 hover:border-surface-300'
               }`}
             >
               <img

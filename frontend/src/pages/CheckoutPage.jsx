@@ -325,14 +325,17 @@ export default function CheckoutPage() {
   const billingAddresses = savedAddresses.filter((a) => a.address_type === 'billing');
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      <header className="bg-white/80 dark:bg-surface-950/80 backdrop-blur-2xl border-b border-surface-100/50 dark:border-surface-800/50 sticky top-0 z-50">
+        <div className="section-premium">
           <div className="flex justify-between items-center h-16">
-            <Link to="/" className="text-xl font-bold text-primary-600">
-              E-Commerce
+            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-marsana-600 dark:text-marsana-400">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-marsana-500 to-accent-violet flex items-center justify-center">
+                <span className="text-white font-bold text-sm">M</span>
+              </div>
+              Marsana
             </Link>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm text-surface-500 dark:text-surface-400">
               <Lock className="w-4 h-4" />
               Secure Checkout
             </div>
@@ -340,16 +343,12 @@ export default function CheckoutPage() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <button
-          onClick={() => navigate('/cart')}
-          className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Cart
+      <main className="section-premium py-6 lg:py-8">
+        <button onClick={() => navigate('/cart')} className="flex items-center gap-1 text-xs sm:text-sm text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-300 mb-4 sm:mb-6 transition-colors min-h-[44px]">
+          <ArrowLeft className="w-4 h-4" /> Back to Cart
         </button>
 
-        <div className="flex items-center justify-center mb-8">
+        <div className="flex items-center justify-center mb-6 lg:mb-8 overflow-x-auto px-2">
           {STEPS.map((step, index) => {
             const StepIcon = step.icon;
             const isActive = currentStep === step.id;
@@ -358,26 +357,26 @@ export default function CheckoutPage() {
               (step.id === 'payment' && currentStep === 'review');
 
             return (
-              <div key={step.id} className="flex items-center">
-                <div className="flex items-center gap-2">
+              <div key={step.id} className="flex items-center flex-shrink-0">
+                <div className="flex items-center gap-1.5 sm:gap-2">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl flex items-center justify-center text-xs sm:text-sm font-bold transition-all duration-300 ${
                       isCompleted
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-gradient-to-r from-accent-emerald to-emerald-500 text-white shadow-glow'
                         : isActive
-                        ? 'bg-primary-600 text-white'
-                        : 'bg-gray-200 text-gray-500'
+                        ? 'bg-gradient-to-r from-marsana-500 to-accent-violet text-white shadow-glow-sm'
+                        : 'bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400'
                     }`}
                   >
                     {isCompleted ? (
-                      <Check className="w-4 h-4" />
+                      <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     ) : (
-                      <StepIcon className="w-4 h-4" />
+                      <StepIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     )}
                   </div>
                   <span
-                    className={`text-sm font-medium hidden sm:block ${
-                      isActive ? 'text-gray-900' : 'text-gray-500'
+                    className={`text-xs sm:text-sm font-medium hidden sm:block ${
+                      isActive ? 'text-surface-900 dark:text-white' : 'text-surface-500 dark:text-surface-400'
                     }`}
                   >
                     {step.label}
@@ -385,8 +384,8 @@ export default function CheckoutPage() {
                 </div>
                 {index < STEPS.length - 1 && (
                   <div
-                    className={`w-12 sm:w-20 h-0.5 mx-2 ${
-                      isCompleted ? 'bg-green-500' : 'bg-gray-200'
+                    className={`w-8 sm:w-20 h-0.5 mx-1.5 sm:mx-2 rounded-full ${
+                      isCompleted ? 'bg-accent-emerald' : 'bg-surface-200 dark:bg-surface-700'
                     }`}
                   />
                 )}
@@ -396,32 +395,32 @@ export default function CheckoutPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          <div className="mb-6 p-4 bg-accent-rose/10 border border-accent-rose/20 rounded-2xl text-sm text-accent-rose font-medium">
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="lg:col-span-2 order-2 lg:order-1">
             {currentStep === 'shipping' && (
-              <div className="bg-white rounded-xl border border-gray-100 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-6">
+              <div className="bg-white dark:bg-surface-900 rounded-2xl lg:rounded-3xl border border-surface-100/50 dark:border-surface-800/50 p-4 sm:p-6 lg:p-8 shadow-soft">
+                <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white mb-6 lg:mb-8">
                   Shipping Information
                 </h2>
 
                 {isAuthenticated && shippingAddresses.length > 0 && (
                   <div className="mb-6">
-                    <p className="text-sm font-medium text-gray-700 mb-3">
+                    <p className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-3">
                       Select a saved address
                     </p>
                     <div className="space-y-2">
                       {shippingAddresses.map((addr) => (
                         <label
                           key={addr.id}
-                          className={`flex items-start gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
+                          className={`flex items-start gap-3 p-4 border rounded-2xl cursor-pointer transition-all duration-200 ${
                             selectedShippingAddressId === addr.id
-                              ? 'border-primary-500 bg-primary-50'
-                              : 'border-gray-200 hover:border-gray-300'
+                              ? 'border-marsana-500 bg-marsana-50 dark:bg-marsana-950 shadow-glow-sm'
+                              : 'border-surface-200 dark:border-surface-800 hover:border-surface-300 dark:hover:border-surface-700'
                           }`}
                         >
                           <input
@@ -429,16 +428,16 @@ export default function CheckoutPage() {
                             name="shipping_address"
                             checked={selectedShippingAddressId === addr.id}
                             onChange={() => setSelectedShippingAddressId(addr.id)}
-                            className="mt-1 w-4 h-4 text-primary-600"
+                            className="mt-1 w-4 h-4 text-marsana-500"
                           />
                           <div className="text-sm">
-                            <p className="font-medium text-gray-900">
+                            <p className="font-semibold text-surface-900 dark:text-white">
                               {addr.label || `${addr.address_line_1}`}
                               {addr.is_default && (
-                                <span className="ml-2 text-xs text-primary-600">(Default)</span>
+                                <span className="ml-2 text-xs text-marsana-600 dark:text-marsana-400">(Default)</span>
                               )}
                             </p>
-                            <p className="text-gray-500">
+                            <p className="text-surface-500 dark:text-surface-400">
                               {addr.address_line_1}, {addr.city}, {addr.state} {addr.postal_code}
                             </p>
                           </div>
@@ -447,7 +446,7 @@ export default function CheckoutPage() {
                     </div>
                     <button
                       onClick={() => setSelectedShippingAddressId(null)}
-                      className="mt-3 text-sm text-primary-600 hover:text-primary-700"
+                      className="mt-3 text-sm text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 font-medium transition-colors"
                     >
                       + Use a new address
                     </button>
@@ -455,117 +454,56 @@ export default function CheckoutPage() {
                 )}
 
                 {(!isAuthenticated || !selectedShippingAddressId) && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="label">First Name *</label>
-                      <input
-                        type="text"
-                        name="first_name"
-                        value={shippingForm.first_name}
-                        onChange={handleShippingChange}
-                        className="input-field"
-                        required
-                      />
+                      <label className="label-premium">First Name *</label>
+                      <input type="text" name="first_name" value={shippingForm.first_name} onChange={handleShippingChange} className="input-premium" required />
                     </div>
                     <div>
-                      <label className="label">Last Name *</label>
-                      <input
-                        type="text"
-                        name="last_name"
-                        value={shippingForm.last_name}
-                        onChange={handleShippingChange}
-                        className="input-field"
-                        required
-                      />
+                      <label className="label-premium">Last Name *</label>
+                      <input type="text" name="last_name" value={shippingForm.last_name} onChange={handleShippingChange} className="input-premium" required />
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="label">Phone Number</label>
-                      <input
-                        type="tel"
-                        name="phone_number"
-                        value={shippingForm.phone_number}
-                        onChange={handleShippingChange}
-                        className="input-field"
-                      />
+                      <label className="label-premium">Phone Number</label>
+                      <input type="tel" name="phone_number" value={shippingForm.phone_number} onChange={handleShippingChange} className="input-premium" />
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="label">Address Line 1 *</label>
-                      <input
-                        type="text"
-                        name="address_line_1"
-                        value={shippingForm.address_line_1}
-                        onChange={handleShippingChange}
-                        className="input-field"
-                        required
-                      />
+                      <label className="label-premium">Address Line 1 *</label>
+                      <input type="text" name="address_line_1" value={shippingForm.address_line_1} onChange={handleShippingChange} className="input-premium" required />
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="label">Address Line 2</label>
-                      <input
-                        type="text"
-                        name="address_line_2"
-                        value={shippingForm.address_line_2}
-                        onChange={handleShippingChange}
-                        className="input-field"
-                      />
+                      <label className="label-premium">Address Line 2</label>
+                      <input type="text" name="address_line_2" value={shippingForm.address_line_2} onChange={handleShippingChange} className="input-premium" />
                     </div>
                     <div>
-                      <label className="label">City *</label>
-                      <input
-                        type="text"
-                        name="city"
-                        value={shippingForm.city}
-                        onChange={handleShippingChange}
-                        className="input-field"
-                        required
-                      />
+                      <label className="label-premium">City *</label>
+                      <input type="text" name="city" value={shippingForm.city} onChange={handleShippingChange} className="input-premium" required />
                     </div>
                     <div>
-                      <label className="label">State *</label>
-                      <input
-                        type="text"
-                        name="state"
-                        value={shippingForm.state}
-                        onChange={handleShippingChange}
-                        className="input-field"
-                        required
-                      />
+                      <label className="label-premium">State *</label>
+                      <input type="text" name="state" value={shippingForm.state} onChange={handleShippingChange} className="input-premium" required />
                     </div>
                     <div>
-                      <label className="label">Postal Code *</label>
-                      <input
-                        type="text"
-                        name="postal_code"
-                        value={shippingForm.postal_code}
-                        onChange={handleShippingChange}
-                        className="input-field"
-                        required
-                      />
+                      <label className="label-premium">Postal Code *</label>
+                      <input type="text" name="postal_code" value={shippingForm.postal_code} onChange={handleShippingChange} className="input-premium" required />
                     </div>
                     <div>
-                      <label className="label">Country *</label>
-                      <input
-                        type="text"
-                        name="country"
-                        value={shippingForm.country}
-                        onChange={handleShippingChange}
-                        className="input-field"
-                        required
-                      />
+                      <label className="label-premium">Country *</label>
+                      <input type="text" name="country" value={shippingForm.country} onChange={handleShippingChange} className="input-premium" required />
                     </div>
                   </div>
                 )}
 
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <h3 className="text-sm font-medium text-gray-700 mb-3">
+                <div className="mt-6 pt-6 border-t border-surface-100 dark:border-surface-800">
+                  <h3 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-3">
                     Delivery Method
                   </h3>
                   <div className="space-y-2 mb-4">
                     <label
-                      className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
+                      className={`flex items-center gap-3 p-3 border rounded-xl cursor-pointer transition-colors ${
                         deliveryType === 'shipping'
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-marsana-500 bg-marsana-50 dark:bg-marsana-950'
+                          : 'border-surface-200 dark:border-surface-700 hover:border-surface-300 dark:hover:border-surface-600'
                       }`}
                     >
                       <input
@@ -573,20 +511,20 @@ export default function CheckoutPage() {
                         name="delivery_type"
                         checked={deliveryType === 'shipping'}
                         onChange={() => setDeliveryType('shipping')}
-                        className="w-4 h-4 text-primary-600"
+                        className="w-4 h-4 text-marsana-500"
                       />
-                      <Truck className="w-5 h-5 text-gray-500" />
+                      <Truck className="w-5 h-5 text-surface-500 dark:text-surface-400" />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">Ship to Address</p>
-                        <p className="text-xs text-gray-500">Delivered to your door</p>
+                        <p className="text-sm font-medium text-surface-900 dark:text-white">Ship to Address</p>
+                        <p className="text-xs text-surface-500 dark:text-surface-400">Delivered to your door</p>
                       </div>
                     </label>
                     {pickupLocations.length > 0 && (
                       <label
-                        className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
+                        className={`flex items-center gap-3 p-3 border rounded-xl cursor-pointer transition-colors ${
                           deliveryType === 'pickup'
-                            ? 'border-primary-500 bg-primary-50'
-                            : 'border-gray-200 hover:border-gray-300'
+                            ? 'border-marsana-500 bg-marsana-50 dark:bg-marsana-950'
+                            : 'border-surface-200 dark:border-surface-700 hover:border-surface-300 dark:hover:border-surface-600'
                         }`}
                       >
                         <input
@@ -594,12 +532,12 @@ export default function CheckoutPage() {
                           name="delivery_type"
                           checked={deliveryType === 'pickup'}
                           onChange={() => setDeliveryType('pickup')}
-                          className="w-4 h-4 text-primary-600"
+                          className="w-4 h-4 text-marsana-500"
                         />
-                        <MapPin className="w-5 h-5 text-gray-500" />
+                        <MapPin className="w-5 h-5 text-surface-500 dark:text-surface-400" />
                         <div>
-                          <p className="text-sm font-medium text-gray-900">Store Pickup</p>
-                          <p className="text-xs text-gray-500">Free - Pick up from store</p>
+                          <p className="text-sm font-medium text-surface-900 dark:text-white">Store Pickup</p>
+                          <p className="text-xs text-surface-500 dark:text-surface-400">Free - Pick up from store</p>
                         </div>
                       </label>
                     )}
@@ -610,10 +548,10 @@ export default function CheckoutPage() {
                       {shippingMethods.map((method) => (
                         <label
                           key={method.id}
-                          className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
+                          className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-colors ${
                             shippingMethod === method.id
-                              ? 'border-primary-500 bg-primary-50'
-                              : 'border-gray-200 hover:border-gray-300'
+                              ? 'border-marsana-500 bg-marsana-50 dark:bg-marsana-950'
+                              : 'border-surface-200 dark:border-surface-700 hover:border-surface-300 dark:hover:border-surface-600'
                           }`}
                         >
                           <div className="flex items-center gap-3">
@@ -622,23 +560,23 @@ export default function CheckoutPage() {
                               name="shipping_method"
                               checked={shippingMethod === method.id}
                               onChange={() => setShippingMethod(method.id)}
-                              className="w-4 h-4 text-primary-600"
+                              className="w-4 h-4 text-marsana-500"
                             />
                             <div>
-                              <p className="text-sm font-medium text-gray-900">{method.name}</p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-sm font-medium text-surface-900 dark:text-white">{method.name}</p>
+                              <p className="text-xs text-surface-500 dark:text-surface-400">
                                 {method.estimated_days_min}-{method.estimated_days_max} business days
                                 {method.carrier && ` - ${method.carrier}`}
                               </p>
                             </div>
                           </div>
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-surface-900 dark:text-white">
                             {method.free_shipping ? 'Free' : formatPrice(method.cost)}
                           </span>
                         </label>
                       ))}
                       {shippingMethods.length === 0 && (
-                        <p className="text-sm text-gray-500 text-center py-4">
+                        <p className="text-sm text-surface-500 dark:text-surface-400 text-center py-4">
                           Enter your shipping address to see available methods
                         </p>
                       )}
@@ -650,10 +588,10 @@ export default function CheckoutPage() {
                       {pickupLocations.map((location) => (
                         <label
                           key={location.id}
-                          className={`flex items-start gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
+                          className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors ${
                             selectedPickupLocation === location.id
-                              ? 'border-primary-500 bg-primary-50'
-                              : 'border-gray-200 hover:border-gray-300'
+                              ? 'border-marsana-500 bg-marsana-50 dark:bg-marsana-950'
+                              : 'border-surface-200 dark:border-surface-700 hover:border-surface-300 dark:hover:border-surface-600'
                           }`}
                         >
                           <input
@@ -661,15 +599,15 @@ export default function CheckoutPage() {
                             name="pickup_location"
                             checked={selectedPickupLocation === location.id}
                             onChange={() => setSelectedPickupLocation(location.id)}
-                            className="mt-1 w-4 h-4 text-primary-600"
+                            className="mt-1 w-4 h-4 text-marsana-500"
                           />
                           <div>
-                            <p className="text-sm font-medium text-gray-900">{location.name}</p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-sm font-medium text-surface-900 dark:text-white">{location.name}</p>
+                            <p className="text-xs text-surface-500 dark:text-surface-400">
                               {location.address_line_1}, {location.city}, {location.state} {location.postal_code}
                             </p>
                             {location.working_hours && (
-                              <p className="text-xs text-gray-500">{location.working_hours}</p>
+                              <p className="text-xs text-surface-500 dark:text-surface-400">{location.working_hours}</p>
                             )}
                           </div>
                         </label>
@@ -678,15 +616,15 @@ export default function CheckoutPage() {
                   )}
                 </div>
 
-                <div className="mt-6 pt-6 border-t border-gray-100">
+                <div className="mt-6 pt-6 border-t border-surface-100 dark:border-surface-800">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={billingSameAsShipping}
                       onChange={(e) => setBillingSameAsShipping(e.target.checked)}
-                      className="w-4 h-4 text-primary-600 rounded"
+                      className="w-4 h-4 text-marsana-500 rounded"
                     />
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-surface-700 dark:text-surface-300">
                       Billing address same as shipping
                     </span>
                   </label>
@@ -694,7 +632,7 @@ export default function CheckoutPage() {
 
                 {!billingSameAsShipping && (
                   <div className="mt-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-3">
+                    <h3 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-3">
                       Billing Address
                     </h3>
                     {isAuthenticated && billingAddresses.length > 0 && (
@@ -703,10 +641,10 @@ export default function CheckoutPage() {
                           {billingAddresses.map((addr) => (
                             <label
                               key={addr.id}
-                              className={`flex items-start gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
+                              className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-colors ${
                                 selectedBillingAddressId === addr.id
-                                  ? 'border-primary-500 bg-primary-50'
-                                  : 'border-gray-200 hover:border-gray-300'
+                                  ? 'border-marsana-500 bg-marsana-50 dark:bg-marsana-950'
+                                  : 'border-surface-200 dark:border-surface-700 hover:border-surface-300 dark:hover:border-surface-600'
                               }`}
                             >
                               <input
@@ -714,13 +652,13 @@ export default function CheckoutPage() {
                                 name="billing_address"
                                 checked={selectedBillingAddressId === addr.id}
                                 onChange={() => setSelectedBillingAddressId(addr.id)}
-                                className="mt-1 w-4 h-4 text-primary-600"
+                                className="mt-1 w-4 h-4 text-marsana-500"
                               />
                               <div className="text-sm">
-                                <p className="font-medium text-gray-900">
+                                <p className="font-medium text-surface-900 dark:text-white">
                                   {addr.label || addr.address_line_1}
                                 </p>
-                                <p className="text-gray-500">
+                                <p className="text-surface-500 dark:text-surface-400">
                                   {addr.address_line_1}, {addr.city}, {addr.state} {addr.postal_code}
                                 </p>
                               </div>
@@ -729,7 +667,7 @@ export default function CheckoutPage() {
                         </div>
                         <button
                           onClick={() => setSelectedBillingAddressId(null)}
-                          className="mt-3 text-sm text-primary-600 hover:text-primary-700"
+                          className="mt-3 text-sm text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300"
                         >
                           + Use a new address
                         </button>
@@ -738,83 +676,83 @@ export default function CheckoutPage() {
                     {(!isAuthenticated || !selectedBillingAddressId) && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="label">First Name *</label>
+                          <label className="label-premium">First Name *</label>
                           <input
                             type="text"
                             name="first_name"
                             value={billingForm.first_name}
                             onChange={handleBillingChange}
-                            className="input-field"
+                            className="input-premium"
                           />
                         </div>
                         <div>
-                          <label className="label">Last Name *</label>
+                          <label className="label-premium">Last Name *</label>
                           <input
                             type="text"
                             name="last_name"
                             value={billingForm.last_name}
                             onChange={handleBillingChange}
-                            className="input-field"
+                            className="input-premium"
                           />
                         </div>
                         <div className="sm:col-span-2">
-                          <label className="label">Address Line 1 *</label>
+                          <label className="label-premium">Address Line 1 *</label>
                           <input
                             type="text"
                             name="address_line_1"
                             value={billingForm.address_line_1}
                             onChange={handleBillingChange}
-                            className="input-field"
+                            className="input-premium"
                           />
                         </div>
                         <div className="sm:col-span-2">
-                          <label className="label">Address Line 2</label>
+                          <label className="label-premium">Address Line 2</label>
                           <input
                             type="text"
                             name="address_line_2"
                             value={billingForm.address_line_2}
                             onChange={handleBillingChange}
-                            className="input-field"
+                            className="input-premium"
                           />
                         </div>
                         <div>
-                          <label className="label">City *</label>
+                          <label className="label-premium">City *</label>
                           <input
                             type="text"
                             name="city"
                             value={billingForm.city}
                             onChange={handleBillingChange}
-                            className="input-field"
+                            className="input-premium"
                           />
                         </div>
                         <div>
-                          <label className="label">State *</label>
+                          <label className="label-premium">State *</label>
                           <input
                             type="text"
                             name="state"
                             value={billingForm.state}
                             onChange={handleBillingChange}
-                            className="input-field"
+                            className="input-premium"
                           />
                         </div>
                         <div>
-                          <label className="label">Postal Code *</label>
+                          <label className="label-premium">Postal Code *</label>
                           <input
                             type="text"
                             name="postal_code"
                             value={billingForm.postal_code}
                             onChange={handleBillingChange}
-                            className="input-field"
+                            className="input-premium"
                           />
                         </div>
                         <div>
-                          <label className="label">Country *</label>
+                          <label className="label-premium">Country *</label>
                           <input
                             type="text"
                             name="country"
                             value={billingForm.country}
                             onChange={handleBillingChange}
-                            className="input-field"
+                            className="input-premium"
                           />
                         </div>
                       </div>
@@ -822,8 +760,8 @@ export default function CheckoutPage() {
                   </div>
                 )}
 
-                <div className="mt-6 flex justify-end">
-                  <button onClick={handleNext} className="btn-primary px-8">
+                <div className="mt-6 sm:mt-8 flex justify-end">
+                  <button onClick={handleNext} className="btn-marsana px-6 sm:px-8 py-3 min-h-[48px] w-full sm:w-auto">
                     Continue to Payment
                   </button>
                 </div>
@@ -831,8 +769,8 @@ export default function CheckoutPage() {
             )}
 
             {currentStep === 'payment' && (
-              <div className="bg-white rounded-xl border border-gray-100 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-6">
+              <div className="bg-white dark:bg-surface-900 rounded-2xl lg:rounded-3xl border border-surface-100/50 dark:border-surface-800/50 p-4 sm:p-6 lg:p-8 shadow-soft">
+                <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white mb-6 lg:mb-8">
                   Payment Method
                 </h2>
 
@@ -844,10 +782,10 @@ export default function CheckoutPage() {
                   ].map((method) => (
                     <label
                       key={method.id}
-                      className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${
+                      className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-colors ${
                         paymentMethod === method.id
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-marsana-500 bg-marsana-50 dark:bg-marsana-950'
+                          : 'border-surface-200 dark:border-surface-700 hover:border-surface-300 dark:hover:border-surface-600'
                       }`}
                     >
                       <input
@@ -855,68 +793,68 @@ export default function CheckoutPage() {
                         name="payment_method"
                         checked={paymentMethod === method.id}
                         onChange={() => setPaymentMethod(method.id)}
-                        className="w-4 h-4 text-primary-600"
+                        className="w-4 h-4 text-marsana-500"
                       />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{method.name}</p>
-                        <p className="text-xs text-gray-500">{method.desc}</p>
+                        <p className="text-sm font-medium text-surface-900 dark:text-white">{method.name}</p>
+                        <p className="text-xs text-surface-500 dark:text-surface-400">{method.desc}</p>
                       </div>
                     </label>
                   ))}
                 </div>
 
                 {paymentMethod === 'credit_card' && (
-                  <div className="p-4 bg-gray-50 rounded-lg space-y-4">
+                  <div className="p-4 bg-surface-50 dark:bg-surface-800 rounded-xl space-y-4">
                     <div>
-                      <label className="label">Cardholder Name</label>
+                      <label className="label-premium">Cardholder Name</label>
                       <input
                         type="text"
                         name="cardholder_name"
                         value={cardDetails.cardholder_name}
                         onChange={handleCardChange}
-                        className="input-field"
+                        className="input-premium"
                         placeholder="John Smith"
                       />
                     </div>
                     <div>
-                      <label className="label">Card Number</label>
+                      <label className="label-premium">Card Number</label>
                       <input
                         type="text"
                         name="card_number"
                         value={cardDetails.card_number}
                         onChange={handleCardChange}
-                        className="input-field"
+                        className="input-premium"
                         placeholder="1234 5678 9012 3456"
                         maxLength={19}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="label">Expiry Date</label>
+                        <label className="label-premium">Expiry Date</label>
                         <input
                           type="text"
                           name="expiry"
                           value={cardDetails.expiry}
                           onChange={handleCardChange}
-                          className="input-field"
+                          className="input-premium"
                           placeholder="MM/YY"
                           maxLength={5}
                         />
                       </div>
                       <div>
-                        <label className="label">CVV</label>
+                        <label className="label-premium">CVV</label>
                         <input
                           type="text"
                           name="cvv"
                           value={cardDetails.cvv}
                           onChange={handleCardChange}
-                          className="input-field"
+                          className="input-premium"
                           placeholder="123"
                           maxLength={4}
                         />
                       </div>
                     </div>
-                    <p className="text-xs text-gray-500 flex items-center gap-1">
+                    <p className="text-xs text-surface-500 dark:text-surface-400 flex items-center gap-1">
                       <Lock className="w-3 h-3" />
                       This is a simulated payment. No real charges will be made.
                     </p>
@@ -924,30 +862,30 @@ export default function CheckoutPage() {
                 )}
 
                 {paymentMethod === 'paypal' && (
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-blue-700">
+                  <div className="p-4 bg-marsana-50 dark:bg-marsana-950/50 rounded-xl">
+                    <p className="text-sm text-marsana-700 dark:text-marsana-300">
                       You will be redirected to PayPal to complete your payment after reviewing your order.
                     </p>
                   </div>
                 )}
 
                 <div className="mt-6">
-                  <label className="label">Order Notes (Optional)</label>
+                  <label className="label-premium">Order Notes (Optional)</label>
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    className="input-field"
+                    className="input-premium"
                     rows={3}
                     placeholder="Any special instructions for your order..."
                     maxLength={500}
                   />
                 </div>
 
-                <div className="mt-6 flex justify-between">
-                  <button onClick={handleBack} className="btn-secondary px-6">
+                <div className="mt-6 sm:mt-8 flex flex-col-reverse sm:flex-row justify-between gap-3">
+                  <button onClick={handleBack} className="btn-ghost px-6 py-3 min-h-[48px]">
                     Back
                   </button>
-                  <button onClick={handleNext} className="btn-primary px-8">
+                  <button onClick={handleNext} className="btn-marsana px-6 sm:px-8 py-3 min-h-[48px]">
                     Review Order
                   </button>
                 </div>
@@ -955,81 +893,81 @@ export default function CheckoutPage() {
             )}
 
             {currentStep === 'review' && (
-              <div className="bg-white rounded-xl border border-gray-100 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-6">
+              <div className="bg-white dark:bg-surface-900 rounded-2xl lg:rounded-3xl border border-surface-100/50 dark:border-surface-800/50 p-4 sm:p-6 lg:p-8 shadow-soft">
+                <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white mb-6 lg:mb-8">
                   Review Your Order
                 </h2>
 
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">
+                    <h3 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
                       Shipping Address
                     </h3>
-                    <div className="p-3 bg-gray-50 rounded-lg text-sm">
-                      <p className="font-medium">
+                    <div className="p-3 bg-surface-50 dark:bg-surface-800 rounded-xl text-sm">
+                      <p className="font-medium text-surface-900 dark:text-white">
                         {getActiveShippingAddress().first_name}{' '}
                         {getActiveShippingAddress().last_name}
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-surface-600 dark:text-surface-400">
                         {getActiveShippingAddress().address_line_1}
                         {getActiveShippingAddress().address_line_2 &&
                           `, ${getActiveShippingAddress().address_line_2}`}
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-surface-600 dark:text-surface-400">
                         {getActiveShippingAddress().city},{' '}
                         {getActiveShippingAddress().state}{' '}
                         {getActiveShippingAddress().postal_code}
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-surface-600 dark:text-surface-400">
                         {getActiveShippingAddress().country}
                       </p>
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">
+                    <h3 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
                       Billing Address
                     </h3>
-                    <div className="p-3 bg-gray-50 rounded-lg text-sm">
-                      <p className="font-medium">
+                    <div className="p-3 bg-surface-50 dark:bg-surface-800 rounded-xl text-sm">
+                      <p className="font-medium text-surface-900 dark:text-white">
                         {getActiveBillingAddress().first_name}{' '}
                         {getActiveBillingAddress().last_name}
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-surface-600 dark:text-surface-400">
                         {getActiveBillingAddress().address_line_1}
                         {getActiveBillingAddress().address_line_2 &&
                           `, ${getActiveBillingAddress().address_line_2}`}
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-surface-600 dark:text-surface-400">
                         {getActiveBillingAddress().city},{' '}
                         {getActiveBillingAddress().state}{' '}
                         {getActiveBillingAddress().postal_code}
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-surface-600 dark:text-surface-400">
                         {getActiveBillingAddress().country}
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                      <h3 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
                         Delivery Method
                       </h3>
-                      <div className="p-3 bg-gray-50 rounded-lg text-sm">
+                      <div className="p-3 bg-surface-50 dark:bg-surface-800 rounded-xl text-sm">
                         {deliveryType === 'pickup' ? (
                           <>
-                            <p className="font-medium">Store Pickup</p>
-                            <p className="text-gray-500">
+                            <p className="font-medium text-surface-900 dark:text-white">Store Pickup</p>
+                            <p className="text-surface-500 dark:text-surface-400">
                               {pickupLocations.find(l => l.id === selectedPickupLocation)?.name || 'Selected location'}
                             </p>
                           </>
                         ) : (
                           <>
-                            <p className="font-medium">
+                            <p className="font-medium text-surface-900 dark:text-white">
                               {shippingMethods.find(m => m.id === shippingMethod)?.name || shippingMethod}
                             </p>
-                            <p className="text-gray-500">
+                            <p className="text-surface-500 dark:text-surface-400">
                               {shippingMethods.find(m => m.id === shippingMethod)
                                 ? `${shippingMethods.find(m => m.id === shippingMethod).estimated_days_min}-${shippingMethods.find(m => m.id === shippingMethod).estimated_days_max} business days`
                                 : 'Estimated delivery'}
@@ -1039,11 +977,11 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                      <h3 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
                         Payment Method
                       </h3>
-                      <div className="p-3 bg-gray-50 rounded-lg text-sm">
-                        <p className="font-medium">
+                      <div className="p-3 bg-surface-50 dark:bg-surface-800 rounded-xl text-sm">
+                        <p className="font-medium text-surface-900 dark:text-white">
                           {paymentMethod === 'cod' && 'Cash on Delivery'}
                           {paymentMethod === 'credit_card' &&
                             `Card ending in ${cardDetails.card_number.slice(-4)}`}
@@ -1054,16 +992,16 @@ export default function CheckoutPage() {
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-medium text-gray-700 mb-3">
+                    <h3 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-3">
                       Order Items
                     </h3>
                     <div className="space-y-3">
                       {cart.items.map((item) => (
                         <div
                           key={item.id}
-                          className="flex gap-3 p-3 bg-gray-50 rounded-lg"
+                          className="flex gap-3 p-3 bg-surface-50 dark:bg-surface-800 rounded-xl"
                         >
-                          <div className="w-14 h-14 flex-shrink-0 bg-gray-200 rounded-lg overflow-hidden">
+                          <div className="w-14 h-14 flex-shrink-0 bg-surface-200 dark:bg-surface-700 rounded-xl overflow-hidden">
                             <img
                               src={item.product_image || 'https://placehold.co/60x60/e2e8f0/94a3b8?text=No+Image'}
                               alt={item.product_name}
@@ -1071,12 +1009,12 @@ export default function CheckoutPage() {
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
+                            <p className="text-sm font-medium text-surface-900 dark:text-white truncate">
                               {item.product_name}
                             </p>
-                            <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                            <p className="text-xs text-surface-500 dark:text-surface-400">Qty: {item.quantity}</p>
                           </div>
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-surface-900 dark:text-white">
                             {formatPrice(item.product_price * item.quantity)}
                           </p>
                         </div>
@@ -1086,31 +1024,31 @@ export default function CheckoutPage() {
 
                   {notes && (
                     <div>
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                      <h3 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
                         Order Notes
                       </h3>
-                      <p className="p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+                      <p className="p-3 bg-surface-50 dark:bg-surface-800 rounded-xl text-sm text-surface-600 dark:text-surface-400">
                         {notes}
                       </p>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-6 pt-6 border-t border-gray-100">
+                <div className="mt-6 pt-6 border-t border-surface-100 dark:border-surface-800">
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={termsAgreed}
                       onChange={(e) => setTermsAgreed(e.target.checked)}
-                      className="mt-1 w-4 h-4 text-primary-600 rounded"
+                      className="mt-1 w-4 h-4 text-marsana-500 rounded"
                     />
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-surface-600 dark:text-surface-400">
                       I agree to the{' '}
-                      <Link to="#" className="text-primary-600 hover:underline">
+                      <Link to="#" className="text-marsana-600 dark:text-marsana-400 hover:underline">
                         Terms and Conditions
                       </Link>{' '}
                       and{' '}
-                      <Link to="#" className="text-primary-600 hover:underline">
+                      <Link to="#" className="text-marsana-600 dark:text-marsana-400 hover:underline">
                         Privacy Policy
                       </Link>
                       . I understand that this is a simulated checkout and no real payment
@@ -1119,14 +1057,14 @@ export default function CheckoutPage() {
                   </label>
                 </div>
 
-                <div className="mt-6 flex justify-between">
-                  <button onClick={handleBack} className="btn-secondary px-6">
+                <div className="mt-6 sm:mt-8 flex flex-col-reverse sm:flex-row justify-between gap-3">
+                  <button onClick={handleBack} className="btn-ghost px-6 py-3 min-h-[48px]">
                     Back
                   </button>
                   <button
                     onClick={handlePlaceOrder}
                     disabled={!termsAgreed || placing}
-                    className="btn-primary px-8 flex items-center gap-2"
+                    className="btn-marsana px-6 sm:px-8 py-3 min-h-[48px] flex items-center justify-center gap-2 w-full sm:w-auto"
                   >
                     {placing ? (
                       <>
@@ -1145,73 +1083,64 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl border border-gray-100 p-6 sticky top-24">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="lg:col-span-1 order-1 lg:order-2">
+            <div className="bg-white dark:bg-surface-900 rounded-2xl lg:rounded-3xl border border-surface-100/50 dark:border-surface-800/50 p-4 sm:p-6 lg:p-8 shadow-soft lg:sticky lg:top-24">
+              <h3 className="text-lg font-bold text-surface-900 dark:text-white mb-6">
                 Order Summary
               </h3>
 
-              <div className="max-h-48 overflow-y-auto mb-4">
+              <div className="max-h-48 overflow-y-auto mb-6 space-y-3">
                 {cart.items.map((item) => (
-                  <div key={item.id} className="flex gap-3 py-2">
-                    <div className="w-12 h-12 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+                  <div key={item.id} className="flex gap-3 p-3 bg-surface-50 dark:bg-surface-800 rounded-2xl">
+                    <div className="w-14 h-14 flex-shrink-0 bg-surface-100 dark:bg-surface-700 rounded-xl overflow-hidden">
                       <img
                         src={item.product_image || 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image'}
                         alt={item.product_name}
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-gray-900 truncate">
-                        {item.product_name}
-                      </p>
-                      <p className="text-xs text-gray-500">x{item.quantity}</p>
+                      <p className="text-xs font-semibold text-surface-900 dark:text-white truncate">{item.product_name}</p>
+                      <p className="text-xs text-surface-500 dark:text-surface-400">x{item.quantity}</p>
                     </div>
-                    <p className="text-xs font-medium text-gray-900">
+                    <p className="text-xs font-semibold text-surface-900 dark:text-white">
                       {formatPrice(item.product_price * item.quantity)}
                     </p>
                   </div>
                 ))}
               </div>
 
-              <div className="space-y-2 pt-4 border-t border-gray-100">
+              <div className="space-y-3 pt-4 border-t border-surface-100 dark:border-surface-800">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">{formatPrice(cart.summary?.subtotal || 0)}</span>
+                  <span className="text-surface-500 dark:text-surface-400">Subtotal</span>
+                  <span className="font-semibold text-surface-900 dark:text-white">{formatPrice(cart.summary?.subtotal || 0)}</span>
                 </div>
                 {cart.summary?.discount_amount > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-green-600">Discount</span>
-                    <span className="font-medium text-green-600">
-                      -{formatPrice(cart.summary.discount_amount)}
-                    </span>
+                    <span className="text-accent-emerald">Discount</span>
+                    <span className="font-semibold text-accent-emerald">-{formatPrice(cart.summary.discount_amount)}</span>
                   </div>
                 )}
                 {cart.summary?.gift_card_amount > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-purple-600">Gift Card</span>
-                    <span className="font-medium text-purple-600">
-                      -{formatPrice(cart.summary.gift_card_amount)}
-                    </span>
+                    <span className="text-accent-violet">Gift Card</span>
+                    <span className="font-semibold text-accent-violet">-{formatPrice(cart.summary.gift_card_amount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Shipping</span>
-                  <span className="font-medium">
-                    {cart.summary?.estimated_shipping === 0
-                      ? 'Free'
-                      : formatPrice(cart.summary?.estimated_shipping || 0)}
+                  <span className="text-surface-500 dark:text-surface-400">Shipping</span>
+                  <span className="font-semibold text-surface-900 dark:text-white">
+                    {cart.summary?.estimated_shipping === 0 ? 'Free' : formatPrice(cart.summary?.estimated_shipping || 0)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Tax</span>
-                  <span className="font-medium">
-                    {formatPrice(cart.summary?.estimated_tax || 0)}
-                  </span>
+                  <span className="text-surface-500 dark:text-surface-400">Tax</span>
+                  <span className="font-semibold text-surface-900 dark:text-white">{formatPrice(cart.summary?.estimated_tax || 0)}</span>
                 </div>
-                <div className="flex justify-between text-base font-bold pt-2 border-t border-gray-100">
-                  <span>Total</span>
-                  <span>{formatPrice(cart.summary?.total || 0)}</span>
+                <div className="flex justify-between text-lg font-bold pt-3 border-t border-surface-100 dark:border-surface-800">
+                  <span className="text-surface-900 dark:text-white">Total</span>
+                  <span className="text-surface-900 dark:text-white">{formatPrice(cart.summary?.total || 0)}</span>
                 </div>
               </div>
             </div>

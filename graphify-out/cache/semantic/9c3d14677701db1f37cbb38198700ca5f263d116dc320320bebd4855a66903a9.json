@@ -1,0 +1,1 @@
+{"nodes": [{"id": "guideline:project-rules", "type": "guideline", "label": "Project Rules", "description": "Global project rules, standards, architecture principles, and development philosophy.", "source_file": "prompts/PROJECT_RULES.md", "confidence": 1.0, "provenance": "EXTRACTED"}], "edges": [], "hyperedges": []}

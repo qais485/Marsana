@@ -36,9 +36,6 @@ export default function AdminProductImportPage() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const lines = e.target.result.split('\n').filter(l => l.trim());
-        // NOTE: This is a naive CSV parser. For production use, consider a proper
-        // CSV parsing library (e.g., PapaParse) to handle quoted fields, escaped
-        // commas, and edge cases correctly.
         if (lines.length < 2) {
           setErrors(['File is empty or has no data rows']);
           return;
@@ -101,10 +98,9 @@ export default function AdminProductImportPage() {
         sku: rest.sku || undefined,
         barcode: rest.barcode || undefined,
         stock_quantity: rest.stock_quantity !== undefined ? parseInt(rest.stock_quantity) || 0 : undefined,
-        category: rest.category || undefined,
-        brand: rest.brand || undefined,
+        category_name: rest.category || undefined,
+        brand_name: rest.brand || undefined,
         is_active: rest.is_active !== undefined ? rest.is_active !== 'false' && rest.is_active !== '0' : undefined,
-        is_featured: rest.is_featured !== undefined ? rest.is_featured === 'true' || rest.is_featured === '1' : undefined,
       }));
 
       const response = await adminProductService.importProducts({ products });
@@ -137,44 +133,44 @@ export default function AdminProductImportPage() {
 
   if (result) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white border-b border-gray-200">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-4 h-16">
-              <Link to="/admin/products" className="text-gray-500 hover:text-gray-700">
+      <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+        <header className="bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800">
+          <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8">
+            <div className="flex items-center gap-4 h-14 sm:h-16">
+              <Link to="/admin/products" className="text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 transition-all duration-300">
                 <ArrowLeft className="h-5 w-5" />
               </Link>
-              <h1 className="text-xl font-bold text-gray-900">Import Results</h1>
+              <h1 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white">Import Results</h1>
             </div>
           </div>
         </header>
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="card text-center py-12">
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Import Complete</h2>
+        <main className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-5 shadow-sm text-center py-12">
+            <CheckCircle className="w-16 h-16 text-green-500 dark:text-green-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-surface-900 dark:text-white mb-2">Import Complete</h2>
             <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mt-6">
               <div className="text-center">
-                <p className="text-3xl font-bold text-gray-900">{result.total_products}</p>
-                <p className="text-sm text-gray-500">Total</p>
+                <p className="text-3xl font-bold text-surface-900 dark:text-white">{result.total_products}</p>
+                <p className="text-sm text-surface-500 dark:text-surface-400">Total</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold text-green-600">{result.successful_imports}</p>
-                <p className="text-sm text-gray-500">Imported</p>
+                <p className="text-3xl font-bold text-green-600 dark:text-green-400">{result.successful_imports}</p>
+                <p className="text-sm text-surface-500 dark:text-surface-400">Imported</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold text-red-600">{result.failed_imports}</p>
-                <p className="text-sm text-gray-500">Failed</p>
+                <p className="text-3xl font-bold text-red-600 dark:text-red-400">{result.failed_imports}</p>
+                <p className="text-sm text-surface-500 dark:text-surface-400">Failed</p>
               </div>
             </div>
             {result.errors?.length > 0 && (
               <div className="mt-6 text-left max-w-md mx-auto">
-                <p className="text-sm font-medium text-red-700 mb-2">Errors:</p>
+                <p className="text-sm font-medium text-red-700 dark:text-red-400 mb-2">Errors:</p>
                 {result.errors.map((err, i) => (
-                  <p key={i} className="text-sm text-red-600">{err}</p>
+                  <p key={i} className="text-sm text-red-600 dark:text-red-400">{err}</p>
                 ))}
               </div>
             )}
-            <button onClick={() => navigate('/admin/products')} className="btn-primary mt-8">
+            <button onClick={() => navigate('/admin/products')} className="btn-marsana mt-8">
               Back to Products
             </button>
           </div>
@@ -184,28 +180,29 @@ export default function AdminProductImportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4 h-16">
-            <Link to="/admin/products" className="text-gray-500 hover:text-gray-700">
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      <header className="bg-white dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex items-center gap-4 h-14 sm:h-16">
+            <Link to="/admin/products" className="text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 transition-all duration-300">
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <h1 className="text-xl font-bold text-gray-900">Import Products</h1>
+            <h1 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white">Import Products</h1>
           </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="card mb-6">
+      <main className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
+        <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-5 shadow-sm mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Upload File</h2>
-            <button onClick={downloadTemplate} className="btn-secondary text-sm flex items-center gap-2">
-              <Download className="h-4 w-4" />
-              Download Template
+            <h2 className="text-base sm:text-lg font-semibold text-surface-900 dark:text-white">Upload File</h2>
+            <button onClick={downloadTemplate} className="btn-outline text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2">
+              <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Download Template</span>
+              <span className="sm:hidden">Template</span>
             </button>
           </div>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-xs sm:text-sm text-surface-500 dark:text-surface-400 mb-4">
             Supported formats: CSV and Excel (.xlsx). Required columns: <strong>name</strong>, <strong>price</strong>.
           </p>
           <div
@@ -213,8 +210,8 @@ export default function AdminProductImportPage() {
             onDragLeave={() => setDragActive(false)}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
-              dragActive ? 'border-primary-500 bg-primary-50' : 'border-gray-300 hover:border-gray-400'
+            className={`border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer transition-all duration-300 ${
+              dragActive ? 'border-marsana-500 bg-marsana-50 dark:bg-marsana-900/20' : 'border-surface-300 dark:border-surface-600 hover:border-surface-400 dark:hover:border-surface-500'
             }`}
           >
             <input
@@ -226,68 +223,68 @@ export default function AdminProductImportPage() {
             />
             {file ? (
               <div className="flex items-center justify-center gap-3">
-                <FileText className="h-8 w-8 text-primary-600" />
+                <FileText className="h-8 w-8 text-marsana-600 dark:text-marsana-400" />
                 <div>
-                  <p className="font-medium text-gray-900">{file.name}</p>
-                  <p className="text-sm text-gray-500">{preview.length} rows found</p>
+                  <p className="font-medium text-surface-900 dark:text-white">{file.name}</p>
+                  <p className="text-sm text-surface-500 dark:text-surface-400">{preview.length} rows found</p>
                 </div>
-                <button onClick={(e) => { e.stopPropagation(); setFile(null); setPreview([]); }} className="text-gray-400 hover:text-gray-600">
+                <button onClick={(e) => { e.stopPropagation(); setFile(null); setPreview([]); }} className="text-surface-400 dark:text-surface-500 hover:text-surface-600 dark:hover:text-surface-300">
                   <X className="h-5 w-5" />
                 </button>
               </div>
             ) : (
               <div>
-                <Upload className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-600">Drop a file here or click to browse</p>
-                <p className="text-sm text-gray-400 mt-1">CSV or XLSX</p>
+                <Upload className="w-12 h-12 text-surface-300 dark:text-surface-600 mx-auto mb-3" />
+                <p className="text-surface-600 dark:text-surface-400">Drop a file here or click to browse</p>
+                <p className="text-sm text-surface-400 dark:text-surface-500 mt-1">CSV or XLSX</p>
               </div>
             )}
           </div>
         </div>
 
         {errors.length > 0 && (
-          <div className="card mb-6 bg-red-50 border border-red-200">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-red-200 dark:border-red-800 p-4 mb-6">
             <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="h-4 w-4 text-red-600" />
-              <h3 className="font-medium text-red-700">Import Errors</h3>
+              <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
+              <h3 className="font-medium text-red-700 dark:text-red-400">Import Errors</h3>
             </div>
             {errors.map((err, i) => (
-              <p key={i} className="text-sm text-red-600">{err}</p>
+              <p key={i} className="text-sm text-red-600 dark:text-red-400">{err}</p>
             ))}
           </div>
         )}
 
         {preview.length > 0 && (
-          <div className="card mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Preview ({preview.length} rows)</h2>
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-5 shadow-sm mb-6">
+            <h2 className="text-lg font-semibold text-surface-900 dark:text-white mb-4">Preview ({preview.length} rows)</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
-                <thead className="bg-gray-50">
+                <thead className="bg-surface-50 dark:bg-surface-800">
                   <tr>
                     {Object.keys(preview[0]).filter(k => !k.startsWith('_')).slice(0, 6).map((h) => (
-                      <th key={h} className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">{h}</th>
+                      <th key={h} className="px-3 py-2 text-left text-xs font-medium text-surface-500 dark:text-surface-400 uppercase">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-surface-200 dark:divide-surface-800">
                   {preview.slice(0, 10).map((row, i) => (
-                    <tr key={i} className="hover:bg-gray-50">
+                    <tr key={i} className="hover:bg-surface-50 dark:hover:bg-surface-800 transition-all duration-300">
                       {Object.keys(row).filter(k => !k.startsWith('_')).slice(0, 6).map((h) => (
-                        <td key={h} className="px-3 py-2 text-gray-700">{row[h]}</td>
+                        <td key={h} className="px-3 py-2 text-surface-700 dark:text-surface-300">{row[h]}</td>
                       ))}
                     </tr>
                   ))}
                 </tbody>
               </table>
               {preview.length > 10 && (
-                <p className="text-sm text-gray-500 text-center py-2">...and {preview.length - 10} more rows</p>
+                <p className="text-sm text-surface-500 dark:text-surface-400 text-center py-2">...and {preview.length - 10} more rows</p>
               )}
             </div>
-            <div className="flex justify-end mt-4">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
               <button
                 onClick={handleImport}
                 disabled={importing}
-                className="btn-primary flex items-center gap-2 text-sm"
+                className="btn-marsana flex items-center justify-center gap-2 text-sm min-h-[44px]"
               >
                 {importing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                 Import {preview.length} Products

@@ -18,23 +18,25 @@ export default class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center bg-[#F5F7FB]">
           <div className="text-center p-8 max-w-md">
-            <div className="text-6xl mb-4">!</div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h1>
-            <p className="text-gray-600 mb-6">
+            <div className="w-20 h-20 rounded-2xl bg-error/10 flex items-center justify-center mx-auto mb-6">
+              <span className="text-4xl text-error">!</span>
+            </div>
+            <h1 className="text-2xl font-bold text-surface-900 mb-3">Something went wrong</h1>
+            <p className="text-surface-500 mb-8">
               An unexpected error occurred. Please try again.
             </p>
             <div className="flex gap-4 justify-center">
               <button
                 onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
+                className="btn-primary"
               >
                 Reload Page
               </button>
               <Link
                 to="/"
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100"
+                className="btn-secondary"
               >
                 Go Home
               </Link>

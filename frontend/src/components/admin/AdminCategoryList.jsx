@@ -65,44 +65,44 @@ export default function AdminCategoryList({ onEdit, onRefresh }) {
     const children = childMap[category.id] || [];
     return (
       <Fragment key={category.id}>
-        <tr className="border-b border-gray-50 hover:bg-gray-50">
+        <tr className="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-all duration-300">
           <td className="px-4 py-3">
             <div className="flex items-center gap-2" style={{ paddingLeft: `${depth * 24}px` }}>
-              {depth > 0 && <ChevronRight className="w-3 h-3 text-gray-400" />}
-              <GripVertical className="w-4 h-4 text-gray-300" />
+              {depth > 0 && <ChevronRight className="w-3 h-3 text-surface-400 dark:text-surface-500" />}
+              <GripVertical className="w-4 h-4 text-surface-300 dark:text-surface-600" />
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <FolderTree className="w-4 h-4 text-gray-400" />
+                <div className="w-8 h-8 bg-surface-100 dark:bg-surface-800 rounded-xl flex items-center justify-center">
+                  <FolderTree className="w-4 h-4 text-surface-400 dark:text-surface-500" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900 text-sm">{category.name}</p>
-                  <p className="text-xs text-gray-500">{category.slug}</p>
+                  <p className="font-medium text-surface-900 dark:text-white text-sm">{category.name}</p>
+                  <p className="text-xs text-surface-500 dark:text-surface-400">{category.slug}</p>
                 </div>
               </div>
             </div>
           </td>
           <td className="px-4 py-3 text-center">
-            <span className="text-sm font-medium text-gray-700">{category.product_count}</span>
+            <span className="text-sm font-medium text-surface-700 dark:text-surface-300">{category.product_count}</span>
           </td>
           <td className="px-4 py-3 text-center">
-            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${category.is_active ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${category.is_active ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400'}`}>
               {category.is_active ? 'Active' : 'Inactive'}
             </span>
           </td>
-          <td className="px-4 py-3 text-right text-sm text-gray-500">
+          <td className="px-4 py-3 text-right text-sm text-surface-500 dark:text-surface-400">
             {category.sort_order}
           </td>
           <td className="px-4 py-3 text-right">
             <div className="flex items-center justify-end gap-1">
               <button
                 onClick={() => onEdit(category)}
-                className="p-1.5 text-gray-500 hover:text-primary-600 rounded-lg hover:bg-primary-50"
+                className="p-1.5 text-surface-500 dark:text-surface-400 hover:text-marsana-600 dark:hover:text-marsana-400 rounded-xl hover:bg-marsana-50 dark:hover:bg-marsana-900/30 transition-all duration-300"
               >
                 <Edit2 className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setDeleteConfirm(category.id)}
-                className="p-1.5 text-gray-500 hover:text-red-600 rounded-lg hover:bg-red-50"
+                className="p-1.5 text-surface-500 dark:text-surface-400 hover:text-red-600 dark:hover:text-red-400 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-all duration-300"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -117,21 +117,21 @@ export default function AdminCategoryList({ onEdit, onRefresh }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-3">
-        <form onSubmit={(e) => e.preventDefault()} className="flex-1 flex gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <form onSubmit={(e) => e.preventDefault()} className="flex-1 flex flex-col sm:flex-row gap-2">
+          <div className="relative flex-1 min-w-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400 dark:text-surface-500" />
             <input
               type="text"
               placeholder="Search categories..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium pl-10 w-full"
             />
           </div>
         </form>
         <button
           onClick={() => onEdit(null)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700"
+          className="btn-marsana flex items-center justify-center gap-2 min-h-[44px]"
         >
           <Plus className="h-4 w-4" />
           Add Category
@@ -139,31 +139,31 @@ export default function AdminCategoryList({ onEdit, onRefresh }) {
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm">
           {error}
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 overflow-hidden shadow-sm">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-6 h-6 text-primary-600 animate-spin" />
+            <Loader2 className="w-6 h-6 text-marsana-600 dark:text-marsana-400 animate-spin" />
           </div>
         ) : rootCategories.length === 0 ? (
           <div className="text-center py-12">
-            <FolderTree className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-            <p className="text-gray-500 text-sm">No categories found</p>
+            <FolderTree className="w-10 h-10 text-surface-300 dark:text-surface-600 mx-auto mb-2" />
+            <p className="text-surface-500 dark:text-surface-400 text-sm">No categories found</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="text-left px-4 py-3 text-gray-500 font-medium">Category</th>
-                  <th className="text-center px-4 py-3 text-gray-500 font-medium">Products</th>
-                  <th className="text-center px-4 py-3 text-gray-500 font-medium">Status</th>
-                  <th className="text-center px-4 py-3 text-gray-500 font-medium">Order</th>
-                  <th className="text-right px-4 py-3 text-gray-500 font-medium">Actions</th>
+                <tr className="border-b border-surface-200 dark:border-surface-800 bg-surface-50 dark:bg-surface-800/50">
+                  <th className="text-left px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Category</th>
+                  <th className="text-center px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Products</th>
+                  <th className="text-center px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Status</th>
+                  <th className="text-center px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Order</th>
+                  <th className="text-right px-4 py-3 text-surface-500 dark:text-surface-400 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -175,17 +175,17 @@ export default function AdminCategoryList({ onEdit, onRefresh }) {
       </div>
 
       {deleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Category</h3>
-            <p className="text-sm text-gray-600 mb-6">
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 max-w-sm w-full mx-4 shadow-sm">
+            <h3 className="text-lg font-semibold text-surface-900 dark:text-white mb-2">Delete Category</h3>
+            <p className="text-sm text-surface-600 dark:text-surface-400 mb-6">
               Are you sure? Category must have no products or subcategories.
             </p>
             <div className="flex gap-3 justify-end">
-              <button onClick={() => setDeleteConfirm(null)} className="px-4 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">
+              <button onClick={() => setDeleteConfirm(null)} className="btn-outline">
                 Cancel
               </button>
-              <button onClick={() => handleDelete(deleteConfirm)} className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700">
+              <button onClick={() => handleDelete(deleteConfirm)} className="px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded-xl text-sm hover:bg-red-700 dark:hover:bg-red-600 transition-all duration-300">
                 Delete
               </button>
             </div>

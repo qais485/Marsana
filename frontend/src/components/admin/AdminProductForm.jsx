@@ -110,24 +110,24 @@ export default function AdminProductForm({ product, onSave, onCancel }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-6 h-6 text-primary-600 animate-spin" />
+        <Loader2 className="w-6 h-6 text-marsana-600 dark:text-marsana-400 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-6">
+    <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-surface-900 dark:text-white">
           {isEdit ? 'Edit Product' : 'Create Product'}
         </h3>
-        <button onClick={onCancel} className="p-1.5 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+        <button onClick={onCancel} className="p-1.5 text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-all duration-300">
           <X className="h-5 w-5" />
         </button>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm">
           {error}
         </div>
       )}
@@ -135,38 +135,38 @@ export default function AdminProductForm({ product, onSave, onCancel }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Product Name *</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">SKU</label>
             <input
               type="text"
               name="sku"
               value={formData.sku}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Barcode</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Barcode</label>
             <input
               type="text"
               name="barcode"
               value={formData.barcode}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Price *</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Price *</label>
             <input
               type="number"
               name="price"
@@ -175,11 +175,11 @@ export default function AdminProductForm({ product, onSave, onCancel }) {
               required
               step="0.01"
               min="0.01"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Discount Price</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Discount Price</label>
             <input
               type="number"
               name="discount_price"
@@ -187,37 +187,37 @@ export default function AdminProductForm({ product, onSave, onCancel }) {
               onChange={handleChange}
               step="0.01"
               min="0"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Stock *</label>
             <input
               type="number"
               name="stock_quantity"
               value={formData.stock_quantity}
               onChange={handleChange}
               min="0"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Image URL</label>
             <input
               type="text"
               name="images"
               value={formData.images}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Category</label>
             <select
               name="category_id"
               value={formData.category_id}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             >
               <option value="">No Category</option>
               {categories.map((cat) => (
@@ -226,12 +226,12 @@ export default function AdminProductForm({ product, onSave, onCancel }) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Brand</label>
             <select
               name="brand_id"
               value={formData.brand_id}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             >
               <option value="">No Brand</option>
               {brands.map((brand) => (
@@ -240,56 +240,56 @@ export default function AdminProductForm({ product, onSave, onCancel }) {
             </select>
           </div>
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Short Description</label>
             <input
               type="text"
               name="short_description"
               value={formData.short_description}
               onChange={handleChange}
               maxLength={500}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             />
           </div>
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Description</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="input-premium"
             />
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
             { name: 'is_active', label: 'Active' },
             { name: 'is_featured', label: 'Featured' },
             { name: 'is_new_arrival', label: 'New Arrival' },
             { name: 'is_best_seller', label: 'Best Seller' },
           ].map(({ name, label }) => (
-            <label key={name} className="flex items-center gap-2 cursor-pointer">
+            <label key={name} className="flex items-center gap-2 cursor-pointer min-h-[44px] px-2 py-2 rounded-xl hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-all duration-300">
               <input
                 type="checkbox"
                 name={name}
                 checked={formData[name]}
                 onChange={handleChange}
-                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                className="w-4 h-4 text-marsana-600 border-surface-300 dark:border-surface-600 rounded focus:ring-marsana-500 flex-shrink-0"
               />
-              <span className="text-sm text-gray-700">{label}</span>
+              <span className="text-sm text-surface-700 dark:text-surface-300">{label}</span>
             </label>
           ))}
         </div>
 
-        <div className="flex justify-end gap-3 pt-2">
-          <button type="button" onClick={onCancel} className="px-4 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+          <button type="button" onClick={onCancel} className="btn-outline min-h-[44px]">
             Cancel
           </button>
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700 disabled:opacity-50"
+            className="btn-marsana flex items-center justify-center gap-2 min-h-[44px]"
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {isEdit ? 'Update' : 'Create'}

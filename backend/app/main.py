@@ -14,8 +14,15 @@ from app.api.routes.promotion_endpoints import router as promotion_router
 from app.api.routes.admin_notification_endpoints import router as admin_notification_router
 from app.api.routes.admin_customer_support_endpoints import router as admin_support_router
 from app.api.routes.customer_support_endpoints import router as support_router
+from app.api.routes.inventory_endpoints import router as inventory_router
+from app.api.routes.marketing_endpoints import router as marketing_router
+from app.api.routes.report_endpoints import router as report_router
+from app.api.routes.admin_settings_endpoints import router as admin_settings_router
 from app.core.config import settings
 from app.middleware.rate_limit import RateLimitMiddleware
+from app.middleware.cache import CacheMiddleware
+from app.middleware.cdn import CDNMiddleware
+from app.middleware.compression import CompressionMiddleware
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -23,6 +30,10 @@ app = FastAPI(
     docs_url="/docs" if settings.DEBUG else None,
     redoc_url="/redoc" if settings.DEBUG else None,
 )
+
+app.add_middleware(CompressionMiddleware, algorithm='gzip', level=6, min_size=1024)
+app.add_middleware(CacheMiddleware, default_max_age=86400)
+app.add_middleware(CDNMiddleware, cdn_url='', enabled=False, image_resize=True)
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,6 +59,10 @@ app.include_router(admin_notification_router)
 app.include_router(admin_support_router)
 app.include_router(support_router)
 app.include_router(wishlist_public_router)
+app.include_router(inventory_router)
+app.include_router(marketing_router)
+app.include_router(report_router)
+app.include_router(admin_settings_router)
 
 
 @app.get("/api/v1/health")

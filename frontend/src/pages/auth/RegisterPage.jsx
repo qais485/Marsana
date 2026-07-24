@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -58,25 +58,29 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="page-container">
-        <div className="form-container">
-          <div className="card text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-green-600" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 px-4 py-8 sm:py-12 overflow-hidden">
+        <div className="w-full max-w-md">
+          <div className="bg-white dark:bg-surface-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-surface-200 dark:border-surface-800 text-center">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8 text-emerald-500" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Check your email</h2>
-            <p className="text-gray-600 mb-6">
-              We&apos;ve sent a verification link to <strong>{formData.email}</strong>.
+            <h2 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white mb-2">
+              Check your email
+            </h2>
+            <p className="text-surface-500 dark:text-surface-400 mb-6 text-sm sm:text-base">
+              We've sent a verification link to{' '}
+              <strong className="text-surface-900 dark:text-white">{formData.email}</strong>.
               Please check your inbox and click the link to verify your account.
             </p>
             <div className="space-y-3">
               <Link
                 to={`/verify-email?email=${encodeURIComponent(formData.email)}`}
-                className="btn-primary inline-block w-full"
+                className="btn-marsana inline-flex w-full items-center justify-center gap-2"
               >
                 Enter verification code
+                <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link to="/login" className="btn-secondary inline-block w-full">
+              <Link to="/login" className="btn-outline inline-flex w-full items-center justify-center">
                 Go to login
               </Link>
             </div>
@@ -87,64 +91,86 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="page-container">
-      <div className="form-container">
-        <div className="card">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Create an account</h1>
-            <p className="text-gray-600 mt-2">Start your journey with us</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 px-4 py-8 sm:py-12 overflow-hidden">
+      <div className="w-full max-w-md">
+        <div className="bg-white dark:bg-surface-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-surface-200 dark:border-surface-800">
+          <div className="text-center mb-6 sm:mb-8">
+            <Link to="/" className="inline-flex items-center gap-2 text-xl font-bold mb-4 sm:mb-6">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-marsana-500 to-marsana-800 flex items-center justify-center">
+                <span className="text-white font-bold">M</span>
+              </div>
+              <span className="bg-gradient-to-r from-marsana-600 to-violet-600 bg-clip-text text-transparent">
+                Marsana
+              </span>
+            </Link>
+            <h1 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white">
+              Create an account
+            </h1>
+            <p className="text-surface-500 dark:text-surface-400 mt-2 text-sm sm:text-base">
+              Start your journey with us
+            </p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-              {error}
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl mb-4 flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+              <span className="text-sm">{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="label">First name</label>
+                <label htmlFor="firstName" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                  First name
+                </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
                   <input
                     id="firstName"
                     name="firstName"
                     type="text"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="input-field pl-10"
+                    className="input-premium !pl-12"
                     placeholder="John"
                     required
                   />
                 </div>
               </div>
               <div>
-                <label htmlFor="lastName" className="label">Last name</label>
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className="input-field"
-                  placeholder="Doe"
-                  required
-                />
+                <label htmlFor="lastName" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                  Last name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="input-premium !pl-12"
+                    placeholder="Doe"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="label">Email address</label>
+              <label htmlFor="email" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                Email address
+              </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
                 <input
                   id="email"
                   name="email"
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="input-field pl-10"
+                  className="input-premium !pl-12"
                   placeholder="you@example.com"
                   required
                 />
@@ -152,23 +178,25 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="label">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                Password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
                 <input
                   id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={handleChange}
-                  className="input-field pl-10 pr-10"
+                  className="input-premium !pl-12 !pr-12"
                   placeholder="At least 8 characters"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -176,44 +204,64 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="label">Confirm password</label>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                Confirm password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
                   type={showPassword ? 'text' : 'password'}
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="input-field pl-10"
+                  className="input-premium !pl-12"
                   placeholder="Repeat your password"
                   required
                 />
               </div>
             </div>
 
-            <div className="flex items-start">
-              <input type="checkbox" className="rounded border-gray-300 text-primary-600 mr-2 mt-1" required />
-              <span className="text-sm text-gray-600">
+            <div className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                className="w-4 h-4 rounded border-surface-300 text-marsana-600 focus:ring-marsana-500/20 mt-0.5"
+                required
+              />
+              <span className="text-sm text-surface-600 dark:text-surface-400">
                 I agree to the{' '}
-                <Link to="/terms" className="text-primary-600 hover:text-primary-700">Terms of Service</Link>
+                <Link to="/terms" className="text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 font-medium transition-colors">
+                  Terms of Service
+                </Link>
                 {' '}and{' '}
-                <Link to="/privacy" className="text-primary-600 hover:text-primary-700">Privacy Policy</Link>
+                <Link to="/privacy" className="text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 font-medium transition-colors">
+                  Privacy Policy
+                </Link>
               </span>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full"
+              className="btn-marsana w-full flex items-center justify-center gap-2"
             >
-              {loading ? 'Creating account...' : 'Create account'}
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                <>
+                  Create account
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-8 text-center text-sm text-surface-500 dark:text-surface-400">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
+            <Link to="/login" className="text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 font-semibold transition-colors">
               Sign in
             </Link>
           </p>

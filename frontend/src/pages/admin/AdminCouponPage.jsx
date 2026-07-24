@@ -90,15 +90,15 @@ export default function AdminCouponPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex items-center gap-4 mb-8">
-          <Link to="/admin" className="p-2 hover:bg-gray-100 rounded-lg">
-            <ArrowLeft className="w-5 h-5" />
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 sm:mb-8">
+          <Link to="/admin" className="p-2 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-xl transition-all duration-300 self-start">
+            <ArrowLeft className="w-5 h-5 text-surface-500 dark:text-surface-400" />
           </Link>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900">Coupon Management</h1>
-            <p className="text-gray-500 mt-1">Create and manage discount coupons</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white">Coupon Management</h1>
+            <p className="text-sm text-surface-500 dark:text-surface-400 mt-1">Create and manage discount coupons</p>
           </div>
           <button
             onClick={() => { setShowForm(!showForm); setEditingId(null); setForm({
@@ -106,117 +106,117 @@ export default function AdminCouponPage() {
               discount_value: '', min_order_amount: '', max_uses: '',
               per_user_limit: '', is_active: true,
             }); }}
-            className="btn-primary flex items-center gap-2"
+            className="btn-marsana flex items-center justify-center gap-2 text-sm min-h-[44px]"
           >
             <Plus className="w-4 h-4" /> Add Coupon
           </button>
         </div>
 
         {error && (
-          <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg">{error}</div>
+          <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-xl">{error}</div>
         )}
 
         {showForm && (
-          <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-100 p-6 mb-6 space-y-4">
-            <h3 className="font-semibold text-gray-900">{editingId ? 'Edit Coupon' : 'New Coupon'}</h3>
+          <form onSubmit={handleSubmit} className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 sm:p-6 mb-6 space-y-4 shadow-sm">
+            <h3 className="font-semibold text-surface-900 dark:text-white">{editingId ? 'Edit Coupon' : 'New Coupon'}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Code</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Code</label>
                 <input type="text" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })}
-                  className="input-field" required disabled={!!editingId} />
+                  className="input-premium" required disabled={!!editingId} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Discount Type</label>
-                <select value={form.discount_type} onChange={(e) => setForm({ ...form, discount_type: e.target.value })} className="input-field">
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Discount Type</label>
+                <select value={form.discount_type} onChange={(e) => setForm({ ...form, discount_type: e.target.value })} className="input-premium">
                   <option value="percentage">Percentage</option>
-                  <option value="fixed">Fixed Amount</option>
+                  <option value="fixed_amount">Fixed Amount</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Discount Value</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Discount Value</label>
                 <input type="number" step="0.01" value={form.discount_value} onChange={(e) => setForm({ ...form, discount_value: e.target.value })}
-                  className="input-field" required />
+                  className="input-premium" required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Min Order Amount</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Min Order Amount</label>
                 <input type="number" step="0.01" value={form.min_order_amount} onChange={(e) => setForm({ ...form, min_order_amount: e.target.value })}
-                  className="input-field" />
+                  className="input-premium" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Max Uses</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Max Uses</label>
                 <input type="number" value={form.max_uses} onChange={(e) => setForm({ ...form, max_uses: e.target.value })}
-                  className="input-field" placeholder="Unlimited" />
+                  className="input-premium" placeholder="Unlimited" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Per User Limit</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Per User Limit</label>
                 <input type="number" value={form.per_user_limit} onChange={(e) => setForm({ ...form, per_user_limit: e.target.value })}
-                  className="input-field" placeholder="Unlimited" />
+                  className="input-premium" placeholder="Unlimited" />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Description</label>
               <input type="text" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
-                className="input-field" placeholder="Optional description" />
+                className="input-premium" placeholder="Optional description" />
             </div>
             <div className="flex items-center gap-2">
               <button type="button" onClick={() => setForm({ ...form, is_active: !form.is_active })}>
-                {form.is_active ? <ToggleRight className="w-8 h-8 text-green-600" /> : <ToggleLeft className="w-8 h-8 text-gray-400" />}
+                {form.is_active ? <ToggleRight className="w-8 h-8 text-green-600 dark:text-green-400" /> : <ToggleLeft className="w-8 h-8 text-surface-400 dark:text-surface-500" />}
               </button>
-              <span className="text-sm text-gray-700">{form.is_active ? 'Active' : 'Inactive'}</span>
+              <span className="text-sm text-surface-700 dark:text-surface-300">{form.is_active ? 'Active' : 'Inactive'}</span>
             </div>
-            <div className="flex gap-3">
-              <button type="submit" className="btn-primary">{editingId ? 'Update' : 'Create'} Coupon</button>
-              <button type="button" onClick={() => { setShowForm(false); setEditingId(null); }} className="btn-secondary">Cancel</button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button type="submit" className="btn-marsana min-h-[44px]">{editingId ? 'Update' : 'Create'} Coupon</button>
+              <button type="button" onClick={() => { setShowForm(false); setEditingId(null); }} className="btn-outline min-h-[44px]">Cancel</button>
             </div>
           </form>
         )}
 
         {loading ? (
-          <div className="text-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary-600 mx-auto" /></div>
+          <div className="text-center py-12"><Loader2 className="w-8 h-8 animate-spin text-marsana-600 dark:text-marsana-400 mx-auto" /></div>
         ) : coupons.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
-            <Tag className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500">No coupons yet. Create your first coupon!</p>
+          <div className="text-center py-12 bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 shadow-sm">
+            <Tag className="w-12 h-12 text-surface-300 dark:text-surface-600 mx-auto mb-3" />
+            <p className="text-surface-500 dark:text-surface-400">No coupons yet. Create your first coupon!</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 overflow-hidden shadow-sm">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-100">
+              <thead className="bg-surface-50 dark:bg-surface-800 border-b border-surface-200 dark:border-surface-800">
                 <tr>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-gray-600">Code</th>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-gray-600">Type</th>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-gray-600">Value</th>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-gray-600">Min Order</th>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-gray-600">Uses</th>
-                  <th className="text-left px-6 py-3 text-sm font-medium text-gray-600">Status</th>
-                  <th className="text-right px-6 py-3 text-sm font-medium text-gray-600">Actions</th>
+                  <th className="text-left px-6 py-3 text-sm font-medium text-surface-600 dark:text-surface-400">Code</th>
+                  <th className="text-left px-6 py-3 text-sm font-medium text-surface-600 dark:text-surface-400">Type</th>
+                  <th className="text-left px-6 py-3 text-sm font-medium text-surface-600 dark:text-surface-400">Value</th>
+                  <th className="text-left px-6 py-3 text-sm font-medium text-surface-600 dark:text-surface-400">Min Order</th>
+                  <th className="text-left px-6 py-3 text-sm font-medium text-surface-600 dark:text-surface-400">Uses</th>
+                  <th className="text-left px-6 py-3 text-sm font-medium text-surface-600 dark:text-surface-400">Status</th>
+                  <th className="text-right px-6 py-3 text-sm font-medium text-surface-600 dark:text-surface-400">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-surface-100 dark:divide-surface-800">
                 {coupons.map((coupon) => (
-                  <tr key={coupon.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 font-mono font-medium text-gray-900">{coupon.code}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600 capitalize">{coupon.discount_type}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900 font-medium">
+                  <tr key={coupon.id} className="hover:bg-surface-50 dark:hover:bg-surface-800 transition-all duration-300">
+                    <td className="px-6 py-4 font-mono font-medium text-surface-900 dark:text-white">{coupon.code}</td>
+                    <td className="px-6 py-4 text-sm text-surface-600 dark:text-surface-400 capitalize">{coupon.discount_type}</td>
+                    <td className="px-6 py-4 text-sm text-surface-900 dark:text-white font-medium">
                       {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `$${coupon.discount_value}`}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-surface-600 dark:text-surface-400">
                       {coupon.min_order_amount > 0 ? `$${coupon.min_order_amount}` : '-'}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-surface-600 dark:text-surface-400">
                       {coupon.used_count}{coupon.max_uses ? ` / ${coupon.max_uses}` : ''}
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        coupon.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        coupon.is_active ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400' : 'bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-300'
                       }`}>
                         {coupon.is_active ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => handleEdit(coupon)} className="text-sm text-primary-600 hover:text-primary-800">Edit</button>
-                        <button onClick={() => handleDelete(coupon.id)} className="text-sm text-red-600 hover:text-red-800">
+                        <button onClick={() => handleEdit(coupon)} className="text-sm text-marsana-600 dark:text-marsana-400 hover:text-marsana-800 dark:hover:text-marsana-300 transition-all duration-300">Edit</button>
+                        <button onClick={() => handleDelete(coupon.id)} className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-all duration-300">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>

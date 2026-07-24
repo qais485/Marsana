@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, X, Clock, TrendingUp, Loader2, Tag, ShoppingBag } from 'lucide-react';
+import { Search, X, Clock, TrendingUp, Loader2, Tag, ShoppingBag, Command } from 'lucide-react';
 import { searchService } from '../../services/api/searchService';
 import { useAuth } from '../../context/AuthContext';
 
@@ -37,38 +37,6 @@ export default function SearchBar() {
     }
   }, []);
 
-  const fetchPopularSearches = useCallback(async () => {
-    try {
-      const response = await searchService.getPopularSearches(5);
-      if (response.success) {
-        setPopularSearches(response.data || []);
-      }
-    } catch {
-      setPopularSearches([]);
-    }
-  }, []);
-
-  const fetchHistory = useCallback(async () => {
-    if (!isAuthenticated) {
-      let stored;
-      try {
-        stored = JSON.parse(localStorage.getItem('search_history') || '[]');
-      } catch {
-        stored = [];
-      }
-      setHistory(stored);
-      return;
-    }
-    try {
-      const response = await searchService.getHistory(5);
-      if (response.success) {
-        setHistory(response.data || []);
-      }
-    } catch {
-      setHistory([]);
-    }
-  }, [isAuthenticated]);
-
   useEffect(() => {
     if (!isOpen) return;
 
@@ -98,16 +66,10 @@ export default function SearchBar() {
   }, [isOpen, isAuthenticated]);
 
   useEffect(() => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-    debounceRef.current = setTimeout(() => {
-      fetchSuggestions(query);
-    }, 300);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => fetchSuggestions(query), 300);
     return () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
+      if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, [query, fetchSuggestions]);
 
@@ -124,6 +86,18 @@ export default function SearchBar() {
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+        setIsOpen(true);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const executeSearch = (searchQuery) => {
@@ -174,43 +148,10 @@ export default function SearchBar() {
     }
   };
 
-  const handleClearHistory = async () => {
-    if (isAuthenticated) {
-      try {
-        await searchService.clearHistory();
-      } catch {}
-    } else {
-      localStorage.removeItem('search_history');
-    }
-    setHistory([]);
-  };
-
-  const removeHistoryItem = async (itemId) => {
-    if (isAuthenticated && itemId) {
-      try {
-        await searchService.removeFromHistory(itemId);
-        setHistory((prev) => prev.filter((h) => h.id !== itemId));
-      } catch {}
-    } else if (!isAuthenticated) {
-      const queryStr = typeof itemId === 'string' ? itemId : '';
-      let stored;
-      try {
-        stored = JSON.parse(localStorage.getItem('search_history') || '[]');
-      } catch {
-        stored = [];
-      }
-      localStorage.setItem(
-        'search_history',
-        JSON.stringify(stored.filter((s) => s !== queryStr))
-      );
-      setHistory((prev) => prev.filter((h) => (h.query || h) !== queryStr));
-    }
-  };
-
   return (
     <div className="relative w-full max-w-xl">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+      <div className="relative group">
+        <Search className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 sm:w-5 sm:h-5 text-surface-400 group-focus-within:text-marsana-500 transition-colors duration-200" />
         <input
           ref={inputRef}
           type="text"
@@ -223,149 +164,149 @@ export default function SearchBar() {
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search products, categories..."
-          className="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          className="w-full pl-11 sm:pl-12 pr-4 sm:pr-20 py-3 sm:py-3.5 bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded-2xl text-sm text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none focus:ring-2 focus:ring-marsana-500/20 focus:border-marsana-500 focus:bg-white dark:focus:bg-surface-800 transition-all duration-300 min-h-[44px]"
         />
-        {query && (
-          <button
-            onClick={() => {
-              setQuery('');
-              setSuggestions([]);
-              inputRef.current?.focus();
-            }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
+        <div className="absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 sm:gap-1.5">
+          {query && (
+            <button
+              onClick={() => {
+                setQuery('');
+                setSuggestions([]);
+                inputRef.current?.focus();
+              }}
+              className="min-w-[36px] min-h-[36px] flex items-center justify-center text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors rounded-lg"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+          <div className="hidden sm:flex items-center gap-1 px-2 py-1 bg-surface-100 dark:bg-surface-800 rounded-lg text-[10px] text-surface-400 font-medium">
+            <Command className="w-3 h-3" />
+            <span>K</span>
+          </div>
+        </div>
       </div>
 
-      {isOpen && (
-        <div
-          ref={dropdownRef}
-          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto"
-        >
-          {loading && (
-            <div className="flex items-center justify-center py-4">
-              <Loader2 className="w-5 h-5 text-primary-600 animate-spin" />
-            </div>
-          )}
+      {/* Dropdown */}
+      <div
+        ref={dropdownRef}
+        className={`absolute top-full left-0 right-0 mt-2 sm:mt-3 bg-white dark:bg-surface-900 backdrop-blur-2xl rounded-3xl shadow-premium-xl border border-surface-100 dark:border-surface-800 z-50 max-h-[70vh] sm:max-h-96 overflow-y-auto transition-all duration-300 origin-top ${
+          isOpen ? 'opacity-100 visible scale-100' : 'opacity-0 invisible scale-95'
+        }`}
+      >
+        {loading && (
+          <div className="flex items-center justify-center py-6">
+            <Loader2 className="w-5 h-5 text-marsana-500 animate-spin" />
+          </div>
+        )}
 
-          {!loading && suggestions.length > 0 && (
-            <div className="p-2">
-              <p className="px-3 py-1 text-xs font-medium text-gray-500 uppercase">
-                Suggestions
+        {!loading && suggestions.length > 0 && (
+          <div className="p-2.5 sm:p-3">
+            <p className="px-3 sm:px-4 py-2 text-xs font-semibold text-surface-400 uppercase tracking-wider">
+              Suggestions
+            </p>
+            {suggestions.map((item, index) => (
+              <button
+                key={`${item.type}-${item.id}`}
+                onClick={() => executeSearch(item.name)}
+                className={`w-full flex items-center gap-3 px-3 sm:px-4 py-3 min-h-[44px] rounded-2xl text-left transition-all duration-200 ${
+                  index === activeIndex
+                    ? 'bg-marsana-50 dark:bg-marsana-950 text-marsana-700 dark:text-marsana-300'
+                    : 'hover:bg-surface-50 dark:hover:bg-surface-800'
+                }`}
+              >
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                  item.type === 'product'
+                    ? 'bg-marsana-100 dark:bg-marsana-900 text-marsana-600 dark:text-marsana-400'
+                    : 'bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400'
+                }`}>
+                  {item.type === 'product' ? (
+                    <ShoppingBag className="w-4 h-4" />
+                  ) : (
+                    <Tag className="w-4 h-4" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-surface-900 dark:text-white truncate">
+                    {item.name}
+                  </p>
+                  <p className="text-xs text-surface-400 capitalize">{item.type}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {!loading && suggestions.length === 0 && history.length > 0 && (
+          <div className="p-2.5 sm:p-3">
+            <div className="flex items-center justify-between px-3 sm:px-4 py-2">
+              <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider">
+                Recent Searches
               </p>
-              {suggestions.map((item, index) => (
-                <button
-                  key={`${item.type}-${item.id}`}
-                  onClick={() => executeSearch(item.name)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-left transition-colors ${
+            </div>
+            {history.slice(0, 5).map((item, index) => {
+              const queryText = item.query || item;
+              return (
+                <div
+                  key={queryText}
+                  className={`flex items-center gap-3 px-3 sm:px-4 py-3 min-h-[44px] rounded-2xl transition-all duration-200 ${
                     index === activeIndex
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'hover:bg-gray-50'
+                      ? 'bg-marsana-50 dark:bg-marsana-950 text-marsana-700 dark:text-marsana-300'
+                      : 'hover:bg-surface-50 dark:hover:bg-surface-800'
                   }`}
                 >
-                  {item.type === 'product' ? (
-                    <ShoppingBag className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  ) : (
-                    <Tag className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      {item.name}
-                    </p>
-                    <p className="text-xs text-gray-500 capitalize">{item.type}</p>
+                  <div className="w-9 h-9 rounded-xl bg-surface-100 dark:bg-surface-800 flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-4 h-4 text-surface-400" />
                   </div>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {!loading && suggestions.length === 0 && history.length > 0 && (
-            <div className="p-2">
-              <div className="flex items-center justify-between px-3 py-1">
-                <p className="text-xs font-medium text-gray-500 uppercase">
-                  Recent Searches
-                </p>
-                <button
-                  onClick={handleClearHistory}
-                  className="text-xs text-primary-600 hover:text-primary-700"
-                >
-                  Clear
-                </button>
-              </div>
-              {history.slice(0, 5).map((item, index) => {
-                const queryText = item.query || item;
-                const itemId = item.id || queryText;
-                return (
-                  <div
-                    key={itemId}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
-                      index === activeIndex
-                        ? 'bg-primary-50 text-primary-700'
-                        : 'hover:bg-gray-50'
-                    }`}
-                  >
-                    <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    <button
-                      onClick={() => executeSearch(queryText)}
-                      className="flex-1 text-left text-sm text-gray-900 truncate"
-                    >
-                      {queryText}
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeHistoryItem(itemId);
-                      }}
-                      className="text-gray-400 hover:text-gray-600"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {!loading &&
-            suggestions.length === 0 &&
-            history.length === 0 &&
-            popularSearches.length > 0 && (
-              <div className="p-2">
-                <p className="px-3 py-1 text-xs font-medium text-gray-500 uppercase">
-                  Popular Searches
-                </p>
-                {popularSearches.map((item, index) => (
                   <button
-                    key={item.id}
-                    onClick={() => executeSearch(item.query)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-left transition-colors ${
-                      index === activeIndex
-                        ? 'bg-primary-50 text-primary-700'
-                        : 'hover:bg-gray-50'
-                    }`}
+                    onClick={() => executeSearch(queryText)}
+                    className="flex-1 text-left text-sm text-surface-700 dark:text-surface-300 truncate min-h-[44px] flex items-center"
                   >
-                    <TrendingUp className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-900">{item.query}</span>
+                    {queryText}
                   </button>
-                ))}
-              </div>
-            )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
-          {!loading &&
-            suggestions.length === 0 &&
-            history.length === 0 &&
-            popularSearches.length === 0 && (
-              <div className="py-8 text-center">
-                <Search className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">
-                  Type to search products and categories
-                </p>
-              </div>
-            )}
-        </div>
-      )}
+        {!loading && suggestions.length === 0 && history.length === 0 && popularSearches.length > 0 && (
+          <div className="p-2.5 sm:p-3">
+            <p className="px-3 sm:px-4 py-2 text-xs font-semibold text-surface-400 uppercase tracking-wider">
+              Popular Searches
+            </p>
+            {popularSearches.map((item, index) => (
+              <button
+                key={item.id}
+                onClick={() => executeSearch(item.query)}
+                className={`w-full flex items-center gap-3 px-3 sm:px-4 py-3 min-h-[44px] rounded-2xl text-left transition-all duration-200 ${
+                  index === activeIndex
+                    ? 'bg-marsana-50 dark:bg-marsana-950 text-marsana-700 dark:text-marsana-300'
+                    : 'hover:bg-surface-50 dark:hover:bg-surface-800'
+                }`}
+              >
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-marsana-500/10 to-accent-violet/10 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="w-4 h-4 text-marsana-500" />
+                </div>
+                <span className="text-sm font-medium text-surface-700 dark:text-surface-300">{item.query}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {!loading && suggestions.length === 0 && history.length === 0 && popularSearches.length === 0 && (
+          <div className="py-10 sm:py-12 text-center px-4">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl bg-surface-100 dark:bg-surface-800 flex items-center justify-center mx-auto mb-4">
+              <Search className="w-6 h-6 sm:w-7 sm:h-7 text-surface-300 dark:text-surface-600" />
+            </div>
+            <p className="text-sm font-medium text-surface-500 dark:text-surface-400">
+              Start typing to search
+            </p>
+            <p className="text-xs text-surface-400 dark:text-surface-500 mt-1">
+              Search for products, categories, and more
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

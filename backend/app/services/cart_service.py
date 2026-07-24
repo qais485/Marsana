@@ -305,6 +305,10 @@ class CartService:
             except ValueError:
                 pass
 
+        after_discount = max(subtotal - discount_amount, Decimal("0.00"))
+
+        estimated_tax = (after_discount * TAX_RATE).quantize(Decimal("0.01"))
+
         gift_card_amount = Decimal("0.00")
         if cart.gift_card_code:
             gift_card = self.db.query(GiftCard).filter(
@@ -313,10 +317,6 @@ class CartService:
             ).first()
             if gift_card and gift_card.remaining_amount > 0:
                 gift_card_amount = min(gift_card.remaining_amount, after_discount + estimated_tax + Decimal("0.01"))
-
-        after_discount = max(subtotal - discount_amount, Decimal("0.00"))
-
-        estimated_tax = (after_discount * TAX_RATE).quantize(Decimal("0.01"))
 
         shipping_cost = Decimal("0.00")
         if after_discount < FREE_SHIPPING_THRESHOLD:

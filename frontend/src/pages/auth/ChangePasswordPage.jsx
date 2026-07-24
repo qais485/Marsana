@@ -60,67 +60,71 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div className="page-container">
-      <div className="form-container">
-        <div className="card">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 px-4 py-8 sm:py-12 overflow-hidden">
+      <div className="w-full max-w-md">
+        <div className="bg-white dark:bg-surface-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-surface-200 dark:border-surface-800">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6"
+            className="inline-flex items-center text-sm text-surface-600 dark:text-surface-400 hover:text-marsana-600 dark:hover:text-marsana-400 mb-4 sm:mb-6 transition-colors min-h-[44px]"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back
           </button>
 
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Change password</h1>
-            <p className="text-gray-600 mt-2">Update your account password</p>
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white">Change password</h1>
+            <p className="text-surface-600 dark:text-surface-400 mt-2 text-sm sm:text-base">Update your account password</p>
           </div>
 
           {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
+            <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-xl mb-4">
               Password changed successfully. You will be redirected to login.
             </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl mb-4">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="currentPassword" className="label">Current password</label>
+              <label htmlFor="currentPassword" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                Current password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
                 <input
                   id="currentPassword"
                   type={showPassword ? 'text' : 'password'}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="input-field pl-10"
+                  className="input-premium pl-10"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="newPassword" className="label">New password</label>
+              <label htmlFor="newPassword" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                New password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
                 <input
                   id="newPassword"
                   type={showPassword ? 'text' : 'password'}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="input-field pl-10 pr-10"
+                  className="input-premium pl-10 pr-10"
                   placeholder="At least 8 characters"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -128,21 +132,23 @@ export default function ChangePasswordPage() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="label">Confirm new password</label>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                Confirm new password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
                 <input
                   id="confirmPassword"
                   type={showPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="input-field pl-10"
+                  className="input-premium pl-10"
                   required
                 />
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary w-full">
+            <button type="submit" disabled={loading} className="btn-marsana w-full">
               {loading ? 'Changing...' : 'Change password'}
             </button>
           </form>

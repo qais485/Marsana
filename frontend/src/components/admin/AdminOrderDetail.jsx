@@ -27,12 +27,12 @@ function escapeHtml(str) {
 }
 
 const STATUS_COLORS = {
-  pending: 'bg-yellow-50 text-yellow-700',
-  processing: 'bg-blue-50 text-blue-700',
-  shipped: 'bg-purple-50 text-purple-700',
-  delivered: 'bg-green-50 text-green-700',
-  cancelled: 'bg-red-50 text-red-700',
-  refunded: 'bg-gray-50 text-gray-700',
+  pending: 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+  processing: 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
+  shipped: 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
+  delivered: 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+  cancelled: 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+  refunded: 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-400',
 };
 
 export default function AdminOrderDetail({ order: initialOrder, onClose, onRefresh }) {
@@ -211,25 +211,25 @@ export default function AdminOrderDetail({ order: initialOrder, onClose, onRefre
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl border border-gray-100 p-4">
+      <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={onClose} className="p-1.5 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+            <button onClick={onClose} className="p-1.5 text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200 rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-all duration-300">
               <X className="h-5 w-5" />
             </button>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Order {order.order_number}</h3>
-              <p className="text-sm text-gray-500">
+              <h3 className="text-lg font-semibold text-surface-900 dark:text-white">Order {order.order_number}</h3>
+              <p className="text-sm text-surface-500 dark:text-surface-400">
                 {order.created_at ? new Date(order.created_at).toLocaleString() : ''}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={printInvoice} className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">
+            <button onClick={printInvoice} className="btn-outline flex items-center gap-2">
               <Printer className="h-4 w-4" />
               Invoice
             </button>
-            <button onClick={printShippingLabel} className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">
+            <button onClick={printShippingLabel} className="btn-outline flex items-center gap-2">
               <Truck className="h-4 w-4" />
               Shipping Label
             </button>
@@ -238,15 +238,15 @@ export default function AdminOrderDetail({ order: initialOrder, onClose, onRefre
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm flex items-center justify-between">
+        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between">
           {error}
-          <button onClick={() => setError(null)} className="text-red-500 hover:text-red-700">
+          <button onClick={() => setError(null)} className="text-red-500 hover:text-red-700 dark:hover:text-red-300">
             <X className="h-4 w-4" />
           </button>
         </div>
       )}
 
-      <div className="flex gap-2 border-b border-gray-200 pb-2">
+      <div className="flex gap-2 border-b border-surface-200 dark:border-surface-800 pb-2 overflow-x-auto">
         {[
           { id: 'details', label: 'Details', icon: Package },
           { id: 'status', label: 'Update Status', icon: Clock },
@@ -256,10 +256,10 @@ export default function AdminOrderDetail({ order: initialOrder, onClose, onRefre
           <button
             key={tab.id}
             onClick={() => setActiveSection(tab.id)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm whitespace-nowrap transition-all duration-300 ${
               activeSection === tab.id
-                ? 'bg-primary-50 text-primary-700 font-medium'
-                : 'text-gray-600 hover:bg-gray-100'
+                ? 'bg-marsana-50 dark:bg-marsana-900/30 text-marsana-700 dark:text-marsana-400 font-medium'
+                : 'text-surface-600 dark:text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800'
             }`}
           >
             <tab.icon className="w-4 h-4" />
@@ -270,78 +270,78 @@ export default function AdminOrderDetail({ order: initialOrder, onClose, onRefre
 
       {activeSection === 'details' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="bg-white rounded-xl border border-gray-100 p-4">
-            <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-sm">
+            <h4 className="font-medium text-surface-900 dark:text-white mb-3 flex items-center gap-2">
               <Package className="h-4 w-4" />
               Order Items
             </h4>
             <div className="space-y-2">
               {(order.items || []).map((item) => (
-                <div key={item.id} className="flex justify-between text-sm py-2 border-b border-gray-50">
+                <div key={item.id} className="flex justify-between text-sm py-2 border-b border-surface-100 dark:border-surface-800">
                   <div>
-                    <p className="font-medium text-gray-900">{item.product_name}</p>
-                    <p className="text-xs text-gray-500">Qty: {item.quantity} x ${(item.unit_price || 0).toFixed(2)}</p>
+                    <p className="font-medium text-surface-900 dark:text-white">{item.product_name}</p>
+                    <p className="text-xs text-surface-500 dark:text-surface-400">Qty: {item.quantity} x ${(item.unit_price || 0).toFixed(2)}</p>
                   </div>
-                  <span className="font-medium">${(item.total_price || 0).toFixed(2)}</span>
+                  <span className="font-medium text-surface-900 dark:text-white">${(item.total_price || 0).toFixed(2)}</span>
                 </div>
               ))}
             </div>
-            <div className="mt-3 pt-3 border-t border-gray-100 space-y-1 text-sm">
-              <div className="flex justify-between"><span className="text-gray-500">Subtotal</span><span>${(order.subtotal || 0).toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Tax</span><span>${(order.tax_amount || 0).toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Shipping</span><span>${(order.shipping_cost || 0).toFixed(2)}</span></div>
-              {order.discount_amount > 0 && <div className="flex justify-between text-green-600"><span>Discount</span><span>-${(order.discount_amount || 0).toFixed(2)}</span></div>}
-              <div className="flex justify-between font-bold text-base pt-1"><span>Total</span><span>${(order.total_amount || 0).toFixed(2)}</span></div>
+            <div className="mt-3 pt-3 border-t border-surface-100 dark:border-surface-800 space-y-1 text-sm">
+              <div className="flex justify-between"><span className="text-surface-500 dark:text-surface-400">Subtotal</span><span className="text-surface-900 dark:text-white">${(order.subtotal || 0).toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-surface-500 dark:text-surface-400">Tax</span><span className="text-surface-900 dark:text-white">${(order.tax_amount || 0).toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-surface-500 dark:text-surface-400">Shipping</span><span className="text-surface-900 dark:text-white">${(order.shipping_cost || 0).toFixed(2)}</span></div>
+              {order.discount_amount > 0 && <div className="flex justify-between text-green-600 dark:text-green-400"><span>Discount</span><span>-${(order.discount_amount || 0).toFixed(2)}</span></div>}
+              <div className="flex justify-between font-bold text-base pt-1"><span className="text-surface-900 dark:text-white">Total</span><span className="text-surface-900 dark:text-white">${(order.total_amount || 0).toFixed(2)}</span></div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <div className="bg-white rounded-xl border border-gray-100 p-4">
-              <h4 className="font-medium text-gray-900 mb-3">Shipping Address</h4>
-              <div className="text-sm text-gray-700 space-y-1">
+            <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-sm">
+              <h4 className="font-medium text-surface-900 dark:text-white mb-3">Shipping Address</h4>
+              <div className="text-sm text-surface-700 dark:text-surface-300 space-y-1">
                 <p className="font-medium">{order.shipping_name}</p>
                 <p>{order.shipping_address}</p>
                 <p>{order.shipping_city}, {order.shipping_state} {order.shipping_postal_code}</p>
                 <p>{order.shipping_country}</p>
-                {order.shipping_phone && <p className="text-gray-500">{order.shipping_phone}</p>}
+                {order.shipping_phone && <p className="text-surface-500 dark:text-surface-400">{order.shipping_phone}</p>}
               </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-100 p-4">
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+            <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-sm">
+              <h4 className="font-medium text-surface-900 dark:text-white mb-3 flex items-center gap-2">
                 <Truck className="h-4 w-4" />
                 Shipping Info
               </h4>
               <div className="text-sm space-y-2">
-                <div className="flex justify-between"><span className="text-gray-500">Status</span>
+                <div className="flex justify-between"><span className="text-surface-500 dark:text-surface-400">Status</span>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[order.status] || ''}`}>{order.status}</span>
                 </div>
-                <div className="flex justify-between"><span className="text-gray-500">Payment</span>
-                  <span className="font-medium">{order.payment_status}</span>
+                <div className="flex justify-between"><span className="text-surface-500 dark:text-surface-400">Payment</span>
+                  <span className="font-medium text-surface-900 dark:text-white">{order.payment_status}</span>
                 </div>
-                <div className="flex justify-between"><span className="text-gray-500">Method</span>
-                  <span>{order.payment_method || '-'}</span>
+                <div className="flex justify-between"><span className="text-surface-500 dark:text-surface-400">Method</span>
+                  <span className="text-surface-900 dark:text-white">{order.payment_method || '-'}</span>
                 </div>
-                <div className="flex justify-between"><span className="text-gray-500">Tracking</span>
-                  <span className="font-mono text-xs">{order.tracking_number || '-'}</span>
+                <div className="flex justify-between"><span className="text-surface-500 dark:text-surface-400">Tracking</span>
+                  <span className="font-mono text-xs text-surface-900 dark:text-white">{order.tracking_number || '-'}</span>
                 </div>
-                <div className="flex justify-between"><span className="text-gray-500">Carrier</span>
-                  <span>{order.shipping_carrier || '-'}</span>
+                <div className="flex justify-between"><span className="text-surface-500 dark:text-surface-400">Carrier</span>
+                  <span className="text-surface-900 dark:text-white">{order.shipping_carrier || '-'}</span>
                 </div>
               </div>
             </div>
 
             {order.status_history && order.status_history.length > 0 && (
-              <div className="bg-white rounded-xl border border-gray-100 p-4">
-                <h4 className="font-medium text-gray-900 mb-3">Status History</h4>
+              <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-4 shadow-sm">
+                <h4 className="font-medium text-surface-900 dark:text-white mb-3">Status History</h4>
                 <div className="space-y-2">
                   {order.status_history.map((h) => (
                     <div key={h.id} className="flex items-start gap-2 text-sm">
-                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-4 w-4 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[h.status] || 'bg-gray-100'}`}>{h.status}</span>
-                        {h.note && <p className="text-gray-500 text-xs mt-1">{h.note}</p>}
-                        <p className="text-gray-400 text-xs">{h.created_at ? new Date(h.created_at).toLocaleString() : ''}</p>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[h.status] || 'bg-surface-100 dark:bg-surface-800'}`}>{h.status}</span>
+                        {h.note && <p className="text-surface-500 dark:text-surface-400 text-xs mt-1">{h.note}</p>}
+                        <p className="text-surface-400 dark:text-surface-500 text-xs">{h.created_at ? new Date(h.created_at).toLocaleString() : ''}</p>
                       </div>
                     </div>
                   ))}
@@ -353,18 +353,18 @@ export default function AdminOrderDetail({ order: initialOrder, onClose, onRefre
       )}
 
       {activeSection === 'status' && (
-        <div className="bg-white rounded-xl border border-gray-100 p-6">
-          <h4 className="font-medium text-gray-900 mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 shadow-sm">
+          <h4 className="font-medium text-surface-900 dark:text-white mb-4 flex items-center gap-2">
             <Clock className="h-4 w-4" />
             Update Order Status
           </h4>
           <div className="space-y-4 max-w-md">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">New Status *</label>
+              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">New Status *</label>
               <select
                 value={statusForm.status}
                 onChange={(e) => setStatusForm({ ...statusForm, status: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="input-premium"
               >
                 <option value="">Select status...</option>
                 {STATUS_OPTIONS.map((s) => (
@@ -375,38 +375,38 @@ export default function AdminOrderDetail({ order: initialOrder, onClose, onRefre
             {(statusForm.status === 'shipped' || statusForm.status === 'processing') && (
               <>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tracking Number</label>
+                  <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Tracking Number</label>
                   <input
                     type="text"
                     value={statusForm.tracking_number}
                     onChange={(e) => setStatusForm({ ...statusForm, tracking_number: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="input-premium"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Shipping Carrier</label>
+                  <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Shipping Carrier</label>
                   <input
                     type="text"
                     value={statusForm.shipping_carrier}
                     onChange={(e) => setStatusForm({ ...statusForm, shipping_carrier: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="input-premium"
                   />
                 </div>
               </>
             )}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Note (optional)</label>
+              <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Note (optional)</label>
               <textarea
                 value={statusForm.note}
                 onChange={(e) => setStatusForm({ ...statusForm, note: e.target.value })}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="input-premium"
               />
             </div>
             <button
               onClick={handleStatusUpdate}
               disabled={saving || !statusForm.status}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700 disabled:opacity-50"
+              className="btn-marsana flex items-center gap-2"
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
               Update Status
@@ -416,49 +416,49 @@ export default function AdminOrderDetail({ order: initialOrder, onClose, onRefre
       )}
 
       {activeSection === 'refund' && (
-        <div className="bg-white rounded-xl border border-gray-100 p-6">
-          <h4 className="font-medium text-gray-900 mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 shadow-sm">
+          <h4 className="font-medium text-surface-900 dark:text-white mb-4 flex items-center gap-2">
             <RotateCcw className="h-4 w-4" />
             Refund Order
           </h4>
           {order.status === 'refunded' ? (
-            <div className="p-4 bg-gray-50 rounded-lg text-sm">
-              <p className="font-medium text-gray-900">This order has been refunded.</p>
-              <p className="text-gray-500 mt-1">Amount: ${(order.refund_amount || 0).toFixed(2)}</p>
-              {order.refund_reason && <p className="text-gray-500">Reason: {order.refund_reason}</p>}
+            <div className="p-4 bg-surface-50 dark:bg-surface-800/50 rounded-xl text-sm">
+              <p className="font-medium text-surface-900 dark:text-white">This order has been refunded.</p>
+              <p className="text-surface-500 dark:text-surface-400 mt-1">Amount: ${(order.refund_amount || 0).toFixed(2)}</p>
+              {order.refund_reason && <p className="text-surface-500 dark:text-surface-400">Reason: {order.refund_reason}</p>}
             </div>
           ) : order.status === 'cancelled' ? (
-            <div className="p-4 bg-yellow-50 rounded-lg text-sm text-yellow-700">
+            <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl text-sm text-yellow-700 dark:text-yellow-400">
               <AlertTriangle className="h-4 w-4 inline mr-1" />
               Cannot refund a cancelled order.
             </div>
           ) : (
             <div className="space-y-4 max-w-md">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Refund Amount *</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Refund Amount *</label>
                 <input
                   type="number"
                   value={refundForm.refund_amount}
                   onChange={(e) => setRefundForm({ ...refundForm, refund_amount: e.target.value })}
                   max={order.total_amount}
                   step="0.01"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="input-premium"
                 />
-                <p className="text-xs text-gray-500 mt-1">Max: ${(order.total_amount || 0).toFixed(2)}</p>
+                <p className="text-xs text-surface-500 dark:text-surface-400 mt-1">Max: ${(order.total_amount || 0).toFixed(2)}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Reason *</label>
+                <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Reason *</label>
                 <textarea
                   value={refundForm.refund_reason}
                   onChange={(e) => setRefundForm({ ...refundForm, refund_reason: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="input-premium"
                 />
               </div>
               <button
                 onClick={handleRefund}
                 disabled={saving || !refundForm.refund_amount || !refundForm.refund_reason}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 disabled:opacity-50"
+                className="px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded-xl text-sm hover:bg-red-700 dark:hover:bg-red-600 disabled:opacity-50 transition-all duration-300 flex items-center gap-2"
               >
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4" />}
                 Process Refund
@@ -469,8 +469,8 @@ export default function AdminOrderDetail({ order: initialOrder, onClose, onRefre
       )}
 
       {activeSection === 'notes' && (
-        <div className="bg-white rounded-xl border border-gray-100 p-6">
-          <h4 className="font-medium text-gray-900 mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 shadow-sm">
+          <h4 className="font-medium text-surface-900 dark:text-white mb-4 flex items-center gap-2">
             <FileText className="h-4 w-4" />
             Admin Notes
           </h4>
@@ -480,12 +480,12 @@ export default function AdminOrderDetail({ order: initialOrder, onClose, onRefre
               onChange={(e) => setNotesForm({ admin_notes: e.target.value })}
               rows={5}
               placeholder="Add internal notes about this order..."
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="input-premium"
             />
             <button
               onClick={handleNotesUpdate}
               disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700 disabled:opacity-50"
+              className="btn-marsana flex items-center gap-2"
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
               Save Notes

@@ -14,9 +14,11 @@ from app.schemas.request_response_models import (
     AdminOrderRefundRequest,
     AdminOrderStatusUpdateRequest,
     AdminProductCreateRequest,
+    AdminProductImportRequest,
     AdminProductImportRow,
     AdminProductInventoryRequest,
     AdminProductUpdateRequest,
+    AdminUserUpdateRequest,
 )
 from app.services.admin_service import AdminService
 
@@ -62,6 +64,138 @@ def get_user_stats(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve user statistics",
+        )
+
+
+# ─── Admin User Management Endpoints ──────────────────────────
+
+
+@router.get("/users/list")
+def admin_list_users(
+    page: int = Query(1, ge=1),
+    limit: int = Query(20, ge=1, le=100),
+    search: Optional[str] = None,
+    role: Optional[str] = None,
+    is_active: Optional[bool] = None,
+    current_user: User = Depends(get_current_admin_user),
+    admin_service: AdminService = Depends(get_admin_service),
+):
+    try:
+        data = admin_service.get_admin_users(
+            page=page, limit=limit, search=search,
+            role=role, is_active=is_active,
+        )
+        return {
+            "success": True,
+            "message": "Users retrieved",
+            "data": data["users"],
+            "pagination": data["pagination"],
+        }
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve users",
+        )
+
+
+@router.get("/users/{user_id}")
+def admin_get_user(
+    user_id: UUID,
+    current_user: User = Depends(get_current_admin_user),
+    admin_service: AdminService = Depends(get_admin_service),
+):
+    try:
+        data = admin_service.get_admin_user(user_id)
+        return {
+            "success": True,
+            "message": "User retrieved",
+            "data": data,
+        }
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e),
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve user",
+        )
+
+
+@router.patch("/users/{user_id}")
+def admin_update_user(
+    user_id: UUID,
+    request: AdminUserUpdateRequest,
+    current_user: User = Depends(get_current_admin_user),
+    admin_service: AdminService = Depends(get_admin_service),
+):
+    try:
+        data = admin_service.update_admin_user(user_id, request.model_dump(exclude_unset=True))
+        return {
+            "success": True,
+            "message": "User updated successfully",
+            "data": data,
+        }
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update user",
+        )
+
+
+@router.patch("/users/{user_id}/active")
+def admin_toggle_user_active(
+    user_id: UUID,
+    current_user: User = Depends(get_current_admin_user),
+    admin_service: AdminService = Depends(get_admin_service),
+):
+    try:
+        data = admin_service.toggle_user_active(user_id)
+        action = "unblocked" if data["is_active"] else "blocked"
+        return {
+            "success": True,
+            "message": f"User {action} successfully",
+            "data": data,
+        }
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e),
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to toggle user status",
+        )
+
+
+@router.delete("/users/{user_id}")
+def admin_delete_user(
+    user_id: UUID,
+    current_user: User = Depends(get_current_admin_user),
+    admin_service: AdminService = Depends(get_admin_service),
+):
+    try:
+        result = admin_service.delete_admin_user(user_id)
+        return {
+            "success": True,
+            "message": result["message"],
+        }
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e),
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete user",
         )
 
 
@@ -282,12 +416,12 @@ def admin_update_inventory(
 
 @router.post("/products/import")
 def admin_import_products(
-    products: list[AdminProductImportRow],
+    request: AdminProductImportRequest,
     current_user: User = Depends(get_current_admin_user),
     admin_service: AdminService = Depends(get_admin_service),
 ):
     try:
-        data = admin_service.import_products([p.model_dump() for p in products])
+        data = admin_service.import_products([p.model_dump() for p in request.products])
         return {
             "success": True,
             "message": f"Imported {data['imported']} of {data['total']} products",
@@ -483,7 +617,7 @@ def admin_delete_category(
 def admin_list_orders(
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
-    status: Optional[str] = None,
+    order_status: Optional[str] = None,
     payment_status: Optional[str] = None,
     search: Optional[str] = None,
     current_user: User = Depends(get_current_admin_user),
@@ -491,7 +625,7 @@ def admin_list_orders(
 ):
     try:
         data = admin_service.get_admin_orders(
-            page=page, limit=limit, status=status,
+            page=page, limit=limit, status=order_status,
             payment_status=payment_status, search=search,
         )
         return {

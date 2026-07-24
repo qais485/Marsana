@@ -56,42 +56,42 @@ export default function AdminFAQForm({ faq, onSave, onCancel }) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">{isEdit ? 'Edit FAQ' : 'Create FAQ'}</h3>
+    <div className="bg-white rounded-xl border border-surface-100 p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-surface-900 mb-4">{isEdit ? 'Edit FAQ' : 'Create FAQ'}</h3>
       {error && <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">{error}</div>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Question *</label>
+          <label className="block text-sm font-medium text-surface-700 mb-1">Question *</label>
           <input
             type="text"
             name="question"
             value={formData.question}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="w-full px-3 py-2 border border-surface-300 rounded-lg text-sm focus:ring-2 focus:ring-marsana-500 focus:border-marsana-500"
             placeholder="Enter the question"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Answer *</label>
+          <label className="block text-sm font-medium text-surface-700 mb-1">Answer *</label>
           <textarea
             name="answer"
             value={formData.answer}
             onChange={handleChange}
             required
             rows={6}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="w-full px-3 py-2 border border-surface-300 rounded-lg text-sm focus:ring-2 focus:ring-marsana-500 focus:border-marsana-500"
             placeholder="Enter the answer"
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-sm font-medium text-surface-700 mb-1">Category</label>
             <select
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-3 py-2 border border-surface-300 rounded-lg text-sm focus:ring-2 focus:ring-marsana-500 focus:border-marsana-500"
             >
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat} className="capitalize">{cat}</option>
@@ -99,13 +99,13 @@ export default function AdminFAQForm({ faq, onSave, onCancel }) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+            <label className="block text-sm font-medium text-surface-700 mb-1">Sort Order</label>
             <input
               type="number"
               name="sort_order"
               value={formData.sort_order}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-3 py-2 border border-surface-300 rounded-lg text-sm focus:ring-2 focus:ring-marsana-500 focus:border-marsana-500"
             />
           </div>
           <div className="flex items-end">
@@ -115,15 +115,15 @@ export default function AdminFAQForm({ faq, onSave, onCancel }) {
                 name="is_active"
                 checked={formData.is_active}
                 onChange={handleChange}
-                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                className="w-4 h-4 text-marsana-600 border-surface-300 rounded focus:ring-marsana-500"
               />
-              <span className="text-sm font-medium text-gray-700">Active</span>
+              <span className="text-sm font-medium text-surface-700">Active</span>
             </label>
           </div>
         </div>
-        <div className="flex justify-end gap-3 pt-2">
-          <button type="button" onClick={onCancel} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
-          <button type="submit" disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 disabled:opacity-50">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+          <button type="button" onClick={onCancel} className="px-4 py-2 min-h-[44px] text-sm font-medium text-surface-700 bg-surface-100 rounded-lg hover:bg-surface-200">Cancel</button>
+          <button type="submit" disabled={saving} className="flex items-center justify-center gap-2 px-4 py-2 min-h-[44px] bg-marsana-600 text-white rounded-lg text-sm font-medium hover:bg-marsana-700 disabled:opacity-50">
             {saving && <Loader2 className="w-4 h-4 animate-spin" />}
             {isEdit ? 'Update' : 'Create'}
           </button>

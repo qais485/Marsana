@@ -102,12 +102,12 @@ export default function ActiveFilters({ filters, filterOptions, onRemove }) {
       {chips.map((chip) => (
         <span
           key={chip.key}
-          className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-full"
+          className="inline-flex items-center gap-1 px-2.5 py-1 bg-marsana-50 text-marsana-700 text-xs font-medium rounded-full"
         >
           {chip.label}
           <button
             onClick={chip.onRemove}
-            className="hover:text-primary-900 transition-colors"
+            className="hover:text-marsana-900 transition-colors"
           >
             <X className="w-3 h-3" />
           </button>

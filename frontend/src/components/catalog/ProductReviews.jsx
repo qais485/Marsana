@@ -132,7 +132,7 @@ export default function ProductReviews({ productId, initialReviews = [], initial
         <Star
           key={i}
           className={`${size} ${
-            i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+            i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-surface-300'
           }`}
         />
       ))}
@@ -140,29 +140,29 @@ export default function ProductReviews({ productId, initialReviews = [], initial
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Customer Reviews</h3>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h3 className="text-base sm:text-lg font-semibold text-surface-900">Customer Reviews</h3>
         <button
           onClick={() => setShowReviewForm(!showReviewForm)}
-          className="btn-primary text-sm"
+          className="btn-primary text-sm min-h-[44px] min-w-[44px]"
         >
           Write a Review
         </button>
       </div>
 
       {ratingSummary?.total > 0 && (
-        <div className="flex items-center gap-8 p-4 bg-gray-50 rounded-lg">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-gray-900">{ratingSummary.average}</div>
-            {renderStars(Math.round(ratingSummary.average), 'w-5 h-5')}
-            <div className="text-sm text-gray-500 mt-1">{ratingSummary.total} reviews</div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 p-3 sm:p-4 bg-surface-50 rounded-lg">
+          <div className="text-center flex-shrink-0">
+            <div className="text-2xl sm:text-3xl font-bold text-surface-900">{ratingSummary.average}</div>
+            {renderStars(Math.round(ratingSummary.average), 'w-4 h-4 sm:w-5 sm:h-5')}
+            <div className="text-xs sm:text-sm text-surface-500 mt-1">{ratingSummary.total} reviews</div>
           </div>
-          <div className="flex-1 space-y-1">
+          <div className="flex-1 space-y-1 w-full">
             {[5, 4, 3, 2, 1].map((star) => (
               <div key={star} className="flex items-center gap-2">
-                <span className="text-sm text-gray-600 w-8">{star} star</span>
-                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                <span className="text-xs sm:text-sm text-surface-600 w-8">{star} star</span>
+                <div className="flex-1 bg-surface-200 rounded-full h-2">
                   <div
                     className="bg-yellow-400 h-2 rounded-full"
                     style={{
@@ -174,7 +174,7 @@ export default function ProductReviews({ productId, initialReviews = [], initial
                     }}
                   />
                 </div>
-                <span className="text-sm text-gray-500 w-8">
+                <span className="text-xs sm:text-sm text-surface-500 w-8">
                   {ratingSummary.breakdown?.[star] || 0}
                 </span>
               </div>
@@ -184,24 +184,25 @@ export default function ProductReviews({ productId, initialReviews = [], initial
       )}
 
       {showReviewForm && (
-        <form onSubmit={handleSubmitReview} className="p-4 border border-gray-200 rounded-lg space-y-4">
+        <form onSubmit={handleSubmitReview} className="p-3 sm:p-4 border border-surface-200 rounded-lg space-y-3 sm:space-y-4">
           {error && (
-            <div className="p-3 bg-red-50 text-red-700 text-sm rounded-lg">{error}</div>
+            <div className="p-2.5 sm:p-3 bg-red-50 text-red-700 text-sm rounded-lg">{error}</div>
           )}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+            <label className="block text-sm font-medium text-surface-700 mb-2">Rating</label>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
                   onClick={() => setReviewForm((prev) => ({ ...prev, rating: star }))}
+                  className="min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                   <Star
                     className={`w-6 h-6 ${
                       star <= reviewForm.rating
                         ? 'text-yellow-400 fill-yellow-400'
-                        : 'text-gray-300'
+                        : 'text-surface-300'
                     } hover:text-yellow-400 transition-colors`}
                   />
                 </button>
@@ -209,7 +210,7 @@ export default function ProductReviews({ productId, initialReviews = [], initial
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+            <label className="block text-sm font-medium text-surface-700 mb-1">Title</label>
             <input
               type="text"
               value={reviewForm.title}
@@ -219,7 +220,7 @@ export default function ProductReviews({ productId, initialReviews = [], initial
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Review</label>
+            <label className="block text-sm font-medium text-surface-700 mb-1">Review</label>
             <textarea
               value={reviewForm.content}
               onChange={(e) => setReviewForm((prev) => ({ ...prev, content: e.target.value }))}
@@ -228,14 +229,14 @@ export default function ProductReviews({ productId, initialReviews = [], initial
               placeholder="Share your experience with this product..."
             />
           </div>
-          <div className="flex gap-3">
-            <button type="submit" disabled={submitting} className="btn-primary text-sm">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <button type="submit" disabled={submitting} className="btn-primary text-sm min-h-[44px] w-full sm:w-auto">
               {submitting ? 'Submitting...' : 'Submit Review'}
             </button>
             <button
               type="button"
               onClick={() => setShowReviewForm(false)}
-              className="btn-secondary text-sm"
+              className="btn-secondary text-sm min-h-[44px] w-full sm:w-auto"
             >
               Cancel
             </button>
@@ -244,67 +245,67 @@ export default function ProductReviews({ productId, initialReviews = [], initial
       )}
 
       {loading ? (
-        <div className="text-center py-8 text-gray-500">Loading reviews...</div>
+        <div className="text-center py-8 text-surface-500">Loading reviews...</div>
       ) : reviews.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">No reviews yet. Be the first to review!</div>
+        <div className="text-center py-8 text-surface-500">No reviews yet. Be the first to review!</div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {reviews.map((review) => (
-            <div key={review.id} className="p-4 border border-gray-100 rounded-lg">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+            <div key={review.id} className="p-3 sm:p-4 border border-surface-100 rounded-lg">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-surface-200 rounded-full flex items-center justify-center flex-shrink-0">
                     {review.user_avatar ? (
                       <img
                         src={review.user_avatar}
                         alt={review.user_name}
-                        className="w-10 h-10 rounded-full object-cover"
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
                       />
                     ) : (
-                      <User className="w-5 h-5 text-gray-500" />
+                      <User className="w-4 h-4 sm:w-5 sm:h-5 text-surface-500" />
                     )}
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900">{review.user_name}</div>
-                    <div className="flex items-center gap-2">
+                    <div className="font-medium text-surface-900 text-sm">{review.user_name}</div>
+                    <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                       {renderStars(review.rating)}
                       {review.is_verified_purchase && (
-                        <span className="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded">
+                        <span className="text-[10px] sm:text-xs text-green-600 bg-green-50 px-1.5 sm:px-2 py-0.5 rounded">
                           Verified Purchase
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
-                <span className="text-sm text-gray-500">
+                <span className="text-xs sm:text-sm text-surface-500 flex-shrink-0">
                   {new Date(review.created_at).toLocaleDateString()}
                 </span>
               </div>
               {review.title && (
-                <h4 className="mt-3 font-medium text-gray-900">{review.title}</h4>
+                <h4 className="mt-2 sm:mt-3 font-medium text-surface-900 text-sm">{review.title}</h4>
               )}
               {review.content && (
-                <p className="mt-2 text-sm text-gray-600">{review.content}</p>
+                <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-surface-600">{review.content}</p>
               )}
-              <div className="mt-3 flex items-center gap-4">
+              <div className="mt-2 sm:mt-3 flex items-center gap-3 sm:gap-4">
                 <button
                   onClick={() => handleToggleHelpful(review.id)}
                   disabled={!isAuthenticated || helpfulLoading === review.id}
-                  className={`flex items-center gap-1 text-sm transition-colors disabled:opacity-50 ${
+                  className={`flex items-center gap-1 text-xs sm:text-sm transition-colors disabled:opacity-50 min-h-[44px] ${
                     review.is_helpful
-                      ? 'text-primary-600 font-medium'
-                      : 'text-gray-500 hover:text-gray-700'
+                      ? 'text-marsana-600 font-medium'
+                      : 'text-surface-500 hover:text-surface-700'
                   }`}
                 >
-                  <ThumbsUp className={`w-4 h-4 ${review.is_helpful ? 'fill-primary-600' : ''}`} />
+                  <ThumbsUp className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${review.is_helpful ? 'fill-marsana-600' : ''}`} />
                   Helpful ({review.helpful_count})
                 </button>
                 <button
                   onClick={() => handleOpenReport(review)}
                   disabled={!isAuthenticated}
-                  className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-600 transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1 text-xs sm:text-sm text-surface-500 hover:text-red-600 transition-colors disabled:opacity-50 min-h-[44px]"
                 >
-                  <Flag className="w-4 h-4" />
+                  <Flag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   Report
                 </button>
               </div>
@@ -316,17 +317,17 @@ export default function ProductReviews({ productId, initialReviews = [], initial
               <button
                 onClick={() => fetchReviews(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="btn-secondary text-sm disabled:opacity-50"
+                className="btn-secondary text-sm disabled:opacity-50 min-h-[44px] min-w-[44px]"
               >
                 Previous
               </button>
-              <span className="flex items-center px-4 text-sm text-gray-600">
+              <span className="flex items-center px-3 sm:px-4 text-xs sm:text-sm text-surface-600">
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 onClick={() => fetchReviews(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="btn-secondary text-sm disabled:opacity-50"
+                className="btn-secondary text-sm disabled:opacity-50 min-h-[44px] min-w-[44px]"
               >
                 Next
               </button>
@@ -339,12 +340,12 @@ export default function ProductReviews({ productId, initialReviews = [], initial
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Report Review</h3>
+              <h3 className="text-lg font-semibold text-surface-900">Report Review</h3>
               <button
                 onClick={() => setReportModal(null)}
-                className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-1 hover:bg-surface-100 rounded-lg transition-colors"
               >
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-5 h-5 text-surface-500" />
               </button>
             </div>
 
@@ -354,7 +355,7 @@ export default function ProductReviews({ productId, initialReviews = [], initial
                   <Flag className="w-6 h-6 text-green-600" />
                 </div>
                 <p className="text-green-700 font-medium">Report submitted successfully</p>
-                <p className="text-sm text-gray-500 mt-1">We will review your report shortly.</p>
+                <p className="text-sm text-surface-500 mt-1">We will review your report shortly.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmitReport} className="space-y-4">
@@ -362,7 +363,7 @@ export default function ProductReviews({ productId, initialReviews = [], initial
                   <div className="p-3 bg-red-50 text-red-700 text-sm rounded-lg">{reportError}</div>
                 )}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Reason</label>
+                  <label className="block text-sm font-medium text-surface-700 mb-2">Reason</label>
                   <div className="space-y-2">
                     {REPORT_REASONS.map((reason) => (
                       <label key={reason} className="flex items-center gap-2 cursor-pointer">
@@ -374,15 +375,15 @@ export default function ProductReviews({ productId, initialReviews = [], initial
                           onChange={(e) =>
                             setReportForm((prev) => ({ ...prev, reason: e.target.value }))
                           }
-                          className="text-primary-600 focus:ring-primary-500"
+                          className="text-marsana-600 focus:ring-marsana-500"
                         />
-                        <span className="text-sm text-gray-700">{reason}</span>
+                        <span className="text-sm text-surface-700">{reason}</span>
                       </label>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-surface-700 mb-1">
                     Additional details (optional)
                   </label>
                   <textarea

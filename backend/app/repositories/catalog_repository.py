@@ -424,7 +424,7 @@ class BlogRepository:
         )
 
     def get_by_slug(self, slug: str) -> Optional[BlogPost]:
-        return self.db.query(BlogPost).filter(BlogPost.slug == slug, BlogPost.is_published == True).first()
+        return self.db.query(BlogPost).filter(BlogPost.slug == slug, BlogPost.is_published.is_(True)).first()
 
 
 class NewsletterRepository:
@@ -1050,6 +1050,67 @@ class AdminRepository:
                 "count": count,
             })
         return results
+
+    # ─── Admin User Management ─────────────────────────────────────
+
+    def get_all_users(
+        self,
+        page: int = 1,
+        limit: int = 20,
+        search: Optional[str] = None,
+        role: Optional[str] = None,
+        is_active: Optional[bool] = None,
+    ) -> tuple[list[User], int]:
+        query = self.db.query(User).filter(User.deleted_at.is_(None))
+
+        if search:
+            search_filter = f"%{search}%"
+            query = query.filter(
+                (User.email.ilike(search_filter))
+                | (User.first_name.ilike(search_filter))
+                | (User.last_name.ilike(search_filter))
+            )
+
+        if role:
+            query = query.filter(User.role == role)
+
+        if is_active is not None:
+            query = query.filter(User.is_active == is_active)
+
+        total = query.count()
+        users = (
+            query.order_by(User.created_at.desc())
+            .offset((page - 1) * limit)
+            .limit(limit)
+            .all()
+        )
+
+        return users, total
+
+    def get_user_by_id(self, user_id: UUID) -> Optional[User]:
+        return (
+            self.db.query(User)
+            .filter(User.id == user_id, User.deleted_at.is_(None))
+            .first()
+        )
+
+    def update_user(self, user: User, data: dict) -> User:
+        for key, value in data.items():
+            if hasattr(user, key) and value is not None:
+                setattr(user, key, value)
+        self.db.commit()
+        self.db.refresh(user)
+        return user
+
+    def set_user_active(self, user: User, is_active: bool) -> User:
+        user.is_active = is_active
+        self.db.commit()
+        self.db.refresh(user)
+        return user
+
+    def delete_user(self, user: User) -> None:
+        user.deleted_at = datetime.now(timezone.utc)
+        self.db.commit()
 
     def get_monthly_revenue(self, months: int = 12) -> list[dict]:
         import calendar

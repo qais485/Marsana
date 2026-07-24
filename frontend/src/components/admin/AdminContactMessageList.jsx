@@ -110,20 +110,20 @@ export default function AdminContactMessageList() {
     <div className="space-y-6">
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-gray-100 p-4">
-            <p className="text-sm text-gray-500">Total</p>
-            <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+          <div className="bg-white rounded-xl border border-surface-100 p-4">
+            <p className="text-sm text-surface-500">Total</p>
+            <p className="text-2xl font-bold text-surface-900">{stats.total}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 p-4">
-            <p className="text-sm text-gray-500">New</p>
+          <div className="bg-white rounded-xl border border-surface-100 p-4">
+            <p className="text-sm text-surface-500">New</p>
             <p className="text-2xl font-bold text-blue-600">{stats.new}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 p-4">
-            <p className="text-sm text-gray-500">Read</p>
+          <div className="bg-white rounded-xl border border-surface-100 p-4">
+            <p className="text-sm text-surface-500">Read</p>
             <p className="text-2xl font-bold text-yellow-600">{stats.read}</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 p-4">
-            <p className="text-sm text-gray-500">Replied</p>
+          <div className="bg-white rounded-xl border border-surface-100 p-4">
+            <p className="text-sm text-surface-500">Replied</p>
             <p className="text-2xl font-bold text-green-600">{stats.replied}</p>
           </div>
         </div>
@@ -134,10 +134,10 @@ export default function AdminContactMessageList() {
           <button
             key={s}
             onClick={() => { setStatusFilter(s); setPage(1); }}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-3 py-2 min-h-[44px] rounded-lg text-sm font-medium transition-colors ${
               statusFilter === s
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-gray-600 hover:bg-gray-100'
+                ? 'bg-marsana-50 text-marsana-700'
+                : 'text-surface-600 hover:bg-surface-100'
             }`}
           >
             {s || 'All'}
@@ -147,50 +147,50 @@ export default function AdminContactMessageList() {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-primary-500 animate-spin" />
+          <Loader2 className="w-8 h-8 text-marsana-500 animate-spin" />
         </div>
       ) : error ? (
         <div className="text-center py-12 text-red-600">{error}</div>
       ) : messages.length === 0 ? (
         <div className="text-center py-12">
-          <Mail className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No contact messages found</p>
+          <Mail className="w-12 h-12 text-surface-300 mx-auto mb-3" />
+          <p className="text-surface-500">No contact messages found</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl border border-surface-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">From</th>
-                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Subject</th>
-                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Status</th>
-                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Date</th>
-                  <th className="text-right px-4 py-3 text-sm font-medium text-gray-500">Actions</th>
+                <tr className="border-b border-surface-100">
+                  <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">From</th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Subject</th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Status</th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Date</th>
+                  <th className="text-right px-4 py-3 text-sm font-medium text-surface-500">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {messages.map((msg) => (
-                  <tr key={msg.id} className="border-b border-gray-50 hover:bg-gray-50">
+                  <tr key={msg.id} className="border-b border-surface-50 hover:bg-surface-50">
                     <td className="px-4 py-3">
-                      <div className="text-sm font-medium text-gray-900">{msg.name}</div>
-                      <div className="text-xs text-gray-500">{msg.email}</div>
+                      <div className="text-sm font-medium text-surface-900">{msg.name}</div>
+                      <div className="text-xs text-surface-500">{msg.email}</div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-700 max-w-xs truncate">{msg.subject}</td>
+                    <td className="px-4 py-3 text-sm text-surface-700 max-w-xs truncate">{msg.subject}</td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${STATUS_STYLES[msg.status] || 'bg-gray-100 text-gray-800'}`}>
+                      <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${STATUS_STYLES[msg.status] || 'bg-surface-100 text-surface-800'}`}>
                         {msg.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm text-surface-500">
                       {new Date(msg.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => handleView(msg)} className="p-1.5 text-gray-400 hover:text-primary-600 rounded-lg hover:bg-primary-50">
+                        <button onClick={() => handleView(msg)} className="p-1.5 text-surface-400 hover:text-marsana-600 rounded-lg hover:bg-marsana-50">
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button onClick={() => handleDelete(msg.id)} className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50">
+                        <button onClick={() => handleDelete(msg.id)} className="p-1.5 text-surface-400 hover:text-red-600 rounded-lg hover:bg-red-50">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -205,21 +205,21 @@ export default function AdminContactMessageList() {
 
       {pagination && pagination.pages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-surface-500">
             Page {pagination.page} of {pagination.pages}
           </p>
           <div className="flex gap-2">
             <button
               onClick={() => setPage(Math.max(1, page - 1))}
               disabled={page === 1}
-              className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50"
+              className="p-2 rounded-lg border border-surface-200 disabled:opacity-50 hover:bg-surface-50"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => setPage(Math.min(pagination.pages, page + 1))}
               disabled={page === pagination.pages}
-              className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50"
+              className="p-2 rounded-lg border border-surface-200 disabled:opacity-50 hover:bg-surface-50"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -230,24 +230,24 @@ export default function AdminContactMessageList() {
       {viewingMessage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900">Message from {viewingMessage.name}</h3>
-              <button onClick={() => setViewingMessage(null)} className="p-1 text-gray-400 hover:text-gray-600">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-surface-100">
+              <h3 className="text-lg font-semibold text-surface-900">Message from {viewingMessage.name}</h3>
+              <button onClick={() => setViewingMessage(null)} className="p-1 text-surface-400 hover:text-surface-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <div className="p-6 space-y-4">
               <div>
-                <p className="text-sm text-gray-500">Email</p>
-                <p className="text-sm text-gray-900">{viewingMessage.email}</p>
+                <p className="text-sm text-surface-500">Email</p>
+                <p className="text-sm text-surface-900">{viewingMessage.email}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Subject</p>
-                <p className="text-sm text-gray-900">{viewingMessage.subject}</p>
+                <p className="text-sm text-surface-500">Subject</p>
+                <p className="text-sm text-surface-900">{viewingMessage.subject}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Message</p>
-                <p className="text-sm text-gray-900 whitespace-pre-wrap">{viewingMessage.message}</p>
+                <p className="text-sm text-surface-500">Message</p>
+                <p className="text-sm text-surface-900 whitespace-pre-wrap">{viewingMessage.message}</p>
               </div>
               {viewingMessage.admin_reply && (
                 <div className="bg-green-50 rounded-lg p-4">
@@ -255,20 +255,20 @@ export default function AdminContactMessageList() {
                   <p className="text-sm text-green-700 whitespace-pre-wrap">{viewingMessage.admin_reply}</p>
                 </div>
               )}
-              <div className="border-t border-gray-100 pt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Reply</label>
+              <div className="border-t border-surface-100 pt-4">
+                <label className="block text-sm font-medium text-surface-700 mb-2">Reply</label>
                 <textarea
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full px-3 py-2 border border-surface-300 rounded-lg text-sm focus:ring-2 focus:ring-marsana-500 focus:border-marsana-500"
                   placeholder="Type your reply..."
                 />
                 <div className="flex justify-end mt-3">
                   <button
                     onClick={handleReply}
                     disabled={!replyText.trim() || sending}
-                    className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 bg-marsana-600 text-white rounded-lg text-sm font-medium hover:bg-marsana-700 disabled:opacity-50"
                   >
                     {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     Send Reply

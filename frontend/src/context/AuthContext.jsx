@@ -36,9 +36,9 @@ export function AuthProvider({ children }) {
 
       try {
         const response = await profileService.getProfile();
-        if (response.success) {
-          setUser(response.data);
-          localStorage.setItem('user', JSON.stringify(response.data));
+        if (response.success && response.data?.user) {
+          setUser(response.data.user);
+          localStorage.setItem('user', JSON.stringify(response.data.user));
         } else {
           throw new Error('Invalid response');
         }

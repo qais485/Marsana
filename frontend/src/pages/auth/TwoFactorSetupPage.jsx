@@ -56,12 +56,12 @@ export default function TwoFactorSetupPage() {
   };
 
   return (
-    <div className="page-container">
-      <div className="form-container">
-        <div className="card">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 px-4 py-8 sm:py-12 overflow-hidden">
+      <div className="w-full max-w-md">
+        <div className="bg-white dark:bg-surface-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-surface-200 dark:border-surface-800">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6"
+            className="inline-flex items-center text-sm text-surface-600 dark:text-surface-400 hover:text-marsana-600 dark:hover:text-marsana-400 mb-4 sm:mb-6 transition-colors min-h-[44px]"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back
@@ -69,37 +69,41 @@ export default function TwoFactorSetupPage() {
 
           {step === 'verify-password' && (
             <>
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="h-8 w-8 text-blue-600" />
+              <div className="text-center mb-6 sm:mb-8">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-marsana-100 dark:bg-marsana-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Shield className="h-7 w-7 sm:h-8 sm:w-8 text-marsana-500" />
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900">Enable two-factor authentication</h1>
-                <p className="text-gray-600 mt-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white">
+                  Enable two-factor authentication
+                </h1>
+                <p className="text-surface-600 dark:text-surface-400 mt-2 text-sm sm:text-base">
                   Add an extra layer of security to your account.
                 </p>
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl mb-4">
                   {error}
                 </div>
               )}
 
               <form onSubmit={handleVerifyPassword} className="space-y-4">
                 <div>
-                  <label htmlFor="password" className="label">Confirm your password</label>
+                  <label htmlFor="password" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                    Confirm your password
+                  </label>
                   <input
                     id="password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="input-field"
+                    className="input-premium"
                     placeholder="Enter your password"
                     required
                   />
                 </div>
 
-                <button type="submit" disabled={loading} className="btn-primary w-full">
+                <button type="submit" disabled={loading} className="btn-marsana w-full">
                   {loading ? 'Verifying...' : 'Continue'}
                 </button>
               </form>
@@ -108,74 +112,87 @@ export default function TwoFactorSetupPage() {
 
           {step === 'scan-qr' && setupData && (
             <>
-              <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Set up authenticator</h1>
-                <p className="text-gray-600 mt-2">
+              <div className="text-center mb-6 sm:mb-8">
+                <h1 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white">
+                  Set up authenticator
+                </h1>
+                <p className="text-surface-600 dark:text-surface-400 mt-2 text-sm sm:text-base">
                   Scan this QR code with your authenticator app.
                 </p>
               </div>
 
               <div className="flex flex-col items-center mb-6">
-                <div className="bg-white p-4 rounded-lg border border-gray-200 mb-4">
+                <div className="bg-white dark:bg-surface-800 p-3 sm:p-4 rounded-xl border border-surface-200 dark:border-surface-700 mb-4">
                   <img
-                    // SECURITY NOTE: Using a third-party QR code service sends the TOTP secret
-                    // URI to an external server. For production, use a local QR code library
-                    // (e.g., qrcode.react or qr-code-styling) to generate QR codes client-side.
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(setupData.provisioning_uri)}`}
                     alt="QR Code"
-                    className="w-48 h-48"
+                    className="w-40 h-40 sm:w-48 sm:h-48"
                   />
                 </div>
 
-                <p className="text-sm text-gray-600 mb-2">Or enter this code manually:</p>
-                <div className="flex items-center gap-2">
-                  <code className="bg-gray-100 px-3 py-2 rounded text-sm font-mono">
+                <p className="text-sm text-surface-600 dark:text-surface-400 mb-2">
+                  Or enter this code manually:
+                </p>
+                <div className="flex items-center gap-2 max-w-full">
+                  <code className="bg-surface-100 dark:bg-surface-800 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-mono text-surface-900 dark:text-white truncate">
                     {setupData.secret}
                   </code>
                   <button
                     onClick={copySecret}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-surface-500 dark:text-surface-400 hover:text-marsana-600 dark:hover:text-marsana-400 transition-colors"
                   >
-                    {copied ? <CheckCircle className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
+                    {copied ? (
+                      <CheckCircle className="h-5 w-5 text-emerald-500" />
+                    ) : (
+                      <Copy className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl mb-4">
                   {error}
                 </div>
               )}
 
               <form onSubmit={handleVerifyCode} className="space-y-4">
                 <div>
-                  <label htmlFor="code" className="label">Verification code</label>
+                  <label htmlFor="code" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                    Verification code
+                  </label>
                   <input
                     id="code"
                     type="text"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
-                    className="input-field text-center text-lg tracking-widest"
+                    className="input-premium text-center text-lg tracking-widest"
                     placeholder="Enter 6-digit code"
                     maxLength={6}
                     required
                   />
                 </div>
 
-                <button type="submit" disabled={loading} className="btn-primary w-full">
+                <button type="submit" disabled={loading} className="btn-marsana w-full">
                   {loading ? 'Verifying...' : 'Enable 2FA'}
                 </button>
               </form>
 
               {setupData.backup_codes && (
-                <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <h3 className="font-medium text-yellow-800 mb-2">Backup codes</h3>
-                  <p className="text-sm text-yellow-700 mb-3">
-                    Save these codes in a safe place. Each can be used once if you lose access to your authenticator.
+                <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+                  <h3 className="font-medium text-amber-800 dark:text-amber-300 mb-2">
+                    Backup codes
+                  </h3>
+                  <p className="text-sm text-amber-700 dark:text-amber-400 mb-3">
+                    Save these codes in a safe place. Each can be used once if you lose access to your
+                    authenticator.
                   </p>
                   <div className="grid grid-cols-2 gap-2">
                     {setupData.backup_codes.map((backupCode, i) => (
-                      <code key={i} className="text-sm font-mono bg-white px-2 py-1 rounded">
+                      <code
+                        key={i}
+                        className="text-xs sm:text-sm font-mono bg-white dark:bg-surface-800 px-2 py-1 rounded-lg text-surface-900 dark:text-white truncate"
+                      >
                         {backupCode}
                       </code>
                     ))}
@@ -187,14 +204,14 @@ export default function TwoFactorSetupPage() {
 
           {step === 'complete' && (
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8 text-emerald-500" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900 mb-2">2FA enabled!</h2>
-              <p className="text-gray-600 mb-6">
+              <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white mb-2">2FA enabled!</h2>
+              <p className="text-surface-600 dark:text-surface-400 mb-6 text-sm sm:text-base">
                 Two-factor authentication is now active on your account.
               </p>
-              <button onClick={() => navigate('/dashboard')} className="btn-primary">
+              <button onClick={() => navigate('/dashboard')} className="btn-marsana">
                 Go to dashboard
               </button>
             </div>

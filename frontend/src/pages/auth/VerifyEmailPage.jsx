@@ -101,17 +101,19 @@ export default function VerifyEmailPage() {
 
   if (success) {
     return (
-      <div className="page-container">
-        <div className="form-container">
-          <div className="card text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 px-4 py-8 sm:py-12 overflow-hidden">
+        <div className="w-full max-w-md">
+          <div className="bg-white dark:bg-surface-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-surface-200 dark:border-surface-800 text-center">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8 text-emerald-500" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Email verified!</h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-surface-900 dark:text-white mb-2">
+              Email verified!
+            </h2>
+            <p className="text-surface-600 dark:text-surface-400 mb-6 text-sm sm:text-base">
               Your email has been verified. You can now access all features.
             </p>
-            <Link to="/login" className="btn-primary inline-block">
+            <Link to="/login" className="btn-marsana inline-block">
               Sign in
             </Link>
           </div>
@@ -121,35 +123,37 @@ export default function VerifyEmailPage() {
   }
 
   return (
-    <div className="page-container">
-      <div className="form-container">
-        <div className="card">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-blue-600" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 px-4 py-8 sm:py-12 overflow-hidden">
+      <div className="w-full max-w-md">
+        <div className="bg-white dark:bg-surface-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-surface-200 dark:border-surface-800">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-marsana-100 dark:bg-marsana-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Mail className="h-7 w-7 sm:h-8 sm:w-8 text-marsana-500" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Verify your email</h1>
-            <p className="text-gray-600 mt-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white">Verify your email</h1>
+            <p className="text-surface-600 dark:text-surface-400 mt-2 text-sm sm:text-base">
               Enter the verification code sent to your email address.
             </p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 flex items-start gap-2">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl mb-4 flex items-start gap-2">
               <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           {resendSuccess && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
+            <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-xl mb-4">
               Verification email sent! Check your inbox.
             </div>
           )}
 
           {!token && (
             <div>
-              <label htmlFor="email" className="label">Email address</label>
+              <label htmlFor="email" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                Email address
+              </label>
               <input
                 id="email"
                 type="email"
@@ -158,7 +162,7 @@ export default function VerifyEmailPage() {
                   setEmail(e.target.value);
                   setResendSuccess(false);
                 }}
-                className="input-field"
+                className="input-premium"
                 placeholder="Enter your email address"
                 required
               />
@@ -167,31 +171,33 @@ export default function VerifyEmailPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div>
-              <label htmlFor="code" className="label">Verification code</label>
+              <label htmlFor="code" className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">
+                Verification code
+              </label>
               <input
                 id="code"
                 type="text"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                className="input-field text-center text-lg tracking-widest"
+                className="input-premium text-center text-lg tracking-widest"
                 placeholder="Enter 6-digit code"
                 maxLength={6}
                 required
               />
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary w-full">
+            <button type="submit" disabled={loading} className="btn-marsana w-full">
               {loading ? 'Verifying...' : 'Verify email'}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-600">
-            Didn&apos;t receive the code?{' '}
+          <p className="mt-6 text-center text-sm text-surface-600 dark:text-surface-400">
+            Didn't receive the code?{' '}
             {email ? (
               <button
                 onClick={handleResend}
                 disabled={resending || cooldown > 0}
-                className="text-primary-600 hover:text-primary-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {resending
                   ? 'Sending...'
@@ -200,7 +206,7 @@ export default function VerifyEmailPage() {
                     : 'Resend code'}
               </button>
             ) : (
-              <span className="text-gray-400">Enter your email above to resend</span>
+              <span className="text-surface-400 dark:text-surface-500">Enter your email above to resend</span>
             )}
           </p>
         </div>

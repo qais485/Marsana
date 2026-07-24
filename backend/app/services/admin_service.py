@@ -50,6 +50,103 @@ class AdminService:
             "monthly_registrations": monthly_registrations,
         }
 
+    # ─── Admin User Management ────────────────────────────────────
+
+    def get_admin_users(
+        self,
+        page: int = 1,
+        limit: int = 20,
+        search: Optional[str] = None,
+        role: Optional[str] = None,
+        is_active: Optional[bool] = None,
+    ) -> dict:
+        users, total = self.admin_repo.get_all_users(
+            page=page, limit=limit, search=search,
+            role=role, is_active=is_active,
+        )
+        return {
+            "users": [self._serialize_admin_user(u) for u in users],
+            "pagination": {
+                "page": page,
+                "limit": limit,
+                "total": total,
+                "pages": (total + limit - 1) // limit,
+            },
+        }
+
+    def get_admin_user(self, user_id: UUID) -> dict:
+        user = self.admin_repo.get_user_by_id(user_id)
+        if not user:
+            raise ValueError("User not found")
+        return self._serialize_admin_user_detail(user)
+
+    def update_admin_user(self, user_id: UUID, data: dict) -> dict:
+        user = self.admin_repo.get_user_by_id(user_id)
+        if not user:
+            raise ValueError("User not found")
+
+        if "email" in data and data["email"] != user.email:
+            from app.repositories.user_repository import UserRepository
+            user_repo = UserRepository(self.db)
+            existing = user_repo.get_by_email(data["email"])
+            if existing:
+                raise ValueError("Email already in use")
+
+        if "role" in data:
+            valid_roles = ["user", "admin"]
+            if data["role"] not in valid_roles:
+                raise ValueError(f"Invalid role. Must be one of: {', '.join(valid_roles)}")
+
+        allowed_fields = ["first_name", "last_name", "email", "role"]
+        update_data = {k: v for k, v in data.items() if k in allowed_fields and v is not None}
+
+        updated_user = self.admin_repo.update_user(user, update_data)
+        return self._serialize_admin_user_detail(updated_user)
+
+    def toggle_user_active(self, user_id: UUID) -> dict:
+        user = self.admin_repo.get_user_by_id(user_id)
+        if not user:
+            raise ValueError("User not found")
+
+        updated_user = self.admin_repo.set_user_active(user, not user.is_active)
+        return self._serialize_admin_user_detail(updated_user)
+
+    def delete_admin_user(self, user_id: UUID) -> dict:
+        user = self.admin_repo.get_user_by_id(user_id)
+        if not user:
+            raise ValueError("User not found")
+
+        self.admin_repo.delete_user(user)
+        return {"message": "User deleted successfully"}
+
+    def _serialize_admin_user(self, user) -> dict:
+        return {
+            "id": str(user.id),
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "role": user.role,
+            "is_active": user.is_active,
+            "is_email_verified": user.is_email_verified,
+            "is_2fa_enabled": user.is_2fa_enabled,
+            "created_at": user.created_at.isoformat() if user.created_at else None,
+            "updated_at": user.updated_at.isoformat() if user.updated_at else None,
+        }
+
+    def _serialize_admin_user_detail(self, user) -> dict:
+        return {
+            "id": str(user.id),
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "role": user.role,
+            "is_active": user.is_active,
+            "is_email_verified": user.is_email_verified,
+            "is_2fa_enabled": user.is_2fa_enabled,
+            "created_at": user.created_at.isoformat() if user.created_at else None,
+            "updated_at": user.updated_at.isoformat() if user.updated_at else None,
+        }
+
     def get_product_stats(self) -> dict:
         stats = self.admin_repo.get_product_stats()
         top_products = self.admin_repo.get_top_products(10)

@@ -46,11 +46,11 @@ export default function ShippingSelector() {
     return (
       <div className="space-y-2">
         <div className="flex items-center gap-2 mb-3">
-          <Truck className="w-4 h-4 text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">Shipping Method</span>
+          <Truck className="w-4 h-4 text-surface-500 dark:text-surface-400" />
+          <span className="text-sm font-medium text-surface-700 dark:text-surface-300">Shipping Method</span>
         </div>
         <div className="flex items-center justify-center py-4">
-          <Loader2 className="w-5 h-5 text-primary-600 animate-spin" />
+          <Loader2 className="w-5 h-5 text-marsana-600 dark:text-marsana-400 animate-spin" />
         </div>
       </div>
     );
@@ -59,35 +59,35 @@ export default function ShippingSelector() {
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 mb-3">
-        <Truck className="w-4 h-4 text-gray-500" />
-        <span className="text-sm font-medium text-gray-700">Shipping Method</span>
+        <Truck className="w-4 h-4 text-surface-500 dark:text-surface-400" />
+        <span className="text-sm font-medium text-surface-700 dark:text-surface-300">Shipping Method</span>
       </div>
       {methods.map((method) => (
         <label
           key={method.id}
-          className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
+          className={`flex items-center justify-between p-2.5 sm:p-3 border rounded-xl cursor-pointer transition-all duration-300 min-h-[44px] ${
             currentMethod === method.id
-              ? 'border-primary-500 bg-primary-50'
-              : 'border-gray-200 hover:border-gray-300'
+              ? 'border-marsana-500 dark:border-marsana-400 bg-marsana-50 dark:bg-marsana-900/20'
+              : 'border-surface-200 dark:border-surface-700 hover:border-surface-300 dark:hover:border-surface-600'
           }`}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <input
               type="radio"
               name="shipping"
               value={method.id}
               checked={currentMethod === method.id}
               onChange={() => handleSelect(method.id)}
-              className="w-4 h-4 text-primary-600"
+              className="w-4 h-4 text-marsana-600 dark:text-marsana-400"
             />
             <div>
-              <p className="text-sm font-medium text-gray-900">{method.name}</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs sm:text-sm font-medium text-surface-900 dark:text-white">{method.name}</p>
+              <p className="text-[10px] sm:text-xs text-surface-500 dark:text-surface-400">
                 {method.estimated_days_min}-{method.estimated_days_max} business days
               </p>
             </div>
           </div>
-          <span className="text-sm font-medium text-gray-900">
+          <span className="text-xs sm:text-sm font-medium text-surface-900 dark:text-white flex-shrink-0">
             {method.free_shipping ? 'Free' : formatPrice(method.cost)}
           </span>
         </label>

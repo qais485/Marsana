@@ -52,19 +52,19 @@ export default function AdminNotificationList() {
   if (loading && notifications.length === 0) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-6 w-6 animate-spin text-primary-600" />
+        <Loader2 className="h-6 w-6 animate-spin text-marsana-600" />
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <h3 className="text-lg font-semibold text-surface-900">Notifications</h3>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500"
+          className="w-full sm:w-auto px-3 py-2 min-h-[44px] border border-surface-300 rounded-lg text-sm focus:ring-2 focus:ring-marsana-500"
         >
           <option value="">All Types</option>
           <option value="order">Order</option>
@@ -75,32 +75,33 @@ export default function AdminNotificationList() {
       </div>
 
       {notifications.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
-          <Bell className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No notifications found</p>
+        <div className="text-center py-12 bg-white rounded-xl border border-surface-100">
+          <Bell className="h-12 w-12 text-surface-300 mx-auto mb-3" />
+          <p className="text-surface-500">No notifications found</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-100">
+        <div className="bg-white rounded-xl border border-surface-100 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+            <thead className="bg-surface-50 border-b border-surface-100">
               <tr>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Title</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Type</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Recipient</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Status</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Date</th>
-                <th className="text-right px-4 py-3 text-sm font-medium text-gray-500">Actions</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Title</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Type</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Recipient</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Status</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-surface-500">Date</th>
+                <th className="text-right px-4 py-3 text-sm font-medium text-surface-500">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-surface-100">
               {notifications.map((notification) => (
-                <tr key={notification.id} className="hover:bg-gray-50">
+                <tr key={notification.id} className="hover:bg-surface-50">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <span>{getTypeIcon(notification.notification_type)}</span>
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{notification.title}</p>
-                        <p className="text-xs text-gray-500 truncate max-w-xs">{notification.message}</p>
+                        <p className="text-sm font-medium text-surface-900">{notification.title}</p>
+                        <p className="text-xs text-surface-500 truncate max-w-xs">{notification.message}</p>
                       </div>
                     </div>
                   </td>
@@ -110,17 +111,17 @@ export default function AdminNotificationList() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-surface-600">
                       {notification.user_id ? notification.user_id.slice(0, 8) + '...' : 'Broadcast'}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`text-xs px-2 py-1 rounded ${notification.is_read ? 'bg-gray-100 text-gray-600' : 'bg-green-100 text-green-700'}`}>
+                    <span className={`text-xs px-2 py-1 rounded ${notification.is_read ? 'bg-surface-100 text-surface-600' : 'bg-green-100 text-green-700'}`}>
                       {notification.is_read ? 'Read' : 'Unread'}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-surface-500">
                       {new Date(notification.created_at).toLocaleDateString()}
                     </span>
                   </td>
@@ -135,13 +136,14 @@ export default function AdminNotificationList() {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
       )}
 
       {pagination.pages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-surface-500">
             Showing {((pagination.page - 1) * pagination.limit) + 1} to{' '}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
           </p>

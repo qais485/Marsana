@@ -6,6 +6,8 @@ import { homeService } from '../services/api/homeService';
 import CategoryBanner from '../components/category/CategoryBanner';
 import ProductCard from '../components/common/ProductCard';
 import SearchBar from '../components/common/SearchBar';
+import Header from '../components/common/Header';
+import Footer from '../components/common/Footer';
 
 export default function CategoryDetailPage() {
   const { slug } = useParams();
@@ -55,10 +57,10 @@ export default function CategoryDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
-          <p className="text-gray-500">Loading category...</p>
+          <Loader2 className="w-8 h-8 text-marsana-600 animate-spin" />
+          <p className="text-surface-500 dark:text-surface-400">Loading category...</p>
         </div>
       </div>
     );
@@ -66,10 +68,12 @@ export default function CategoryDetailPage() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">{error || 'Category not found'}</p>
-          <Link to="/categories" className="btn-primary">
+          <p className="text-surface-600 dark:text-surface-400 mb-4">
+            {error || 'Category not found'}
+          </p>
+          <Link to="/categories" className="btn-marsana">
             Back to Categories
           </Link>
         </div>
@@ -80,36 +84,21 @@ export default function CategoryDetailPage() {
   const { category, children } = data;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="text-xl font-bold text-primary-600">
-              E-Commerce
-            </Link>
-            <div className="flex-1 mx-6">
-              <SearchBar />
-            </div>
-            <nav className="flex items-center gap-4">
-              <Link to="/categories" className="text-sm text-gray-600 hover:text-gray-900">
-                Categories
-              </Link>
-              <Link to="/products" className="text-sm text-gray-600 hover:text-gray-900">
-                Products
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <Header />
 
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <ol className="flex items-center gap-2 text-sm text-gray-500">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 overflow-x-auto">
+        <ol className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-surface-500 dark:text-surface-400 whitespace-nowrap">
           <li>
-            <Link to="/" className="hover:text-gray-700">Home</Link>
+            <Link to="/" className="hover:text-marsana-600 dark:hover:text-marsana-400 transition-colors">
+              Home
+            </Link>
           </li>
           <li><ChevronRight className="w-4 h-4" /></li>
           <li>
-            <Link to="/categories" className="hover:text-gray-700">Categories</Link>
+            <Link to="/categories" className="hover:text-marsana-600 dark:hover:text-marsana-400 transition-colors">
+              Categories
+            </Link>
           </li>
           {category.parent && (
             <>
@@ -117,7 +106,7 @@ export default function CategoryDetailPage() {
               <li>
                 <Link
                   to={`/categories/${category.parent.slug}`}
-                  className="hover:text-gray-700"
+                  className="hover:text-marsana-600 dark:hover:text-marsana-400 transition-colors"
                 >
                   {category.parent.name}
                 </Link>
@@ -125,24 +114,26 @@ export default function CategoryDetailPage() {
             </>
           )}
           <li><ChevronRight className="w-4 h-4" /></li>
-          <li className="text-gray-900 font-medium">{category.name}</li>
+          <li className="text-surface-900 dark:text-white font-medium">{category.name}</li>
         </ol>
       </nav>
 
       <CategoryBanner category={category} />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {children && children.length > 0 && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Subcategories</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <section className="mb-8 sm:mb-12">
+            <h2 className="text-lg sm:text-2xl font-bold text-surface-900 dark:text-white mb-4 sm:mb-6">
+              Subcategories
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {children.map((child) => (
                 <Link
                   key={child.id}
                   to={`/categories/${child.slug}`}
-                  className="group bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300"
+                  className="group bg-white dark:bg-surface-900 rounded-2xl overflow-hidden shadow-sm border border-surface-200 dark:border-surface-800 hover:shadow-lg hover:border-marsana-200 dark:hover:border-marsana-800 transition-all duration-300"
                 >
-                  <div className="aspect-square bg-gray-100 overflow-hidden">
+                  <div className="aspect-square bg-surface-100 dark:bg-surface-800 overflow-hidden">
                     {child.image_url ? (
                       <img
                         src={child.image_url}
@@ -151,12 +142,12 @@ export default function CategoryDetailPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <LayoutGrid className="w-10 h-10 text-gray-300" />
+                        <LayoutGrid className="w-8 h-8 sm:w-10 sm:h-10 text-surface-300 dark:text-surface-600" />
                       </div>
                     )}
                   </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-medium text-gray-900 group-hover:text-primary-600 transition-colors">
+                  <div className="p-3 sm:p-4 text-center">
+                    <h3 className="font-medium text-sm sm:text-base text-surface-900 dark:text-white group-hover:text-marsana-600 dark:group-hover:text-marsana-400 transition-colors truncate">
                       {child.name}
                     </h3>
                   </div>
@@ -167,11 +158,11 @@ export default function CategoryDetailPage() {
         )}
 
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Products</h2>
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-2xl font-bold text-surface-900 dark:text-white">Products</h2>
             <Link
               to={`/products?category=${category.id}`}
-              className="text-primary-600 hover:text-primary-700 font-medium text-sm"
+              className="text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 font-medium text-sm transition-colors"
             >
               View All →
             </Link>
@@ -179,15 +170,17 @@ export default function CategoryDetailPage() {
 
           {productsLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-marsana-600 animate-spin" />
             </div>
           ) : products.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
-              <LayoutGrid className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">No products in this category yet</p>
+            <div className="text-center py-12 bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800">
+              <LayoutGrid className="w-12 h-12 text-surface-300 dark:text-surface-600 mx-auto mb-4" />
+              <p className="text-surface-500 dark:text-surface-400">
+                No products in this category yet
+              </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {products.map((product) => (
                 <Link key={product.id} to={`/products/${product.slug}`}>
                   <ProductCard product={product} />
@@ -197,6 +190,8 @@ export default function CategoryDetailPage() {
           )}
         </section>
       </main>
+
+      <Footer />
     </div>
   );
 }

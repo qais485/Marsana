@@ -89,41 +89,41 @@ export default function AdminTemplateForm({ template, onSave, onCancel }) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-6">
+    <div className="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-800 p-6 shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-surface-900 dark:text-white">
           {template ? 'Edit Template' : 'Create Template'}
         </h3>
-        <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
+        <button onClick={onCancel} className="text-surface-400 dark:text-surface-500 hover:text-surface-600 dark:hover:text-surface-300 transition-all duration-300">
           <X className="h-5 w-5" />
         </button>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-700 text-sm">{error}</div>
+        <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm">{error}</div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Name *</label>
             <input
               type="text"
               name="name"
               value={form.name}
               onChange={handleNameChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="input-premium"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Slug *</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Slug *</label>
             <input
               type="text"
               name="slug"
               value={form.slug}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-gray-50"
+              className="input-premium bg-surface-50 dark:bg-surface-800"
               required
               readOnly={!!template}
             />
@@ -131,64 +131,64 @@ export default function AdminTemplateForm({ template, onSave, onCancel }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Description</label>
           <input
             type="text"
             name="description"
             value={form.description}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="input-premium"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email Subject *</label>
+          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Email Subject *</label>
           <input
             type="text"
             name="subject"
             value={form.subject}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="input-premium"
             placeholder="Order Confirmation - {{order_number}}"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Notification Title *</label>
+          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Notification Title *</label>
           <input
             type="text"
             name="title_template"
             value={form.title_template}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="input-premium"
             placeholder="Order Confirmed"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Message Template *</label>
+          <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Message Template *</label>
           <textarea
             name="message_template"
             value={form.message_template}
             onChange={handleChange}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="input-premium"
             placeholder="Your order {{order_number}} has been placed successfully. Total: ${{total_amount}}"
             required
           />
-          <p className="text-xs text-gray-500 mt-1">Use {'{{variable}}'} for dynamic values</p>
+          <p className="text-xs text-surface-500 dark:text-surface-400 mt-1">Use {'{{variable}}'} for dynamic values</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Type *</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Type *</label>
             <select
               name="notification_type"
               value={form.notification_type}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="input-premium"
             >
               {NOTIFICATION_TYPES.map(t => (
                 <option key={t.value} value={t.value}>{t.label}</option>
@@ -196,12 +196,12 @@ export default function AdminTemplateForm({ template, onSave, onCancel }) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Channel *</label>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1">Channel *</label>
             <select
               name="channel"
               value={form.channel}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="input-premium"
             >
               {CHANNELS.map(c => (
                 <option key={c.value} value={c.value}>{c.label}</option>
@@ -210,55 +210,55 @@ export default function AdminTemplateForm({ template, onSave, onCancel }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
-          <label className="flex items-center gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <label className="flex items-center gap-2 min-h-[44px] px-3 py-2 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800/50 cursor-pointer">
             <input
               type="checkbox"
               name="is_active"
               checked={form.is_active}
               onChange={handleChange}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="rounded border-surface-300 dark:border-surface-600 text-marsana-600 focus:ring-marsana-500 flex-shrink-0"
             />
-            <span className="text-sm text-gray-700">Active</span>
+            <span className="text-sm text-surface-700 dark:text-surface-300">Active</span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2 min-h-[44px] px-3 py-2 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800/50 cursor-pointer">
             <input
               type="checkbox"
               name="send_in_app"
               checked={form.send_in_app}
               onChange={handleChange}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="rounded border-surface-300 dark:border-surface-600 text-marsana-600 focus:ring-marsana-500 flex-shrink-0"
             />
-            <span className="text-sm text-gray-700">In-App</span>
+            <span className="text-sm text-surface-700 dark:text-surface-300">In-App</span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2 min-h-[44px] px-3 py-2 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800/50 cursor-pointer">
             <input
               type="checkbox"
               name="send_email"
               checked={form.send_email}
               onChange={handleChange}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="rounded border-surface-300 dark:border-surface-600 text-marsana-600 focus:ring-marsana-500 flex-shrink-0"
             />
-            <span className="text-sm text-gray-700">Email</span>
+            <span className="text-sm text-surface-700 dark:text-surface-300">Email</span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2 min-h-[44px] px-3 py-2 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800/50 cursor-pointer">
             <input
               type="checkbox"
               name="send_push"
               checked={form.send_push}
               onChange={handleChange}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="rounded border-surface-300 dark:border-surface-600 text-marsana-600 focus:ring-marsana-500 flex-shrink-0"
             />
-            <span className="text-sm text-gray-700">Push</span>
+            <span className="text-sm text-surface-700 dark:text-surface-300">Push</span>
           </label>
         </div>
 
-        <div className="flex items-center gap-3 pt-4">
-          <button type="submit" disabled={loading} className="btn-primary flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4">
+          <button type="submit" disabled={loading} className="btn-marsana flex items-center justify-center gap-2 min-h-[44px]">
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             {template ? 'Update Template' : 'Create Template'}
           </button>
-          <button type="button" onClick={onCancel} className="btn-secondary">
+          <button type="button" onClick={onCancel} className="btn-outline min-h-[44px]">
             Cancel
           </button>
         </div>
