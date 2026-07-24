@@ -1,11 +1,12 @@
 import logging
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+
+import httpx
 
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
+
+RESEND_API_URL = "https://api.resend.com/emails"
 
 
 class EmailSendError(Exception):
@@ -13,35 +14,41 @@ class EmailSendError(Exception):
 
 
 def send_email(to_email: str, subject: str, html_content: str) -> bool:
-    if not all(
-        [
-            settings.SMTP_HOST,
-            settings.SMTP_USER,
-            settings.SMTP_PASSWORD,
-            settings.EMAIL_FROM,
-        ]
-    ):
-        raise EmailSendError("SMTP not configured — set SMTP_HOST, SMTP_USER, SMTP_PASSWORD, EMAIL_FROM in .env")
+    if not settings.RESEND_API_KEY:
+        raise EmailSendError("RESEND_API_KEY not configured — set it in .env or Render environment")
 
-    msg = MIMEMultipart("alternative")
-    msg["From"] = settings.EMAIL_FROM
-    msg["To"] = to_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(html_content, "html"))
+    from_email = settings.RESEND_FROM_EMAIL or settings.EMAIL_FROM
+    if not from_email:
+        raise EmailSendError("RESEND_FROM_EMAIL not configured — set it in .env or Render environment")
+
+    payload = {
+        "from": from_email,
+        "to": [to_email],
+        "subject": subject,
+        "html": html_content,
+    }
 
     try:
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
-            server.starttls()
-            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-            server.sendmail(settings.EMAIL_FROM, to_email, msg.as_string())
-        logger.info("Email sent to %s", to_email)
+        with httpx.Client(timeout=30) as client:
+            response = client.post(
+                RESEND_API_URL,
+                json=payload,
+                headers={
+                    "Authorization": f"Bearer {settings.RESEND_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+            )
+
+        if response.status_code != 200:
+            error_detail = response.text
+            logger.error("Resend API error %s: %s", response.status_code, error_detail)
+            raise EmailSendError(f"Resend API returned {response.status_code}: {error_detail}")
+
+        logger.info("Email sent to %s via Resend", to_email)
         return True
-    except smtplib.SMTPAuthenticationError as e:
-        logger.error("SMTP authentication failed: %s", e)
-        raise EmailSendError(f"SMTP authentication failed: {e}") from e
-    except smtplib.SMTPConnectError as e:
-        logger.error("SMTP connection failed: %s", e)
-        raise EmailSendError(f"SMTP connection failed: {e}") from e
+
+    except EmailSendError:
+        raise
     except Exception as e:
-        logger.exception("Failed to send email to %s", to_email)
+        logger.exception("Failed to send email via Resend")
         raise EmailSendError(f"Failed to send email: {e}") from e
