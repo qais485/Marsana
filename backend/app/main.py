@@ -27,8 +27,8 @@ from app.middleware.compression import CompressionMiddleware
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
-    docs_url="/docs" if settings.DEBUG else None,
-    redoc_url="/redoc" if settings.DEBUG else None,
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
 app.add_middleware(CompressionMiddleware, algorithm='gzip', level=6, min_size=1024)
