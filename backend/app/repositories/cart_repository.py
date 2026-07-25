@@ -1,11 +1,10 @@
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy import IntegrityError
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.database_models import Cart, CartItem, SavedForLater
-
 
 class CartRepository:
     def __init__(self, db: Session):
