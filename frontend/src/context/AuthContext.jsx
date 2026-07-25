@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/api/authService';
 import { profileService } from '../services/api/profileService';
 
@@ -24,6 +25,18 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(getInitialUser);
   const [loading, setLoading] = useState(true);
   const [isValidating, setIsValidating] = useState(true);
+  const navigate = useNavigate();
+
+  // Listen for auth logout events from API client
+  useEffect(() => {
+    const handleLogout = () => {
+      logout();
+      navigate('/login');
+    };
+    
+    window.addEventListener('auth:logout', handleLogout);
+    return () => window.removeEventListener('auth:logout', handleLogout);
+  }, [navigate]);
 
   useEffect(() => {
     const validateToken = async () => {

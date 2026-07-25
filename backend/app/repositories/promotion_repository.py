@@ -60,7 +60,23 @@ class CouponRepository:
         self.db.commit()
 
     def increment_usage(self, coupon: Coupon) -> None:
-        coupon.used_count += 1
+        """
+        Atomically increment coupon usage count.
+        Prevents race conditions that could allow coupon overuse.
+        """
+        from app.models.database_models import Coupon as CouponModel
+        
+        # Atomic increment with check for max_uses
+        result = self.db.query(CouponModel).filter(
+            CouponModel.id == coupon.id,
+            CouponModel.used_count < CouponModel.max_uses
+        ).update({
+            CouponModel.used_count: CouponModel.used_count + 1
+        })
+        
+        if result == 0:
+            raise ValueError("Coupon has reached maximum usage limit")
+        
         self.db.commit()
 
     def get_user_usage_count(self, coupon_id: UUID, user_id: UUID) -> int:
@@ -173,9 +189,19 @@ class LoyaltyRepository:
         return tx
 
     def redeem_points(self, user_id: UUID, points: int) -> Optional[LoyaltyPointTransaction]:
-        loyalty = self.get_by_user(user_id)
+        """
+        Atomically redeem loyalty points with row-level locking.
+        Prevents double-spend race conditions.
+        """
+        # Use row-level lock to prevent race conditions
+        loyalty = self.db.query(LoyaltyPoint).filter(
+            LoyaltyPoint.user_id == user_id
+        ).with_for_update().first()
+        
         if not loyalty or loyalty.points_balance < points:
             return None
+        
+        # Atomic decrement with check
         loyalty.points_balance -= points
         loyalty.lifetime_redeemed += points
 
@@ -233,7 +259,19 @@ class ReferralRepository:
         return referral
 
     def increment_usage(self, referral: ReferralCode) -> None:
-        referral.usage_count += 1
+        """
+        Atomically increment referral usage count.
+        Prevents race conditions.
+        """
+        from app.models.database_models import ReferralCode as ReferralCodeModel
+        
+        # Atomic increment
+        self.db.query(ReferralCodeModel).filter(
+            ReferralCodeModel.id == referral.id
+        ).update({
+            ReferralCodeModel.usage_count: ReferralCodeModel.usage_count + 1
+        })
+        
         self.db.commit()
 
     def create_reward(self, reward: ReferralReward) -> ReferralReward:

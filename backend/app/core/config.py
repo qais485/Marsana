@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pydantic_settings import BaseSettings
 from decimal import Decimal
 from typing import Optional
@@ -29,6 +30,16 @@ class Settings(BaseSettings):
 
     FRONTEND_URL: str = "http://localhost:5173"
     CORS_ORIGINS: list[str] = ["http://localhost:5173"]
+    
+    # Security: Validate CORS origins in production
+    def __init__(self, **values):
+        super().__init__(**values)
+        if not self.DEBUG:
+            # In production, ensure CORS_ORIGINS doesn't contain localhost
+            self.CORS_ORIGINS = [
+                origin for origin in self.CORS_ORIGINS 
+                if "localhost" not in origin and "127.0.0.1" not in origin
+            ]
 
     RATE_LIMIT_LOGIN_ATTEMPTS: int = 5
     RATE_LIMIT_WINDOW_MINUTES: int = 15
@@ -38,7 +49,13 @@ class Settings(BaseSettings):
         case_sensitive = True
 
 
-settings = Settings()
+@lru_cache()
+def get_settings() -> Settings:
+    """Get settings singleton with caching."""
+    return Settings()
+
+
+settings = get_settings()
 
 TAX_RATE = Decimal("0.08")
 FREE_SHIPPING_THRESHOLD = Decimal("50.00")

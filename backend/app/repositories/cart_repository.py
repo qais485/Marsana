@@ -1,6 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
+from sqlalchemy import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.database_models import Cart, CartItem, SavedForLater
@@ -14,12 +15,23 @@ class CartRepository:
         return self.db.query(Cart).filter(Cart.user_id == user_id).first()
 
     def get_or_create(self, user_id: UUID) -> Cart:
+        """
+        Get or create cart with race condition protection.
+        Uses unique constraint on user_id to prevent duplicates.
+        """
         cart = self.get_by_user(user_id)
         if not cart:
-            cart = Cart(user_id=user_id)
-            self.db.add(cart)
-            self.db.commit()
-            self.db.refresh(cart)
+            try:
+                cart = Cart(user_id=user_id)
+                self.db.add(cart)
+                self.db.commit()
+                self.db.refresh(cart)
+            except IntegrityError:
+                # Another request created the cart concurrently
+                self.db.rollback()
+                cart = self.get_by_user(user_id)
+                if not cart:
+                    raise RuntimeError("Failed to create or retrieve cart")
         return cart
 
     def update(self, cart: Cart) -> Cart:

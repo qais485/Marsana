@@ -1,0 +1,27 @@
+# Robots.txt for Marsana E-Commerce Platform
+# https://marsana-frontend.onrender.com
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and private pages
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /profile/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /orders/
+Disallow: /wishlist/
+Disallow: /loyalty/
+Disallow: /referral/
+Disallow: /settings/
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://marsana-frontend.onrender.com/sitemap.xml
+
+# Crawl-delay for polite bots
+Crawl-delay: 1

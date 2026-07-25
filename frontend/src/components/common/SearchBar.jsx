@@ -54,7 +54,13 @@ export default function SearchBar() {
       } else {
         let stored;
         try {
-          stored = JSON.parse(localStorage.getItem('search_history') || '[]');
+          const parsed = JSON.parse(localStorage.getItem('search_history') || '[]');
+          // Validate parsed data is an array of strings
+          if (Array.isArray(parsed)) {
+            stored = parsed.filter(item => typeof item === 'string').slice(0, 10);
+          } else {
+            stored = [];
+          }
         } catch {
           stored = [];
         }
@@ -109,7 +115,13 @@ export default function SearchBar() {
     } else {
       let stored;
       try {
-        stored = JSON.parse(localStorage.getItem('search_history') || '[]');
+        const parsed = JSON.parse(localStorage.getItem('search_history') || '[]');
+        // Validate parsed data is an array of strings
+        if (Array.isArray(parsed)) {
+          stored = parsed.filter(item => typeof item === 'string');
+        } else {
+          stored = [];
+        }
       } catch {
         stored = [];
       }

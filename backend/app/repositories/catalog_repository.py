@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.database_models import (
@@ -1095,9 +1095,18 @@ class AdminRepository:
         )
 
     def update_user(self, user: User, data: dict) -> User:
+        # Allowlist of fields that can be updated through this method
+        # Security: Prevents privilege escalation by blocking sensitive fields
+        allowed_fields = {
+            'first_name', 'last_name', 'phone_number', 'is_active',
+            'is_email_verified', 'avatar_url', 'bio', 'date_of_birth',
+            'gender', 'timezone', 'language'
+        }
+        
         for key, value in data.items():
-            if hasattr(user, key) and value is not None:
+            if key in allowed_fields and hasattr(user, key) and value is not None:
                 setattr(user, key, value)
+        
         self.db.commit()
         self.db.refresh(user)
         return user
@@ -1341,31 +1350,54 @@ class OrderRepository:
         return order
 
     def decrement_stock(self, items: list[dict]) -> None:
+        """
+        Atomically decrement stock for items with row-level locking.
+        Prevents overselling by using SELECT ... FOR UPDATE.
+        """
         for item_data in items:
             product_id = item_data.get("product_id")
             variant_id = item_data.get("variant_id")
             quantity = item_data.get("quantity", 1)
 
             if variant_id:
+                # Use row-level lock to prevent race conditions
                 variant = self.db.query(ProductVariant).filter(
                     ProductVariant.id == variant_id
-                ).first()
+                ).with_for_update().first()
                 if variant:
-                    variant.stock_quantity = max(variant.stock_quantity - quantity, 0)
+                    if variant.stock_quantity >= quantity:
+                        variant.stock_quantity -= quantity
+                    else:
+                        raise ValueError(f"Insufficient stock for variant {variant_id}")
             elif product_id:
+                # Use row-level lock to prevent race conditions
                 product = self.db.query(Product).filter(
                     Product.id == product_id
-                ).first()
+                ).with_for_update().first()
                 if product:
-                    product.stock_quantity = max(product.stock_quantity - quantity, 0)
-                    product.sold_count = product.sold_count + quantity
+                    if product.stock_quantity >= quantity:
+                        product.stock_quantity -= quantity
+                        product.sold_count = product.sold_count + quantity
+                    else:
+                        raise ValueError(f"Insufficient stock for product {product_id}")
 
         self.db.commit()
 
     def update(self, order: Order, data: dict) -> Order:
+        # Allowlist of fields that can be updated through this method
+        # Security: Prevents unauthorized modification of critical order fields
+        allowed_fields = {
+            'status', 'shipping_address', 'billing_address', 'billing_same_as_shipping',
+            'shipping_method', 'tracking_number', 'carrier', 'admin_notes',
+            'internal_notes', 'estimated_delivery_date', 'actual_delivery_date',
+            'refund_amount', 'refund_reason', 'gift_wrap', 'gift_message',
+            'delivery_type', 'pickup_location_id'
+        }
+        
         for key, value in data.items():
-            if value is not None:
+            if key in allowed_fields and value is not None:
                 setattr(order, key, value)
+        
         self.db.commit()
         self.db.refresh(order)
         return order

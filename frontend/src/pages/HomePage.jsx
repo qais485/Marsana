@@ -91,7 +91,7 @@ export default function HomePage() {
         <SearchBar />
       </div>
 
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <HeroBanner banners={homepageData?.hero_banners || []} />
         <Categories categories={homepageData?.categories || []} />
         <FeaturedProducts products={homepageData?.featured_products || []} />

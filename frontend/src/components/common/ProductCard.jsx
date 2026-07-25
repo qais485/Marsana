@@ -22,7 +22,7 @@ export default function ProductCard({ product }) {
 
   const inWishlist = isInWishlist(product.id);
 
-  const images = typeof product.images === 'string' ? product.images.split(',').filter(Boolean) : [];
+  const images = product.images && typeof product.images === 'string' ? product.images.split(',').filter(Boolean) : [];
   const primaryImage = images[0] || 'https://placehold.co/400x400/e2e8f0/94a3b8?text=No+Image';
   const secondaryImage = images[1] || primaryImage;
 

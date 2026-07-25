@@ -21,6 +21,12 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
+// Custom event for auth navigation (preserves React Router state)
+const AUTH_EVENT = 'auth:logout';
+const triggerLogout = () => {
+  window.dispatchEvent(new CustomEvent(AUTH_EVENT));
+};
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token');
   if (token) {
@@ -68,7 +74,8 @@ api.interceptors.response.use(
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
           localStorage.removeItem('user');
-          window.location.href = '/login';
+          // Use custom event instead of hard redirect (preserves React state)
+          triggerLogout();
           return Promise.reject(error);
         } finally {
           isRefreshing = false;

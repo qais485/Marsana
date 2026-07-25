@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { adminOrderService } from '../../services/api/adminOrderService';
+import { escapeHtml } from '../../utils/security';
 import {
   Loader2,
   X,
@@ -15,16 +16,6 @@ import {
 } from 'lucide-react';
 
 const STATUS_OPTIONS = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'];
-
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
 
 const STATUS_COLORS = {
   pending: 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',

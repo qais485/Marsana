@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy import func
+from sqlalchemy import func, IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.database_models import (
@@ -100,20 +100,33 @@ class WarehouseInventoryRepository:
     def get_or_create(
         self, product_id: UUID, warehouse_id: UUID, variant_id: Optional[UUID] = None
     ) -> WarehouseInventory:
+        """
+        Get or create inventory record with race condition protection.
+        Uses unique constraint on warehouse_id and product_id to prevent duplicates.
+        """
         existing = self.get_by_product_and_warehouse(product_id, warehouse_id, variant_id)
         if existing:
             return existing
-        inventory = WarehouseInventory(
-            product_id=product_id,
-            warehouse_id=warehouse_id,
-            variant_id=variant_id,
-            quantity=0,
-            reserved_quantity=0,
-        )
-        self.db.add(inventory)
-        self.db.flush()
-        self.db.refresh(inventory)
-        return inventory
+        
+        try:
+            inventory = WarehouseInventory(
+                product_id=product_id,
+                warehouse_id=warehouse_id,
+                variant_id=variant_id,
+                quantity=0,
+                reserved_quantity=0,
+            )
+            self.db.add(inventory)
+            self.db.flush()
+            self.db.refresh(inventory)
+            return inventory
+        except IntegrityError:
+            # Another request created the inventory concurrently
+            self.db.rollback()
+            existing = self.get_by_product_and_warehouse(product_id, warehouse_id, variant_id)
+            if existing:
+                return existing
+            raise RuntimeError("Failed to create or retrieve inventory record")
 
     def update_quantity(
         self, inventory: WarehouseInventory, quantity_change: int

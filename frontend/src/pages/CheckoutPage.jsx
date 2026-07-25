@@ -15,6 +15,7 @@ import { useCart } from '../context/CartContext';
 import { profileService } from '../services/api/profileService';
 import { checkoutService } from '../services/api/checkoutService';
 import { formatPrice } from '../utils/format';
+import PaymentTokenize from '../components/payment/PaymentTokenize';
 
 const STEPS = [
   { id: 'shipping', label: 'Shipping', icon: MapPin },
@@ -57,12 +58,7 @@ export default function CheckoutPage() {
   const [pickupLocations, setPickupLocations] = useState([]);
   const [selectedPickupLocation, setSelectedPickupLocation] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('cod');
-  const [cardDetails, setCardDetails] = useState({
-    card_number: '',
-    expiry: '',
-    cvv: '',
-    cardholder_name: '',
-  });
+  const [paymentToken, setPaymentToken] = useState(null);
   const [notes, setNotes] = useState('');
   const [termsAgreed, setTermsAgreed] = useState(false);
 
@@ -151,22 +147,7 @@ export default function CheckoutPage() {
     setBillingForm({ ...billingForm, [e.target.name]: e.target.value });
   };
 
-  const handleCardChange = (e) => {
-    let value = e.target.value;
-    if (e.target.name === 'card_number') {
-      value = value.replace(/\D/g, '').replace(/(\d{4})/g, '$1 ').trim().slice(0, 19);
-    }
-    if (e.target.name === 'expiry') {
-      value = value.replace(/\D/g, '');
-      if (value.length >= 2) {
-        value = value.slice(0, 2) + '/' + value.slice(2, 4);
-      }
-    }
-    if (e.target.name === 'cvv') {
-      value = value.replace(/\D/g, '').slice(0, 4);
-    }
-    setCardDetails({ ...cardDetails, [e.target.name]: value });
-  };
+
 
   const getActiveShippingAddress = () => {
     if (selectedShippingAddressId) {
@@ -235,12 +216,8 @@ export default function CheckoutPage() {
 
   const validatePayment = () => {
     if (paymentMethod === 'credit_card') {
-      if (!cardDetails.card_number || !cardDetails.expiry || !cardDetails.cvv) {
-        setError('Please fill in all card details');
-        return false;
-      }
-      if (cardDetails.card_number.replace(/\s/g, '').length < 13) {
-        setError('Invalid card number');
+      if (!paymentToken) {
+        setError('Please tokenize your card first');
         return false;
       }
     }
@@ -287,13 +264,13 @@ export default function CheckoutPage() {
         payment_details:
           paymentMethod === 'credit_card'
             ? {
-                // WARNING: Handling card details directly violates PCI-DSS compliance.
-                // In production, use a payment processor (Stripe, Braintree, etc.) that
-                // handles card data via tokenization. Never store raw card numbers.
-                card_number: cardDetails.card_number.replace(/\s/g, ''),
-                expiry: cardDetails.expiry,
-                cvv: cardDetails.cvv,
-                cardholder_name: cardDetails.cardholder_name,
+                // PCI-DSS compliant: Only send token, never raw card data
+                token: paymentToken.token,
+                card_type: paymentToken.card_type,
+                last_4: paymentToken.last_4,
+                expiry_month: paymentToken.expiry_month,
+                expiry_year: paymentToken.expiry_year,
+                cardholder_name: paymentToken.cardholder_name,
               }
             : null,
         notes: notes || null,
@@ -804,60 +781,31 @@ export default function CheckoutPage() {
                 </div>
 
                 {paymentMethod === 'credit_card' && (
-                  <div className="p-4 bg-surface-50 dark:bg-surface-800 rounded-xl space-y-4">
-                    <div>
-                      <label className="label-premium">Cardholder Name</label>
-                      <input
-                        type="text"
-                        name="cardholder_name"
-                        value={cardDetails.cardholder_name}
-                        onChange={handleCardChange}
-                        className="input-premium"
-                        placeholder="John Smith"
-                      />
-                    </div>
-                    <div>
-                      <label className="label-premium">Card Number</label>
-                      <input
-                        type="text"
-                        name="card_number"
-                        value={cardDetails.card_number}
-                        onChange={handleCardChange}
-                        className="input-premium"
-                        placeholder="1234 5678 9012 3456"
-                        maxLength={19}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="label-premium">Expiry Date</label>
-                        <input
-                          type="text"
-                          name="expiry"
-                          value={cardDetails.expiry}
-                          onChange={handleCardChange}
-                          className="input-premium"
-                          placeholder="MM/YY"
-                          maxLength={5}
-                        />
+                  <div className="p-4 bg-surface-50 dark:bg-surface-800 rounded-xl">
+                    {paymentToken ? (
+                      <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
+                        <Check className="w-5 h-5 text-green-600 dark:text-green-400" />
+                        <div>
+                          <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                            Card tokenized successfully
+                          </p>
+                          <p className="text-xs text-green-600 dark:text-green-400">
+                            {paymentToken.card_type.toUpperCase()} ending in {paymentToken.last_4}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => setPaymentToken(null)}
+                          className="ml-auto text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
+                        >
+                          Change
+                        </button>
                       </div>
-                      <div>
-                        <label className="label-premium">CVV</label>
-                        <input
-                          type="text"
-                          name="cvv"
-                          value={cardDetails.cvv}
-                          onChange={handleCardChange}
-                          className="input-premium"
-                          placeholder="123"
-                          maxLength={4}
-                        />
-                      </div>
-                    </div>
-                    <p className="text-xs text-surface-500 dark:text-surface-400 flex items-center gap-1">
-                      <Lock className="w-3 h-3" />
-                      This is a simulated payment. No real charges will be made.
-                    </p>
+                    ) : (
+                      <PaymentTokenize
+                        onTokenize={setPaymentToken}
+                        onError={setError}
+                      />
+                    )}
                   </div>
                 )}
 
@@ -983,8 +931,10 @@ export default function CheckoutPage() {
                       <div className="p-3 bg-surface-50 dark:bg-surface-800 rounded-xl text-sm">
                         <p className="font-medium text-surface-900 dark:text-white">
                           {paymentMethod === 'cod' && 'Cash on Delivery'}
-                          {paymentMethod === 'credit_card' &&
-                            `Card ending in ${cardDetails.card_number.slice(-4)}`}
+                          {paymentMethod === 'credit_card' && paymentToken &&
+                            `${paymentToken.card_type.toUpperCase()} ending in ${paymentToken.last_4}`}
+                          {paymentMethod === 'credit_card' && !paymentToken &&
+                            'Card not tokenized'}
                           {paymentMethod === 'paypal' && 'PayPal'}
                         </p>
                       </div>

@@ -34,6 +34,35 @@ from app.repositories.verification_repository import VerificationRepository
 logger = logging.getLogger(__name__)
 
 
+def validate_password_strength(password: str) -> bool:
+    """
+    Validate password strength.
+    Returns True if password meets requirements, raises ValueError otherwise.
+    """
+    if len(password) < 8:
+        raise ValueError("Password must be at least 8 characters long")
+    if len(password) > 128:
+        raise ValueError("Password must be less than 128 characters long")
+    if not any(c.isupper() for c in password):
+        raise ValueError("Password must contain at least one uppercase letter")
+    if not any(c.islower() for c in password):
+        raise ValueError("Password must contain at least one lowercase letter")
+    if not any(c.isdigit() for c in password):
+        raise ValueError("Password must contain at least one digit")
+    if not any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in password):
+        raise ValueError("Password must contain at least one special character")
+    
+    # Check for common weak passwords
+    common_passwords = [
+        "password", "12345678", "qwerty", "abc123", "password123",
+        "admin", "letmein", "welcome", "monkey", "dragon",
+    ]
+    if password.lower() in common_passwords:
+        raise ValueError("Password is too common. Please choose a stronger password")
+    
+    return True
+
+
 class AuthService:
     def __init__(self, db: Session):
         self.db = db
@@ -51,6 +80,9 @@ class AuthService:
     ) -> dict:
         if self.user_repo.get_by_email(email):
             raise ValueError("Email already registered")
+
+        # Validate password strength
+        validate_password_strength(password)
 
         user = User(
             email=email,
@@ -219,7 +251,8 @@ class AuthService:
 
         import hashlib
         code_hash = hashlib.sha256(code.encode()).hexdigest()
-        if verification.code != code and verification.code != code_hash:
+        # Only compare hashed codes - never store or compare plaintext
+        if verification.code != code_hash:
             raise ValueError("Invalid verification code")
 
         if verification.expires_at < datetime.now(timezone.utc):
@@ -275,6 +308,9 @@ class AuthService:
         if not user:
             raise ValueError("User not found")
 
+        # Validate new password strength
+        validate_password_strength(new_password)
+
         user.password_hash = hash_password(new_password)
         self.user_repo.update(user)
         self.verification_repo.mark_password_reset_used(reset)
@@ -293,6 +329,9 @@ class AuthService:
             current_password, user.password_hash
         ):
             raise ValueError("Invalid current password")
+
+        # Validate new password strength
+        validate_password_strength(new_password)
 
         user.password_hash = hash_password(new_password)
         self.user_repo.update(user)
@@ -508,14 +547,17 @@ class AuthService:
     def _send_email_verification(
         self, user: User, purpose: str, new_email: Optional[str] = None
     ) -> None:
+        import hashlib
         token = generate_token()
         code = generate_verification_code()
+        # Store hashed code, never plaintext
+        code_hash = hashlib.sha256(code.encode()).hexdigest()
         expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
 
         verification = EmailVerification(
             user_id=user.id,
             token=token,
-            code=code,
+            code=code_hash,  # Store hash, not plaintext
             purpose=purpose,
             expires_at=expires_at,
         )
