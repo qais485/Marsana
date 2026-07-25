@@ -1,5 +1,5 @@
 # Robots.txt for Marsana E-Commerce Platform
-# https://marsana-frontend.onrender.com
+# https://marsana.onrender.com
 
 # Allow all crawlers
 User-agent: *
@@ -21,7 +21,7 @@ Disallow: /settings/
 Disallow: /api/
 
 # Sitemap location
-Sitemap: https://marsana-frontend.onrender.com/sitemap.xml
+Sitemap: https://marsana.onrender.com/sitemap.xml
 
 # Crawl-delay for polite bots
 Crawl-delay: 1
