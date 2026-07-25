@@ -2,7 +2,8 @@ from datetime import datetime, timezone
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy import func, IntegrityError
+from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.database_models import (
@@ -48,9 +49,9 @@ class WarehouseRepository:
             if value is not None:
                 setattr(warehouse, key, value)
         if data.get("is_default"):
-            self.db.query(Warehouse).filter(
-                Warehouse.id != warehouse.id
-            ).update({"is_default": False})
+            self.db.query(Warehouse).filter(Warehouse.id != warehouse.id).update(
+                {"is_default": False}
+            )
         self.db.commit()
         self.db.refresh(warehouse)
         return warehouse
@@ -104,10 +105,12 @@ class WarehouseInventoryRepository:
         Get or create inventory record with race condition protection.
         Uses unique constraint on warehouse_id and product_id to prevent duplicates.
         """
-        existing = self.get_by_product_and_warehouse(product_id, warehouse_id, variant_id)
+        existing = self.get_by_product_and_warehouse(
+            product_id, warehouse_id, variant_id
+        )
         if existing:
             return existing
-        
+
         try:
             inventory = WarehouseInventory(
                 product_id=product_id,
@@ -123,7 +126,9 @@ class WarehouseInventoryRepository:
         except IntegrityError:
             # Another request created the inventory concurrently
             self.db.rollback()
-            existing = self.get_by_product_and_warehouse(product_id, warehouse_id, variant_id)
+            existing = self.get_by_product_and_warehouse(
+                product_id, warehouse_id, variant_id
+            )
             if existing:
                 return existing
             raise RuntimeError("Failed to create or retrieve inventory record")
@@ -145,19 +150,25 @@ class WarehouseInventoryRepository:
         return inventory
 
     def get_total_quantity_for_product(self, product_id: UUID) -> int:
-        result = self.db.query(
-            func.coalesce(func.sum(WarehouseInventory.quantity), 0)
-        ).filter(WarehouseInventory.product_id == product_id).scalar()
+        result = (
+            self.db.query(func.coalesce(func.sum(WarehouseInventory.quantity), 0))
+            .filter(WarehouseInventory.product_id == product_id)
+            .scalar()
+        )
         return int(result)
 
     def get_low_stock_items(
         self, page: int = 1, limit: int = 20
     ) -> tuple[list[WarehouseInventory], int]:
-        query = self.db.query(WarehouseInventory).join(Product).filter(
-            WarehouseInventory.quantity <= WarehouseInventory.low_stock_threshold,
-            WarehouseInventory.quantity > 0,
-            Product.is_active,
-            Product.deleted_at.is_(None),
+        query = (
+            self.db.query(WarehouseInventory)
+            .join(Product)
+            .filter(
+                WarehouseInventory.quantity <= WarehouseInventory.low_stock_threshold,
+                WarehouseInventory.quantity > 0,
+                Product.is_active,
+                Product.deleted_at.is_(None),
+            )
         )
         total = query.count()
         items = query.offset((page - 1) * limit).limit(limit).all()
@@ -166,10 +177,14 @@ class WarehouseInventoryRepository:
     def get_out_of_stock_items(
         self, page: int = 1, limit: int = 20
     ) -> tuple[list[WarehouseInventory], int]:
-        query = self.db.query(WarehouseInventory).join(Product).filter(
-            WarehouseInventory.quantity == 0,
-            Product.is_active,
-            Product.deleted_at.is_(None),
+        query = (
+            self.db.query(WarehouseInventory)
+            .join(Product)
+            .filter(
+                WarehouseInventory.quantity == 0,
+                Product.is_active,
+                Product.deleted_at.is_(None),
+            )
         )
         total = query.count()
         items = query.offset((page - 1) * limit).limit(limit).all()
@@ -206,10 +221,7 @@ class WarehouseInventoryRepository:
 
         total = query.count()
         items = (
-            query.order_by(Product.name)
-            .offset((page - 1) * limit)
-            .limit(limit)
-            .all()
+            query.order_by(Product.name).offset((page - 1) * limit).limit(limit).all()
         )
         return items, total
 
