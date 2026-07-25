@@ -27,13 +27,22 @@ export function AuthProvider({ children }) {
   const [isValidating, setIsValidating] = useState(true);
   const navigate = useNavigate();
 
-  // Listen for auth logout events from API client
   useEffect(() => {
-    const handleLogout = () => {
-      logout();
+    const handleLogout = async () => {
+      const refreshToken = localStorage.getItem('refresh_token');
+      if (refreshToken) {
+        try {
+          await authService.logout(refreshToken);
+        } catch {
+          // Ignore logout errors
+        }
+      }
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+      setUser(null);
       navigate('/login');
     };
-    
     window.addEventListener('auth:logout', handleLogout);
     return () => window.removeEventListener('auth:logout', handleLogout);
   }, [navigate]);
