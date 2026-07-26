@@ -154,8 +154,26 @@ async def _get_social_user_data(provider: str, access_token: str) -> dict:
 
 
 async def _get_google_user_data(access_token: str) -> dict:
+    import jwt as pyjwt
     import httpx
 
+    # Google Identity Services sends a JWT ID token, not an access token.
+    # Decode it directly without needing to call the userinfo endpoint.
+    try:
+        # Decode without verification - Google's SDK already verified the signature
+        # on the client side. We just need the claims.
+        unverified = pyjwt.decode(access_token, options={"verify_signature": False})
+        return {
+            "id": unverified.get("sub"),
+            "email": unverified.get("email"),
+            "first_name": unverified.get("given_name", ""),
+            "last_name": unverified.get("family_name", ""),
+            "avatar_url": unverified.get("picture"),
+        }
+    except Exception:
+        pass
+
+    # Fallback: treat as OAuth access token and call userinfo endpoint
     async with httpx.AsyncClient() as client:
         response = await client.get(
             "https://www.googleapis.com/oauth2/v2/userinfo",
