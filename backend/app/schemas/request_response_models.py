@@ -20,89 +20,12 @@ class SuccessResponse(BaseResponse):
 # ─── Auth Schemas ────────────────────────────────────────────────
 
 
-class RegisterRequest(BaseModel):
-    email: EmailStr
-    password: str = Field(min_length=8, max_length=128)
-    first_name: str = Field(min_length=1, max_length=100)
-    last_name: str = Field(min_length=1, max_length=100)
-
-
-class RegisterResponse(BaseResponse):
-    data: Optional[dict] = None
-
-
-class LoginRequest(BaseModel):
-    email: EmailStr
-    password: str
-    device_name: Optional[str] = None
-    device_type: Optional[str] = None
-
-
-class TokenResponse(BaseResponse):
-    data: Optional[dict] = None
-
-
 class LogoutRequest(BaseModel):
     refresh_token: str
 
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
-
-
-# ─── Email Verification ─────────────────────────────────────────
-
-
-class SendEmailVerificationRequest(BaseModel):
-    email: EmailStr
-
-
-class VerifyEmailRequest(BaseModel):
-    token: str
-    code: str
-
-
-class ChangeEmailRequest(BaseModel):
-    new_email: EmailStr
-    password: str
-
-
-# ─── Password Schemas ────────────────────────────────────────────
-
-
-class ForgotPasswordRequest(BaseModel):
-    email: EmailStr
-
-
-class ResetPasswordRequest(BaseModel):
-    token: str
-    new_password: str = Field(min_length=8, max_length=128)
-
-
-class ChangePasswordRequest(BaseModel):
-    current_password: str
-    new_password: str = Field(min_length=8, max_length=128)
-
-
-# ─── Two-Factor Authentication ──────────────────────────────────
-
-
-class Enable2FARequest(BaseModel):
-    password: str
-
-
-class Verify2FARequest(BaseModel):
-    temp_token: Optional[str] = Field(None, description="Temporary token from login with 2FA (optional for enable flow)")
-    code: str = Field(max_length=6, pattern=r"^\d{6}$", description="6-digit TOTP verification code")
-
-
-class Disable2FARequest(BaseModel):
-    password: str
-    code: str
-
-
-class TwoFactorSetupResponse(BaseResponse):
-    data: Optional[dict] = None
 
 
 # ─── Social Login ────────────────────────────────────────────────
@@ -159,7 +82,7 @@ class RevokeDeviceRequest(BaseModel):
 
 
 class RevokeAllSessionsRequest(BaseModel):
-    password: str
+    pass
 
 
 # ─── Profile Schemas ─────────────────────────────────────────────
@@ -214,8 +137,7 @@ class UserWithProfileResponse(BaseModel):
     email: str
     first_name: str
     last_name: str
-    is_email_verified: bool
-    is_2fa_enabled: bool
+    avatar_url: Optional[str] = None
     profile: Optional[ProfileResponse] = None
 
     class Config:
@@ -524,7 +446,6 @@ class AccountSettingsResponse(BaseModel):
 
 
 class DeleteAccountRequest(BaseModel):
-    password: str
     confirmation: str = Field(pattern=r"^DELETE_MY_ACCOUNT$")
 
 
@@ -1146,8 +1067,6 @@ class AdminUserResponse(BaseModel):
     last_name: str
     role: str
     is_active: bool
-    is_email_verified: bool
-    is_2fa_enabled: bool
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 

@@ -4,7 +4,6 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.core.security import verify_password
 from app.models.database_models import (
     Address,
     Cart,
@@ -58,8 +57,7 @@ class ProfileService:
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "role": user.role,
-                "is_email_verified": user.is_email_verified,
-                "is_2fa_enabled": user.is_2fa_enabled,
+                "avatar_url": user.avatar_url,
             },
             "profile": {
                 "id": str(profile.id),
@@ -116,13 +114,10 @@ class ProfileService:
 
         return {"message": "Profile updated successfully"}
 
-    def delete_account(self, user_id: UUID, password: str) -> dict:
+    def delete_account(self, user_id: UUID) -> dict:
         user = self.user_repo.get_by_id(user_id)
         if not user:
             raise ValueError("User not found")
-
-        if not user.password_hash or not verify_password(password, user.password_hash):
-            raise ValueError("Invalid password")
 
         self.user_repo.delete(user)
         return {"message": "Account deleted successfully"}

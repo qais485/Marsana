@@ -2,13 +2,6 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LoginPage from '../pages/auth/LoginPage';
-import RegisterPage from '../pages/auth/RegisterPage';
-import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
-import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
-import VerifyEmailPage from '../pages/auth/VerifyEmailPage';
-import ChangePasswordPage from '../pages/auth/ChangePasswordPage';
-import TwoFactorSetupPage from '../pages/auth/TwoFactorSetupPage';
-import Verify2FAPage from '../pages/auth/Verify2FAPage';
 import HomePage from '../pages/HomePage';
 import NotFoundPage from '../pages/NotFoundPage';
 
@@ -122,11 +115,6 @@ export default function AppRoutes() {
     <Suspense fallback={<PageLoader />}>
       <Routes>
           <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-          <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
-          <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
-          <Route path="/reset-password" element={<PublicRoute><ResetPasswordPage /></PublicRoute>} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route path="/verify-2fa" element={<Verify2FAPage />} />
 
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/admin" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
@@ -152,8 +140,6 @@ export default function AppRoutes() {
           <Route path="/admin/reports" element={<AdminRoute><AdminReportsPage /></AdminRoute>} />
           <Route path="/admin/settings" element={<AdminRoute><AdminSettingsPage /></AdminRoute>} />
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path="/change-password" element={<ProtectedRoute><ChangePasswordPage /></ProtectedRoute>} />
-          <Route path="/2fa-setup" element={<ProtectedRoute><TwoFactorSetupPage /></ProtectedRoute>} />
           <Route path="/loyalty" element={<ProtectedRoute><LoyaltyPage /></ProtectedRoute>} />
           <Route path="/referral" element={<ProtectedRoute><ReferralPage /></ProtectedRoute>} />
 

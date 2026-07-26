@@ -74,11 +74,9 @@ class TestAuthenticatedCheckout:
     def test_checkout_requires_cart(self, client, db_session):
         user = User(
             email="checkout@example.com",
-            password_hash="$2b$12$LJ3m4ys4Pz4tSy4tSy4tSy4tSy4tSy4tSy4tSy4tSy4tSy4tSy4tSy",
             first_name="Checkout",
             last_name="User",
             is_active=True,
-            is_email_verified=True,
         )
         db_session.add(user)
         db_session.commit()

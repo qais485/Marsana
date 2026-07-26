@@ -12,8 +12,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.database.base import Base
 from app.models.database_models import (
-    User, UserSession, UserDevice, EmailVerification,
-    PasswordReset, UserTwoFactor, SocialAccount,
+    User, UserSession, UserDevice, SocialAccount,
 )
 
 config = context.config

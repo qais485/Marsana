@@ -1,76 +1,72 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from app.services.business_logic import AuthService
-from app.models.database_models import User, UserTwoFactor
+from app.models.database_models import User
 
 
-# NOTE: Auth tests are organized by feature (2FA, login, register).
-# Consider splitting into separate files per feature for maintainability.
-
-
-class TestTwoFactorAuth:
-    def test_enable_2fa_returns_secret(self, client, db_session):
-        from app.core.security import pwd_context
-
-        password = "TestPass123!"
-        password_hash = pwd_context.hash(password)
-
-        user = User(
-            email="2fa@example.com",
-            password_hash=password_hash,
-            first_name="Test",
-            last_name="User",
-            is_active=True,
-            is_email_verified=True,
-        )
-        db_session.add(user)
-        db_session.commit()
-
+class TestGoogleOAuthLogin:
+    def test_social_login_creates_new_user(self, client, db_session):
         from app.core.security import create_access_token
-        token = create_access_token(subject=str(user.id))
 
-        response = client.post(
-            "/api/v1/auth/2fa/enable",
-            headers={"Authorization": f"Bearer {token}"},
-            json={"password": password},
-        )
+        mock_google_data = {
+            "id": "google-123",
+            "email": "newuser@gmail.com",
+            "first_name": "New",
+            "last_name": "User",
+            "avatar_url": "https://lh3.googleusercontent.com/photo.jpg",
+        }
+
+        with patch("app.api.routes.endpoints._get_social_user_data", return_value=mock_google_data):
+            response = client.post(
+                "/api/v1/auth/social/login",
+                json={
+                    "provider": "google",
+                    "access_token": "mock-google-token",
+                },
+            )
+
         assert response.status_code == 200
         data = response.json()
-        assert "secret" in data["data"]
-        assert "backup_codes" in data["data"]
+        assert data["success"] is True
+        assert "access_token" in data["data"]
+        assert "refresh_token" in data["data"]
+        assert data["data"]["user"]["email"] == "newuser@gmail.com"
 
-    def test_verify_2fa_with_temp_token(self, client, db_session):
+    def test_social_login_existing_user(self, client, db_session):
         user = User(
-            email="verify2fa@example.com",
-            password_hash="$2b$12$LJ3m4ys4Pz4tSy4tSy4tSy4tSy4tSy4tSy4tSy4tSy4tSy4tSy4tSy",
-            first_name="Test",
+            email="existing@gmail.com",
+            first_name="Existing",
             last_name="User",
             is_active=True,
-            is_email_verified=True,
-            is_2fa_enabled=True,
         )
         db_session.add(user)
-        db_session.flush()
-
-        two_factor = UserTwoFactor(
-            user_id=user.id,
-            secret="JBSWY3DPEHPK3PXP",
-            is_enabled=True,
-        )
-        db_session.add(two_factor)
         db_session.commit()
 
-        from app.core.security import create_access_token
-        temp_token = create_access_token(subject=str(user.id))
-
-        import pyotp
-        totp = pyotp.TOTP("JBSWY3DPEHPK3PXP")
-        valid_code = totp.now()
-
-        response = client.post(
-            "/api/v1/auth/verify-2fa",
-            json={"temp_token": temp_token, "code": valid_code},
+        from app.models.database_models import SocialAccount
+        social = SocialAccount(
+            user_id=user.id,
+            provider="google",
+            provider_user_id="google-existing",
         )
+        db_session.add(social)
+        db_session.commit()
+
+        mock_google_data = {
+            "id": "google-existing",
+            "email": "existing@gmail.com",
+            "first_name": "Existing",
+            "last_name": "User",
+        }
+
+        with patch("app.api.routes.endpoints._get_social_user_data", return_value=mock_google_data):
+            response = client.post(
+                "/api/v1/auth/social/login",
+                json={
+                    "provider": "google",
+                    "access_token": "mock-google-token",
+                },
+            )
+
         assert response.status_code == 200
         data = response.json()
         assert data["success"] is True

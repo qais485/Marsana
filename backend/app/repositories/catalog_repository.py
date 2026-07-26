@@ -840,11 +840,7 @@ class AdminRepository:
             .filter(User.created_at >= week_ago)
             .scalar()
         )
-        verified = (
-            self.db.query(func.count(User.id))
-            .filter(User.is_email_verified)
-            .scalar()
-        )
+        verified = total
         return {
             "total": total,
             "active": active,
@@ -852,8 +848,6 @@ class AdminRepository:
             "admins": admins,
             "new_this_month": new_month,
             "new_this_week": new_week,
-            "verified": verified,
-            "unverified": total - verified,
         }
 
     def get_product_stats(self) -> dict:
@@ -1017,7 +1011,6 @@ class AdminRepository:
                 "last_name": u.last_name,
                 "role": u.role,
                 "is_active": u.is_active,
-                "is_email_verified": u.is_email_verified,
                 "created_at": u.created_at.isoformat() if u.created_at else None,
             }
             for u in users
@@ -1099,7 +1092,7 @@ class AdminRepository:
         # Security: Prevents privilege escalation by blocking sensitive fields
         allowed_fields = {
             'first_name', 'last_name', 'phone_number', 'is_active',
-            'is_email_verified', 'avatar_url', 'bio', 'date_of_birth',
+            'avatar_url', 'bio', 'date_of_birth',
             'gender', 'timezone', 'language'
         }
         

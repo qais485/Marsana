@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/api/authService';
 import { profileService } from '../services/api/profileService';
@@ -78,38 +78,8 @@ export function AuthProvider({ children }) {
     validateToken();
   }, []);
 
-  const login = async (email, password, deviceName, deviceType) => {
-    const response = await authService.login({
-      email,
-      password,
-      device_name: deviceName,
-      device_type: deviceType,
-    });
-
-    if (!response.success) {
-      throw new Error(response.message || 'Login failed');
-    }
-
-    if (response.data.requires_verification) {
-      return { requiresVerification: true, email: response.data.email };
-    }
-
-    if (response.data.requires_2fa) {
-      return { requires2FA: true, tempToken: response.data.temp_token };
-    }
-
-    const { access_token, refresh_token, user: userData } = response.data;
-    localStorage.setItem('access_token', access_token);
-    localStorage.setItem('refresh_token', refresh_token);
-    localStorage.setItem('user', JSON.stringify(userData));
+  const login = (userData) => {
     setUser(userData);
-
-    return { success: true };
-  };
-
-  const register = async (data) => {
-    const response = await authService.register(data);
-    return response;
   };
 
   const logout = async () => {
@@ -132,7 +102,6 @@ export function AuthProvider({ children }) {
     loading,
     isValidating,
     login,
-    register,
     logout,
     updateUser: (userData) => {
       setUser(userData);

@@ -141,8 +141,6 @@ class StoreSettingService:
 
             # Security - Authentication
             {"key": "auth_method", "category": "security", "value": "jwt", "description": "Authentication method (jwt, session)", "status": "existing"},
-            {"key": "require_email_verification", "category": "security", "value": True, "description": "Require email verification for new accounts", "status": "existing"},
-            {"key": "enable_2fa", "category": "security", "value": False, "description": "Enable two-factor authentication (TOTP)", "status": "existing"},
             {"key": "session_timeout", "category": "security", "value": 60, "description": "Session timeout in minutes", "status": "existing"},
 
             # Security - Authorization & Role Based Access

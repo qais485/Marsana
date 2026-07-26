@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/api/authService';
-import { Shield, Smartphone, Monitor, Trash2, LogOut, Key, Mail, User, Home, LayoutDashboard, ArrowLeft, ClipboardList, Search, Star, Users, Menu, X } from 'lucide-react';
+import { Smartphone, Monitor, Trash2, LogOut, Mail, User, Home, LayoutDashboard, ArrowLeft, ClipboardList, Search, Star, Users, Menu, X } from 'lucide-react';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 
@@ -243,20 +243,6 @@ export default function DashboardPage() {
                       <User className="h-4 w-4" />
                       Edit profile
                     </button>
-                    <button
-                      onClick={() => navigate('/change-password')}
-                      className="btn-outline flex items-center gap-2 justify-center"
-                    >
-                      <Key className="h-4 w-4" />
-                      Change password
-                    </button>
-                    <button
-                      onClick={() => navigate('/2fa-setup')}
-                      className="btn-outline flex items-center gap-2 justify-center"
-                    >
-                      <Shield className="h-4 w-4" />
-                      {user?.is_2fa_enabled ? 'Manage 2FA' : 'Enable 2FA'}
-                    </button>
                   </div>
                 </div>
               </div>
@@ -275,38 +261,16 @@ export default function DashboardPage() {
                       </div>
                       <div>
                         <p className="font-medium text-surface-900 dark:text-white">
-                          Email verification
+                          Email
                         </p>
                         <p className="text-sm text-surface-500 dark:text-surface-400">
                           {user?.email}
                         </p>
                       </div>
                     </div>
-                    <span className={`text-sm font-medium ${user?.is_email_verified ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                      {user?.is_email_verified ? 'Verified' : 'Pending'}
+                    <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                      Google OAuth
                     </span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-surface-50 dark:bg-surface-800 rounded-xl">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-surface-100 dark:bg-surface-700 flex items-center justify-center">
-                        <Shield className="h-5 w-5 text-surface-500 dark:text-surface-400" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-surface-900 dark:text-white">
-                          Two-factor authentication
-                        </p>
-                        <p className="text-sm text-surface-500 dark:text-surface-400">
-                          {user?.is_2fa_enabled ? 'Enabled' : 'Not enabled'}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => navigate('/2fa-setup')}
-                      className="text-sm text-marsana-600 dark:text-marsana-400 hover:text-marsana-700 dark:hover:text-marsana-300 font-medium"
-                    >
-                      {user?.is_2fa_enabled ? 'Manage' : 'Enable'}
-                    </button>
                   </div>
                 </div>
               </div>

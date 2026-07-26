@@ -127,8 +127,6 @@ class AdminService:
             "last_name": user.last_name,
             "role": user.role,
             "is_active": user.is_active,
-            "is_email_verified": user.is_email_verified,
-            "is_2fa_enabled": user.is_2fa_enabled,
             "created_at": user.created_at.isoformat() if user.created_at else None,
             "updated_at": user.updated_at.isoformat() if user.updated_at else None,
         }
@@ -141,8 +139,6 @@ class AdminService:
             "last_name": user.last_name,
             "role": user.role,
             "is_active": user.is_active,
-            "is_email_verified": user.is_email_verified,
-            "is_2fa_enabled": user.is_2fa_enabled,
             "created_at": user.created_at.isoformat() if user.created_at else None,
             "updated_at": user.updated_at.isoformat() if user.updated_at else None,
         }

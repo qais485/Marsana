@@ -72,7 +72,6 @@ def delete_account(
     try:
         result = profile_service.delete_account(
             user_id=current_user.id,
-            password=request.password,
         )
         return {"success": True, "message": result["message"]}
     except ValueError as e:

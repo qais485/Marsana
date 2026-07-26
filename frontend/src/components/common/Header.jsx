@@ -164,7 +164,7 @@ export default function Header() {
                     Sign in
                   </Link>
                   <Link
-                    to="/register"
+                    to="/login"
                     className="btn-marsana text-sm !px-4 sm:!px-5 !py-2.5 min-h-[44px]"
                   >
                     Get Started
@@ -265,7 +265,7 @@ export default function Header() {
                     Sign in
                   </Link>
                   <Link
-                    to="/register"
+                    to="/login"
                     onClick={() => setMobileMenuOpen(false)}
                     className="block px-4 py-3.5 min-h-[44px] text-sm font-medium text-marsana-600 dark:text-marsana-400 hover:bg-marsana-50 dark:hover:bg-marsana-950 rounded-xl transition-all duration-200"
                   >

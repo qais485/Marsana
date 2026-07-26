@@ -1,4 +1,3 @@
-import html
 import logging
 import re
 from typing import Optional
@@ -9,7 +8,6 @@ from sqlalchemy.orm import Session
 from app.models.database_models import NotificationLog, NotificationTemplate, UserNotification, UserAccountSetting
 from app.repositories.notification_repository import NotificationLogRepository, NotificationTemplateRepository
 from app.repositories.profile_repository import NotificationRepository
-from app.utils.email import send_email, EmailSendError
 
 logger = logging.getLogger(__name__)
 
@@ -272,12 +270,8 @@ class NotificationService:
         return created
 
     def _send_email_to_user(self, user_id: UUID, subject: str, message: str) -> bool:
-        from app.repositories.user_repository import UserRepository
-        user_repo = UserRepository(self.db)
-        user = user_repo.get_by_id(user_id)
-        if not user or not user.email:
-            return False
-        return self._send_email_notification(user_id, subject, message, to_email=user.email)
+        logger.info("Email sending disabled - notification skipped for user %s", user_id)
+        return False
 
     def _send_email_notification(
         self,
@@ -287,71 +281,20 @@ class NotificationService:
         to_email: Optional[str] = None,
         template_id: Optional[UUID] = None,
     ) -> bool:
-        if to_email is None:
-            from app.repositories.user_repository import UserRepository
-            user_repo = UserRepository(self.db)
-            user = user_repo.get_by_id(user_id)
-            if not user or not user.email:
-                self.log_repo.create(
-                    NotificationLog(
-                        id=uuid4(),
-                        user_id=user_id,
-                        template_id=template_id,
-                        channel="email",
-                        title=subject,
-                        message=message,
-                        status="failed",
-                        error_message="User email not found",
-                    )
-                )
-                return False
-            to_email = user.email
-
-        html_content = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
-                <h1 style="color: #333;">E-Commerce</h1>
-            </div>
-            <div style="padding: 20px;">
-                <h2>{html.escape(subject)}</h2>
-                <p>{html.escape(message)}</p>
-            </div>
-            <div style="background-color: #f8f9fa; padding: 10px; text-align: center; font-size: 12px; color: #666;">
-                <p>This is an automated notification from E-Commerce.</p>
-            </div>
-        </body>
-        </html>
-        """
-        try:
-            send_email(to_email, subject, html_content)
-            self.log_repo.create(
-                NotificationLog(
-                    id=uuid4(),
-                    user_id=user_id,
-                    template_id=template_id,
-                    channel="email",
-                    title=subject,
-                    message=message,
-                    status="sent",
-                )
+        logger.info("Email sending disabled - notification skipped for user %s", user_id)
+        self.log_repo.create(
+            NotificationLog(
+                id=uuid4(),
+                user_id=user_id,
+                template_id=template_id,
+                channel="email",
+                title=subject,
+                message=message,
+                status="skipped",
+                error_message="Email sending disabled",
             )
-            return True
-        except EmailSendError as e:
-            logger.error("Failed to send email to %s: %s", to_email, e)
-            self.log_repo.create(
-                NotificationLog(
-                    id=uuid4(),
-                    user_id=user_id,
-                    template_id=template_id,
-                    channel="email",
-                    title=subject,
-                    message=message,
-                    status="failed",
-                    error_message=str(e),
-                )
-            )
-            return False
+        )
+        return False
 
     # ─── Serialization Helpers ────────────────────────────────────
 

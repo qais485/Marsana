@@ -32,13 +32,11 @@ class User(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String(255), nullable=False, index=True)
-    password_hash = Column(String(255), nullable=True)
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
-    is_active = Column(Boolean, default=False)
-    is_email_verified = Column(Boolean, default=False)
-    is_2fa_enabled = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
     role = Column(String(20), default="user")
+    avatar_url = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), default=utcnow)
     updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
     deleted_at = Column(DateTime(timezone=True), nullable=True)
@@ -48,18 +46,6 @@ class User(Base):
     )
     devices = relationship(
         "UserDevice", back_populates="user", cascade="all, delete-orphan"
-    )
-    email_verifications = relationship(
-        "EmailVerification", back_populates="user", cascade="all, delete-orphan"
-    )
-    password_resets = relationship(
-        "PasswordReset", back_populates="user", cascade="all, delete-orphan"
-    )
-    two_factor = relationship(
-        "UserTwoFactor",
-        back_populates="user",
-        uselist=False,
-        cascade="all, delete-orphan",
     )
     social_accounts = relationship(
         "SocialAccount", back_populates="user", cascade="all, delete-orphan"
@@ -152,57 +138,6 @@ class UserDevice(Base):
 
     user = relationship("User", back_populates="devices")
     sessions = relationship("UserSession", back_populates="device")
-
-
-class EmailVerification(Base):
-    __tablename__ = "email_verifications"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
-    )
-    token = Column(String(255), nullable=False, unique=True)
-    code = Column(String(10), nullable=False)
-    purpose = Column(String(50), nullable=False)
-    is_used = Column(Boolean, default=False)
-    expires_at = Column(DateTime(timezone=True), nullable=False)
-    created_at = Column(DateTime(timezone=True), default=utcnow)
-
-    user = relationship("User", back_populates="email_verifications")
-
-
-class PasswordReset(Base):
-    __tablename__ = "password_resets"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
-    )
-    token = Column(String(255), nullable=False, unique=True)
-    is_used = Column(Boolean, default=False)
-    expires_at = Column(DateTime(timezone=True), nullable=False)
-    created_at = Column(DateTime(timezone=True), default=utcnow)
-
-    user = relationship("User", back_populates="password_resets")
-
-
-class UserTwoFactor(Base):
-    __tablename__ = "user_two_factor"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
-        unique=True,
-    )
-    secret = Column(String(255), nullable=False)
-    is_enabled = Column(Boolean, default=False)
-    backup_codes = Column(Text, nullable=True)
-    created_at = Column(DateTime(timezone=True), default=utcnow)
-    updated_at = Column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
-
-    user = relationship("User", back_populates="two_factor")
 
 
 class SocialAccount(Base):
