@@ -4,6 +4,8 @@ import { Loader2, ArrowLeft, ChevronDown, ChevronUp, Search } from 'lucide-react
 import api from '../services/api/client';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
+import { FAQJsonLd } from '../components/seo/JsonLd';
 
 function FAQItem({ faq, isExpanded, onToggle }) {
   const contentRef = useRef(null);
@@ -109,6 +111,16 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <SEO
+        title="Frequently Asked Questions"
+        description="Find answers to common questions about Marsana shopping, orders, returns, shipping, and more."
+        url="/faq"
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'FAQ' },
+        ]}
+      />
+      <FAQJsonLd faqs={filteredFaqs} />
       <Header />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">

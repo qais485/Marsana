@@ -17,6 +17,7 @@ import DeliveryTrackingSection from '../components/orders/DeliveryTrackingSectio
 import { formatPrice, STATUS_COLORS } from '../utils/format';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 const CANCEL_REASONS = [
   'Changed my mind',
@@ -199,6 +200,7 @@ export default function OrderDetailPage() {
 
   return (
       <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 overflow-x-hidden">
+      <SEO title="Order Details" noindex />
       <Header />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

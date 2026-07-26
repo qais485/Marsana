@@ -8,6 +8,8 @@ import ProductCard from '../components/common/ProductCard';
 import SearchBar from '../components/common/SearchBar';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
+import { ItemListJsonLd } from '../components/seo/JsonLd';
 
 export default function CategoryDetailPage() {
   const { slug } = useParams();
@@ -82,9 +84,21 @@ export default function CategoryDetailPage() {
   }
 
   const { category, children } = data;
+  const breadcrumbs = [
+    { name: 'Home', url: '/' },
+    { name: 'Categories', url: '/categories' },
+    { name: category.name },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <SEO
+        title={category.name}
+        description={category.description || `Shop ${category.name} products on Marsana`}
+        url={`/categories/${category.slug}`}
+        breadcrumbs={breadcrumbs}
+      />
+      <ItemListJsonLd items={products} name={category.name} />
       <Header />
 
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 overflow-x-auto">

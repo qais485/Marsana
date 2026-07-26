@@ -4,6 +4,7 @@ import { Loader2, ArrowLeft, Search, Eye, BookOpen } from 'lucide-react';
 import api from '../services/api/client';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function HelpCenterPage() {
   const [articles, setArticles] = useState([]);
@@ -84,6 +85,15 @@ export default function HelpCenterPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <SEO
+        title="Help Center"
+        description="Find guides, tutorials, and answers to common questions about using Marsana."
+        url="/help"
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Help Center' },
+        ]}
+      />
       <Header />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">

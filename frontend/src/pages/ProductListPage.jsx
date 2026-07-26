@@ -13,6 +13,7 @@ import { useCart } from '../context/CartContext';
 import { productService } from '../services/api/productService';
 import ProductCard from '../components/common/ProductCard';
 import SearchBar from '../components/common/SearchBar';
+import SEO from '../components/seo/SEO';
 import FilterSidebar from '../components/common/FilterSidebar';
 import ActiveFilters from '../components/common/ActiveFilters';
 import Header from '../components/common/Header';
@@ -138,6 +139,15 @@ export default function ProductListPage() {
 
   return (
     <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      <SEO
+        title="Products"
+        description="Browse our wide selection of quality products at competitive prices on Marsana."
+        url="/products"
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Products' },
+        ]}
+      />
       <Header />
 
       {/* Spacer for fixed header */}

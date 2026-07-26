@@ -5,6 +5,7 @@ import { promotionService } from '../services/api/promotionService';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function ReferralPage() {
   const { user, isAuthenticated } = useAuth();
@@ -95,6 +96,7 @@ export default function ReferralPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <SEO title="Referrals" noindex />
       <Header />
 
       <main className="max-w-4xl mx-auto px-4 py-6 sm:py-8">

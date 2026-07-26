@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { formatPrice } from '../utils/format';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function WishlistPage() {
   const { isAuthenticated } = useAuth();
@@ -82,6 +83,7 @@ export default function WishlistPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 overflow-x-hidden">
+      <SEO title="Wishlist" noindex />
       <Header />
       <div className="h-16 lg:h-18" />
 

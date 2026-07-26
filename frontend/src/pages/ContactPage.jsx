@@ -4,6 +4,7 @@ import { Loader2, Mail, Phone, MapPin, Send, ArrowLeft, CheckCircle } from 'luci
 import api from '../services/api/client';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -53,6 +54,15 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <SEO
+        title="Contact Us"
+        description="Get in touch with Marsana support. We're here to help with orders, returns, and any questions."
+        url="/contact"
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Contact Us' },
+        ]}
+      />
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">

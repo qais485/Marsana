@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/api/authService';
 import { AlertCircle, ArrowRight } from 'lucide-react';
+import SEO from '../../components/seo/SEO';
 
 export default function LoginPage() {
   const [error, setError] = useState('');
@@ -80,6 +81,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 px-4 py-8 sm:py-12 overflow-hidden">
+      <SEO title="Sign In" noindex />
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-surface-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-surface-200 dark:border-surface-800">
           <div className="text-center mb-6 sm:mb-8">

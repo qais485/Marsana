@@ -3,6 +3,7 @@ import { CheckCircle, Package, Truck, ArrowRight, ArrowLeft } from 'lucide-react
 import { formatPrice } from '../utils/format';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function OrderConfirmationPage() {
   const location = useLocation();
@@ -14,6 +15,7 @@ export default function OrderConfirmationPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 overflow-x-hidden">
+      <SEO title="Order Confirmed" noindex />
       <Header />
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

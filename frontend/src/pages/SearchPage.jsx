@@ -5,6 +5,7 @@ import { searchService } from '../services/api/searchService';
 import ProductCard from '../components/common/ProductCard';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -60,6 +61,12 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <SEO
+        title={`Search results for "${query}"`}
+        description={`Find products matching "${query}" on Marsana.`}
+        url={`/search?q=${encodeURIComponent(query)}`}
+        noindex
+      />
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">

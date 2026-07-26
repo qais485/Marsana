@@ -16,6 +16,7 @@ import { profileService } from '../services/api/profileService';
 import { checkoutService } from '../services/api/checkoutService';
 import { formatPrice } from '../utils/format';
 import PaymentTokenize from '../components/payment/PaymentTokenize';
+import SEO from '../components/seo/SEO';
 
 const STEPS = [
   { id: 'shipping', label: 'Shipping', icon: MapPin },
@@ -303,6 +304,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      <SEO title="Checkout" noindex />
       <header className="bg-white/80 dark:bg-surface-950/80 backdrop-blur-2xl border-b border-surface-100/50 dark:border-surface-800/50 sticky top-0 z-50">
         <div className="section-premium">
           <div className="flex justify-between items-center h-16">

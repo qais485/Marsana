@@ -13,6 +13,7 @@ import SavedForLater from '../components/cart/SavedForLater';
 import MiniCart from '../components/cart/MiniCart';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function CartPage() {
   const { isAuthenticated } = useAuth();
@@ -69,6 +70,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <SEO title="Shopping Cart" noindex />
       <Header />
       <MiniCart isOpen={miniCartOpen} onClose={() => setMiniCartOpen(false)} />
 

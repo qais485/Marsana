@@ -5,6 +5,7 @@ import { checkoutService } from '../services/api/checkoutService';
 import { formatPrice, STATUS_COLORS } from '../utils/format';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function OrderTrackingPage() {
   const [email, setEmail] = useState('');
@@ -39,6 +40,7 @@ export default function OrderTrackingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 overflow-x-hidden">
+      <SEO title="Track Order" noindex />
       <Header />
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

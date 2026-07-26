@@ -5,6 +5,7 @@ import { categoryService } from '../services/api/categoryService';
 import SearchBar from '../components/common/SearchBar';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function CategoryListPage() {
   const [categories, setCategories] = useState([]);
@@ -56,6 +57,15 @@ export default function CategoryListPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20">
+      <SEO
+        title="Categories"
+        description="Browse all product categories on Marsana. Find exactly what you're looking for."
+        url="/categories"
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Categories' },
+        ]}
+      />
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">

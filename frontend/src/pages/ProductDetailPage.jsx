@@ -16,6 +16,8 @@ import ProductSpecifications from '../components/catalog/ProductSpecifications';
 import ProductTags from '../components/catalog/ProductTags';
 import ProductReviews from '../components/catalog/ProductReviews';
 import RelatedProducts from '../components/catalog/RelatedProducts';
+import SEO from '../components/seo/SEO';
+import { ProductJsonLd } from '../components/seo/JsonLd';
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
@@ -87,6 +89,12 @@ export default function ProductDetailPage() {
   const { product, images, variants, attributes, specifications, tags, reviews, rating_summary, related_products, similar_products } = data;
 
   const currentPrice = selectedVariant?.discount_price || product.discount_price || product.price;
+  const productImage = images?.[0]?.image_url || product.images_list?.[0]?.image_url;
+  const breadcrumbs = [
+    { name: 'Home', url: '/' },
+    { name: 'Products', url: '/products' },
+    { name: product.name },
+  ];
   const originalPrice = selectedVariant?.price || product.price;
   const hasDiscount = currentPrice < originalPrice;
   const discountPercent = hasDiscount
@@ -157,6 +165,15 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-surface-50 dark:bg-surface-950">
+      <SEO
+        title={product.name}
+        description={product.short_description || product.description?.substring(0, 160)}
+        image={productImage}
+        url={`/products/${product.slug}`}
+        type="product"
+        breadcrumbs={breadcrumbs}
+      />
+      <ProductJsonLd product={{ ...product, images, rating: rating_summary?.average_rating, review_count: rating_summary?.review_count }} />
       <Header />
       <MiniCart isOpen={miniCartOpen} onClose={() => setMiniCartOpen(false)} />
 

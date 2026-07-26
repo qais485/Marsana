@@ -5,6 +5,7 @@ import { authService } from '../services/api/authService';
 import { Smartphone, Monitor, Trash2, LogOut, Mail, User, Home, LayoutDashboard, ArrowLeft, ClipboardList, Search, Star, Users, Menu, X } from 'lucide-react';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import SEO from '../components/seo/SEO';
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -57,6 +58,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 via-white to-marsana-50/20 dark:from-surface-950 dark:via-surface-900 dark:to-marsana-950/20 overflow-x-hidden">
+      <SEO title="Dashboard" noindex />
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

@@ -16,6 +16,7 @@ Disallow: /wishlist/
 Disallow: /loyalty/
 Disallow: /referral/
 Disallow: /settings/
+Disallow: /search?
 
 # Disallow API endpoints
 Disallow: /api/
